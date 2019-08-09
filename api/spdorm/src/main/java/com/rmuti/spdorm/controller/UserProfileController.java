@@ -22,7 +22,7 @@ public class UserProfileController {
         UserProfile userProfile_db = userProfileRepository.findByUserUsernameAndUserPassword(userUsername,userPassword);
         if(userProfile_db != null) {
             res.setStatus(0);
-            res.setData(userProfile_db.getUserId());
+            res.setData(userProfile_db);
             res.setMessage("เข้าสู่ระบบเรียบร้อยแล้ว");
         }else {
             res.setStatus(1);

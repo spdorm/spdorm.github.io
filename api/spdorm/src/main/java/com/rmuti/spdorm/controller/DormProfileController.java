@@ -4,10 +4,18 @@ import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.DormProfileRepository;
 import com.rmuti.spdorm.model.table.DormProfile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import org.apache.commons.io.IOUtils;
 
 @RestController
 @RequestMapping("/dorm")
@@ -16,6 +24,7 @@ public class DormProfileController {
 
     @Autowired
     private DormProfileRepository dormProfileRepository;
+
 
     @PostMapping("/add")
     public Object add(DormProfile dormProfile) {
@@ -112,4 +121,42 @@ public class DormProfileController {
 //        return res;
 //    }
 
+    @PostMapping("/saveImage")
+    public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int dormId) throws IOException {
+        APIResponse res = new APIResponse();
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
+        String formattedDate = myDateObj.format(myFormatObj);
+
+        DormProfile dormProfile_db = dormProfileRepository.findByDormId(dormId);
+
+        if (!file.isEmpty() && dormProfile_db != null) {
+            String fileName = file.getOriginalFilename();
+            String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
+            String newName = formattedDate + "." + typeName;
+            String floder = "/home/nicapa_sr/spdorm/images/dorm/";
+            Path path = Paths.get(floder + newName);
+            //File fileContent = new File(fileName);
+            //BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
+            byte[] bytes = file.getBytes();
+            Files.write(path, bytes);
+            dormProfileRepository.updateDormImage(dormId, newName);
+            res.setStatus(0);
+            res.setMessage("อัพรูปเรียบร้อยแล้ว");
+            res.setData(newName);
+        }
+        return res;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getResource(@RequestParam String nameImage) throws Exception {
+        try {
+            String path = "/home/nicapa_sr/spdorm/images/dorm/" + nameImage;
+            InputStream in = new FileInputStream(path);
+            return IOUtils.toByteArray(in);
+        } catch (Exception e) {
+        }
+        return null;
+    }
 }

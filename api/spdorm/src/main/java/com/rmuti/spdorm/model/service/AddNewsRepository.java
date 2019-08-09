@@ -13,6 +13,6 @@ public interface AddNewsRepository extends JpaRepository<AddNews, Integer> {
 
         // Check DormId, UserId And NewsId for list
         @Query(value = "select * from add_news a where a.dorm_id = ?1 order by a.news_id DESC",nativeQuery = true)
-        List<Object[]> findByDormId(int dormId);
+        List<AddNews> findByDormId(int dormId);
 }
 

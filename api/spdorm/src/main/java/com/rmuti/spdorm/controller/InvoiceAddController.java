@@ -33,9 +33,9 @@ public class InvoiceAddController {
     }
 
     @PostMapping("/list")
-    public Object list(@RequestParam int invoiceId, @RequestParam int dormId, @RequestParam int roomId){
+    public Object list(@RequestParam int dormId,@RequestParam int userId, @RequestParam int roomId){
         APIResponse res = new APIResponse();
-        res.setData(invoiceAddRepository.findByInvoiceIdAndDormIdAndRoomId(invoiceId, dormId, roomId));
+        res.setData(invoiceAddRepository.findByDormIdAndUserIdAndRoomId(dormId,userId,roomId));
         return res;
     }
 

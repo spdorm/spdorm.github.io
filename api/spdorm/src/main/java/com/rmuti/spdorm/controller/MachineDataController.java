@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.Table;
+import java.util.List;
 
 @RestController
 @RequestMapping("/machineData")
@@ -28,11 +29,26 @@ public class MachineDataController {
         return res;
     }
 
-    @PostMapping("/list")
-    public Object list(@RequestParam int machineId){
+//    @PostMapping("/list")
+//    public Object list(@RequestParam int machineId){
+//        APIResponse res = new APIResponse();
+//        res.setStatus(0);
+//        res.setData(machineDataRepository.findByMachineId(machineId));
+//        return res;
+//    }
+
+    @PostMapping("/listAll")
+    public Object list(@RequestParam int dormId){
         APIResponse res = new APIResponse();
-        res.setStatus(0);
-        res.setData(machineDataRepository.findByMachineId(machineId));
+        List machineData_db = machineDataRepository.listByDormId(dormId);
+        if(!machineData_db.isEmpty()){
+            res.setStatus(0);
+            res.setData(machineData_db);
+            res.setMessage("พบข้อมูล");
+        }else{
+            res.setStatus(1);
+            res.setMessage("ไม่พบข้อมูล");
+        }
         return res;
     }
 }

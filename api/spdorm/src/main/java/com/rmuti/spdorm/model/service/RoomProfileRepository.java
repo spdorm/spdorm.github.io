@@ -44,4 +44,9 @@ public interface RoomProfileRepository extends JpaRepository<RoomProfile, Intege
     @Transactional
     @Query(value = "update room_profile a set a.customer_id = ?2, a.room_status = ?3 where a.room_id = ?1",nativeQuery = true)
     void updateCustomerToRoom(int roomId,int customerId,String status);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update room_profile a set a.room_document = ?2 where a.room_id = ?1",nativeQuery = true)
+    void updateImageToRoom(int roomId,String nameImage);
 }

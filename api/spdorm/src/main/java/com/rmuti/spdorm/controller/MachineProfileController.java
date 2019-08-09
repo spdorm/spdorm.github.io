@@ -3,12 +3,15 @@ package com.rmuti.spdorm.controller;
 import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.MachineDataRepository;
 import com.rmuti.spdorm.model.service.MachineProfileRepository;
+import com.rmuti.spdorm.model.table.MachineData;
 import com.rmuti.spdorm.model.table.MachineProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/machine")
@@ -40,7 +43,15 @@ public class MachineProfileController {
     @PostMapping("/list")
     public Object list(@RequestParam int dormId) {
         APIResponse res = new APIResponse();
-        res.setData(machineProfileRepository.findByDormId(dormId));
+        List machineProfile_db = machineProfileRepository.findByDormId(dormId);
+        if(machineProfile_db.isEmpty()){
+            res.setStatus(1);
+            res.setMessage("ไม่พบข้อมูลเครื่องหยอดเหรียญ");
+        }else{
+            res.setStatus(0);
+            res.setMessage("พบข้อมูลเครื่องหยอดเหรียญ");
+            res.setData(machineProfileRepository.findByDormId(dormId));
+        }
         return res;
     }
 
@@ -52,7 +63,10 @@ public class MachineProfileController {
         if (machineProfile1_db != null) {
             res.setStatus(0);
             machineProfileRepository.delete(machineProfile);
-            machineDataRepository.deleteByMachineId(machineProfile.getMachineId());
+            MachineData machineData_db = machineDataRepository.findByMachineId(machineProfile.getMachineId());
+            if(machineData_db != null){
+                machineDataRepository.deleteByMachineId(machineProfile.getMachineId());
+            }
             res.setMessage("ลบสำเร็จ");
         } else {
             res.setStatus(1);

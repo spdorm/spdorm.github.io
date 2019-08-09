@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface DormProfileRepository extends JpaRepository<DormProfile, Integer> {
 
+    DormProfile findByDormId(int dormId);
+
     // Check DormAddress for Add
     DormProfile findByDormAddress(String dormAddress);
 
@@ -39,5 +41,10 @@ public interface DormProfileRepository extends JpaRepository<DormProfile, Intege
     @Query(value = "update dorm_profile a set a.dorm_name = ?2, a.dorm_address = ?3, a.dorm_telephone = ?4, a.dorm_email = ?5, a.dorm_floor = ?6, a.dorm_price = ?7, a.dorm_promotion = ?8, a.dorm_detail = ?9, a.dorm_status = ?10 where a.dorm_id = ?1",nativeQuery = true)
     void updateDormProfile(int dormId,String dormName,String dormAddress,String dormTelephone,String dormEmail,String dormFloor,String dormPrice,String dormPromotion,String dormDetail,String dormStatus);
     //int dormId,String dormName,String dormAddress,String dormTelephone,String dormEmail,String dormPrice,String dormPromotion,String dormDetail
+
+    @Transactional
+    @Modifying
+    @Query(value = "update dorm_profile a set a.dorm_image = ?2 where a.dorm_id = ?1",nativeQuery = true)
+    void updateDormImage(int dormId,String dormImage);
 
 }
