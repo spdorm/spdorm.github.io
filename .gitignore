@@ -1,0 +1,12 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### ignore api ###
+api/spdorm/target
+
+### python cache ###
+tools/__pycache__
+
