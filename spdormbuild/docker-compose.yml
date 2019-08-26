@@ -3,7 +3,7 @@ services:
   api:
     image: openjdk:12
     volumes:
-      - ./spdormbuild/dist/:/app
+      - ./dist/:/app
     ports:
       - 8080:80
     # labels:
