@@ -13,7 +13,7 @@ services:
     networks:
       - internal
     environment:
-      - db_server=mysql
+      - db_server=mysql      
     command: java -jar /app/api.jar  
 
   mysql:
