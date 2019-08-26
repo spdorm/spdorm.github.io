@@ -4,10 +4,12 @@ services:
     image: openjdk:12
     volumes:
       - ./spdormbuild/dist/:/app
-    labels:
-      - traefik.enable=false
-    expose:
-      - 8080
+    ports:
+      - 8080:80
+    # labels:
+    #   - traefik.enable=false
+    # expose:
+    #   - 8080
     networks:
       - internal
     environment:
@@ -26,8 +28,8 @@ services:
       # - /etc/localtime:/etc/localtime:ro
       - ./config/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
-      MYSQL_ROOT_PASSWORD: xxxx
-      MYSQL_DATABASE: spdorm
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: spdorm_db
     networks:
       - internal
 
