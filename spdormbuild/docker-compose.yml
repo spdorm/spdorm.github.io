@@ -1,5 +1,34 @@
 version: '3.5'
 services:
+  traefik:
+    image: traefik
+    command: --web --docker --docker.watch --logLevel=DEBUG
+    networks:
+      - proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ./traefik/acme:/etc/traefik/acme
+    ports:
+     - 80:80
+     - 443:443
+
+  nginx:
+    image: nginx
+    labels:
+      - traefik.backend=nginx
+      - "traefik.frontend.rule=Host:findbuild.co, www.findbuild.co"
+      - traefik.docker.network=proxy
+      - traefik.enable=true
+      - traefik.port=80
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - ./dist/web:/user/share/nginx/html
+      # - /etc/localtime:/etc/localtime:ro
+    networks:
+      - internal
+      - proxy
+
   api:
     image: openjdk:12
     volumes:
