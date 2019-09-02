@@ -134,6 +134,7 @@ public class DormProfileController {
             String fileName = file.getOriginalFilename();
             String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
             String newName = formattedDate + "." + typeName;
+            //String floder = "D:/Projects/spdorm_16-08-62/image/dorm/";
             String floder = "/home/nicapa_sr/spdorm/images/dorm/";
             Path path = Paths.get(floder + newName);
             //File fileContent = new File(fileName);
@@ -153,6 +154,7 @@ public class DormProfileController {
     public byte[] getResource(@RequestParam String nameImage) throws Exception {
         try {
             String path = "/home/nicapa_sr/spdorm/images/dorm/" + nameImage;
+            //String path = "D:/Projects/spdorm_16-08-62/image/dorm/" + nameImage; ///home/nicapa_sr/spdorm/images/dorm/
             InputStream in = new FileInputStream(path);
             return IOUtils.toByteArray(in);
         } catch (Exception e) {

@@ -41,4 +41,6 @@ public class IncomeAdd {
     @Column(name = "profit")
     private String profit;
 
+
+
 }

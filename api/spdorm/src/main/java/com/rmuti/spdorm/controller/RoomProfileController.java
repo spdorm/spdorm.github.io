@@ -2,9 +2,11 @@ package com.rmuti.spdorm.controller;
 
 import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.DormProfileRepository;
+import com.rmuti.spdorm.model.service.HistoryRepository;
 import com.rmuti.spdorm.model.service.RoomProfileRepository;
 import com.rmuti.spdorm.model.service.UserProfileRepository;
 import com.rmuti.spdorm.model.table.DormProfile;
+import com.rmuti.spdorm.model.table.History;
 import com.rmuti.spdorm.model.table.RoomProfile;
 import com.rmuti.spdorm.model.table.UserProfile;
 import org.apache.commons.io.IOUtils;
@@ -19,9 +21,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/room")
@@ -37,10 +40,14 @@ public class RoomProfileController {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+    @Autowired
+    private HistoryRepository historyRepository;
+
     @PostMapping("/add")
     public Object register(RoomProfile roomProfile) {
         APIResponse res = new APIResponse();
-        RoomProfile roomProfileDb = roomProfileRepository.findRoomByDormIdAndRoomNo(roomProfile.getDormId(), roomProfile.getRoomNo());
+        RoomProfile roomProfileDb = roomProfileRepository.findRoomByDormIdAndRoomNo(roomProfile.getDormId(),
+                roomProfile.getRoomNo());
         if (roomProfileDb == null) {
             res.setStatus(0);
             res.setMessage("เพิ่มห้องเรียบร้อยแล้ว");
@@ -59,17 +66,20 @@ public class RoomProfileController {
         return res;
     }
 
-//    @PostMapping("/addRent")
-//    public Object addRent(@RequestParam int dormId,@RequestParam String roomNo,@RequestParam String userName,@RequestParam String doc){
-//        APIResponse res = new APIResponse();
-//        RoomProfile roomProfile_db = roomProfileRepository.findRoomByDormIdAndRoomNo(dormId,roomNo);
-//        UserProfile userProfile_db = userProfileRepository.findByUserUsername(userName);
-//        if(roomProfile_db != null && userProfile_db != null){
-//            res.setStatus(0);
-//            res.setMessage("เพิ่มสัญญาเช่าเรียบร้อยแล้ว");
-//        }
-//        return res;
-//    }
+    // @PostMapping("/addRent")
+    // public Object addRent(@RequestParam int dormId,@RequestParam String
+    // roomNo,@RequestParam String userName,@RequestParam String doc){
+    // APIResponse res = new APIResponse();
+    // RoomProfile roomProfile_db =
+    // roomProfileRepository.findRoomByDormIdAndRoomNo(dormId,roomNo);
+    // UserProfile userProfile_db =
+    // userProfileRepository.findByUserUsername(userName);
+    // if(roomProfile_db != null && userProfile_db != null){
+    // res.setStatus(0);
+    // res.setMessage("เพิ่มสัญญาเช่าเรียบร้อยแล้ว");
+    // }
+    // return res;
+    // }
 
     @PostMapping("/listRoom")
     public Object listRoom(@RequestParam int dormId, @RequestParam int roomId) {
@@ -87,7 +97,8 @@ public class RoomProfileController {
     }
 
     @PostMapping("/updateRoom")
-    public Object updateRoom(@RequestParam String status, @RequestParam String type, @RequestParam String floor, @RequestParam String no, @RequestParam String price, @RequestParam String doc, @RequestParam int roomId) {
+    public Object updateRoom(@RequestParam String status, @RequestParam String type, @RequestParam String floor,
+            @RequestParam String no, @RequestParam String price, @RequestParam String doc, @RequestParam int roomId) {
         APIResponse res = new APIResponse();
         roomProfileRepository.updateRoom(status, type, floor, no, price, doc, roomId);
         res.setStatus(0);
@@ -111,10 +122,7 @@ public class RoomProfileController {
     }
 
     @PostMapping("/listFloor")
-    public Object listFloor(
-            @RequestParam int dormId,
-            @RequestParam int roomFloor
-    ) {
+    public Object listFloor(@RequestParam int dormId, @RequestParam int roomFloor) {
         APIResponse res = new APIResponse();
         DormProfile dormProfile_db = dormProfileRepository.findByDormId(dormId);
         if (dormProfile_db != null) {
@@ -130,21 +138,22 @@ public class RoomProfileController {
 
     // @PostMapping("/checkRoomAndUser")
     // public Object checkRoomAndUser(
-    //                 @RequestParam int dormId,
-    //                 @RequestParam int userId,
-    //                 @RequestParam String roomNo,
-    //                 @RequestParam String userUserName
+    // @RequestParam int dormId,
+    // @RequestParam int userId,
+    // @RequestParam String roomNo,
+    // @RequestParam String userUserName
     // ){
-    //     APIResponse res = new APIResponse();
-    //     List temp = roomProfileRepository.findRoomByDormIdAndUserIdAndRoomNo(dormId, userId, roomNo, userUserName);
-    //     if(temp.isEmpty()){
-    //         res.setStatus(1);
-    //         res.setMessage("ไม่พบข้อมูล");
-    //     }else {
-    //         res.setStatus(0);
-    //         res.setMessage("พบข้อมูล");
-    //     }
-    //     return res;
+    // APIResponse res = new APIResponse();
+    // List temp = roomProfileRepository.findRoomByDormIdAndUserIdAndRoomNo(dormId,
+    // userId, roomNo, userUserName);
+    // if(temp.isEmpty()){
+    // res.setStatus(1);
+    // res.setMessage("ไม่พบข้อมูล");
+    // }else {
+    // res.setStatus(0);
+    // res.setMessage("พบข้อมูล");
+    // }
+    // return res;
     // }
 
     @PostMapping("/updateCustomerToRoom")
@@ -153,18 +162,27 @@ public class RoomProfileController {
         UserProfile userProfile_db = userProfileRepository.findByUserUsername(userName);
         RoomProfile roomProfile_db = roomProfileRepository.findByRoomId(roomId);
         RoomProfile checkCustomer = roomProfileRepository.findByCustomerId(userProfile_db.getUserId());
+        History history_db = historyRepository.findByDormIdAndUserId(roomProfile_db.getDormId(),userProfile_db.getUserId(), "รออนุมัติ");
+
         if (roomProfile_db != null && userProfile_db != null) {
             if (checkCustomer == null) {
-                res.setStatus(0);
-                roomProfileRepository.updateCustomerToRoom(roomId, userProfile_db.getUserId(), "ไม่ว่าง");
-                res.setMessage("เพิ่มผู้เช่าเรียบร้อยแล้ว");
+                if (history_db != null) {
+                    Date myDateObj = new Date();
+                    res.setStatus(0);
+                    roomProfileRepository.updateCustomerToRoom(roomId, userProfile_db.getUserId(), "ไม่ว่าง");
+                    historyRepository.updateHistory(history_db.getHistoryId(),roomId, myDateObj, "อนุมัติ");
+                    res.setMessage("เพิ่มผู้เช่าเรียบร้อยแล้ว");
+                } else {
+                    res.setStatus(1);
+                    res.setMessage("บัญชีผู้ใช้นี้ไม่มีการแจ้งขอเข้าพัก");
+                }
             } else {
                 res.setStatus(1);
-                res.setMessage("รหัสผู้ใช้นี้มีข้อมูลเช่าห้องอื่นอยู่แล้ว");
+                res.setMessage("บัญชีผู้ใช้นี้มีข้อมูลเช่าห้องอื่นอยู่แล้ว");
             }
         } else {
             res.setStatus(1);
-            res.setMessage("ไม่พบห้องหรือรหัสผู้ใช้นี้");
+            res.setMessage("ไม่พบห้องหรือบัญชีผู้ใช้นี้");
         }
         return res;
     }
@@ -173,9 +191,13 @@ public class RoomProfileController {
     public Object cancelRent(@RequestParam int roomId) {
         APIResponse res = new APIResponse();
         RoomProfile roomProfile_db = roomProfileRepository.findByRoomId(roomId);
-        if (roomProfile_db != null) {
+        History history_db = historyRepository.findByDormIdAndUserId(roomProfile_db.getDormId(),roomProfile_db.getCustomerId(),"อนุมัติ");
+
+        if (roomProfile_db != null && history_db != null) {
+            Date myDateObj = new Date();
             res.setStatus(0);
             roomProfileRepository.updateCustomerToRoom(roomId, 0, "ว่าง");
+            historyRepository.cancel(history_db.getHistoryId(),myDateObj,"ยกเลิก");
             res.setMessage("ยกเลิกสัญญาเช่าเรียบร้อยแล้ว");
         } else {
             res.setData(1);
@@ -183,7 +205,6 @@ public class RoomProfileController {
         }
         return res;
     }
-
 
     @PostMapping("/findByCustomerId")
     public Object findByCustomerId(@RequestParam int userId) {
@@ -201,7 +222,8 @@ public class RoomProfileController {
     }
 
     @PostMapping("/saveImage")
-    public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int roomId, @RequestParam int roomNo, @RequestParam String userName) throws IOException {
+    public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int roomId,
+            @RequestParam int roomNo, @RequestParam String userName) throws IOException {
         APIResponse res = new APIResponse();
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
@@ -213,13 +235,15 @@ public class RoomProfileController {
             String fileName = file.getOriginalFilename();
             String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
             String newName = roomNo + "_" + userName + "_" + formattedDate + "." + typeName;
+            //String floder = "D:/Projects/spdorm_16-08-62/image/charter/";
             String floder = "/home/nicapa_sr/spdorm/images/charter/";
             Path path = Paths.get(floder + newName);
-            //File fileContent = new File(fileName);
-            //BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
+            // File fileContent = new File(fileName);
+            // BufferedOutputStream buf = new BufferedOutputStream(new
+            // FileOutputStream(fileContent));
             byte[] bytes = file.getBytes();
             Files.write(path, bytes);
-            roomProfileRepository.updateImageToRoom(roomId,newName);
+            roomProfileRepository.updateImageToRoom(roomId, newName);
             res.setStatus(0);
             res.setMessage("อัพรูปเรียบร้อยแล้ว");
             res.setData(newName);
@@ -232,6 +256,7 @@ public class RoomProfileController {
     public byte[] getResource(@RequestParam String nameImage) throws Exception {
         try {
             String path = "/home/nicapa_sr/spdorm/images/charter/" + nameImage;
+            //String path = "D:/Projects/spdorm_16-08-62/image/charter/" + nameImage; // D:/Projects/spdorm_08-07-62/spdorm/image/ /home/nicapa_sr/spdorm/images/charter/
             InputStream in = new FileInputStream(path);
             return IOUtils.toByteArray(in);
         } catch (Exception e) {
