@@ -31,10 +31,12 @@ class InformMultiLineState extends State<InformMultiLine> {
   TextEditingController fixDetail = TextEditingController();
 
   void onfixDorm() {
+    
     Map<String, dynamic> param = Map();
     param["dormId"] = _dormId.toString();
     param["userId"] = '${_userId}';
     param["roomId"] = _roomId.toString();
+    param["roomNo"] = _roomId.toString();
     param["fixTopic"] = fixTopic.text;
     param["fixDetail"] = fixDetail.text;
     param["fixStatus"] = 'active';

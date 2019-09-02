@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'mainHomDorm.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(new MaterialApp(
+    theme: ThemeData(fontFamily: 'Kanit'),
     debugShowCheckedModeBanner: false,
     home: Login(),
   ));

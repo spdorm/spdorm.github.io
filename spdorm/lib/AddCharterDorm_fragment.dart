@@ -33,7 +33,8 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
   File _image, _see;
 
   Future getImageGallery() async {
-    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 1024,maxHeight: 1024);
+    lst.clear();
     setState(() {
       _image = imageFile;
     });

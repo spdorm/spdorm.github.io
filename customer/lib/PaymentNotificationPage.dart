@@ -23,19 +23,30 @@ class _PaymentmultiLine extends State {
       TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: AppBar(
-        title: Text('ใบแจ้งชำระ'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Container(
-              padding: EdgeInsets.only(left: 0, right: 250, bottom: 10),
+  void initState() {
+    http.post('${config.API_url}/invoice/list', body: {
+      "dormId": _dormId.toString(),
+      "userId": _userId.toString(),
+      "roomId": _roomId.toString()
+    }).then((response) {
+      print(response.body);
+      Map jsonData = jsonDecode(response.body) as Map;
+      List temp = jsonData['data'];
+      if (jsonData['status'] == 0) {
+        for (int i = 0; i < temp.length; i++) {
+          List dataPay = temp[i];
+          Color color;
+
+          if (_date == dataPay[1]) {
+            if (dataPay[3] == "ยังไม่จ่าย") {
+              color = Colors.red;
+            } else {
+              color = Colors.green;
+            }
+            _name = dataPay[13] + "  " + dataPay[14];
+
+            Container detil = Container(
+              margin: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),

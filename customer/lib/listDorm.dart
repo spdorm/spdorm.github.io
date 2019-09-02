@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'config.dart';
+import 'firstPage.dart';
+import 'mainHomDorm.dart';
 import 'publishStatus.dart';
 
 class ListDormPage extends StatefulWidget {
@@ -19,6 +21,15 @@ class _ListDormPage extends State {
 
   void initState() {
     super.initState();
+    _body();
+  }
+
+  Future<int> _getId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getInt('id');
+  }
+
+  void _body() {
     http.post('${config.API_url}/dorm/listAll').then((respone) {
       print(respone.body);
       Map jsonData = jsonDecode(respone.body);
@@ -44,24 +55,38 @@ class _ListDormPage extends State {
           Map jsonData = jsonDecode(response.body) as Map;
           int count = jsonData['data'];
 
-          if (count == 0) {
-            color = Colors.red;
-          } else {
-            color = Colors.green;
-          }
+            if (jsonData['status'] == 0) {
+              if (count == 0) {
+                color = Colors.red;
+              } else {
+                color = Colors.green;
+              }
 
-          FlatButton dormInfo = FlatButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext) =>
-                          PublishStatus(data[0], data[6])));
-            },
-            child: Card(
-              child: Row(
-                children: <Widget>[
-                  Column(
+              FlatButton dormInfo = FlatButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext) =>
+                              PublishStatus(data[0], data[6])));
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: new EdgeInsets.only(top: 8),
+                  padding: new EdgeInsets.all(5.0),
+                  height: 200.0,
+                  decoration: new BoxDecoration(
+                    color: Colors.lightBlue[200],
+                    borderRadius:
+                        new BorderRadius.all(new Radius.circular(10.0)),
+                    boxShadow: [
+                      new BoxShadow(
+                          color: Colors.black54,
+                          offset: new Offset(2.0, 2.0),
+                          blurRadius: 5.0)
+                    ],
+                  ),
+                  child: new Row(
                     children: <Widget>[
                       _nameImage != ""
                           ? Container(
@@ -130,6 +155,64 @@ class _ListDormPage extends State {
         });
   }
 
+  Future<void> _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('id', null);
+    print(prefs.getInt('id'));
+  }
+
+  Future<bool> onLogOut() {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('คุณต้องการออกจากระบบ ?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('ไม่ใช่'),
+                  onPressed: () => Navigator.pop(context, false),
+                ),
+                FlatButton(
+                  child: Text('ใช่'),
+                  onPressed: () => {
+                    _logout().then((res) => {
+                          Navigator.pop(context),
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext) => Login()))
+                        }),
+                  },
+                ),
+              ],
+            ));
+  }
+
+  Future<Null> _onRefresh() async {
+    await new Future.delayed(new Duration(seconds: 1));
+    _getId().then((userId) {
+      http.post('${config.API_url}/room/findByCustomerId',
+          body: {"userId": userId.toString()}).then((response) {
+        Map jsonData = jsonDecode(response.body) as Map;
+        Map<String, dynamic> dataMap = jsonData['data'];
+        if (jsonData['status'] == 0) {
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext) => mainHomDorm(
+                      dataMap['dormId'], userId, dataMap['roomId'])));
+        } else {
+          lst.clear();
+          setState(() {
+            _body();
+          });
+        }
+      });
+    });
+
+    return null;
+  }
+
   Widget buildBody(BuildContext context, int index) {
     return lst[index];
   }
@@ -138,12 +221,25 @@ class _ListDormPage extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'Kanit'),
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
         onWillPop: _onClose,
         child: Scaffold(
-          appBar: AppBar(title: const Text('หอพัก')),
-          body: ListView.builder(itemBuilder: buildBody, itemCount: lst.length),
+          appBar: AppBar(
+            title: const Text('หอพัก'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: onLogOut,
+                child: Icon(Icons.exit_to_app),
+              )
+            ],
+          ),
+          body: RefreshIndicator(
+            child:
+                ListView.builder(itemBuilder: buildBody, itemCount: lst.length),
+            onRefresh: _onRefresh,
+          ),
         ),
       ),
     );

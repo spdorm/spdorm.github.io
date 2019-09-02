@@ -29,7 +29,7 @@ class _RegisterDataDorm extends State {
   File _image;
 
   Future getImageGallery() async {
-    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 1024,maxHeight: 1024);
     setState(() {
       _image = imageFile;
     });

@@ -31,8 +31,7 @@ class mainHomDormState extends State<mainHomDorm> {
 
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('login', false);
-    print(prefs.getBool('login'));
+    await prefs.setInt('id', null);
   }
 
   onSelectItem(int index) {

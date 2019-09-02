@@ -4,11 +4,11 @@
 *.iml
 *.ipr
 
-### Zip File ###
-spdorm.github.io.zip
 ### ignore api ###
 api/spdorm/target
 
 ### python cache ###
 tools/__pycache__
 
+### Zip files ###
+spdorm.github.io.zip
