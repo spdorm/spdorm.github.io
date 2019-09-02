@@ -54,7 +54,7 @@ class _PaymentmultiLine extends State {
           Color color;
 
           if (_date == dataPay[1]) {
-            if (dataPay[4] == "ยังไม่จ่าย") {
+            if (dataPay[3] == "ยังไม่จ่าย") {
               color = Colors.red;
             } else {
               color = Colors.green;

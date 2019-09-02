@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'config.dart';
 import 'firstPage.dart';
+import 'mainHomDorm.dart';
 import 'publishStatus.dart';
 
 class ListDormPage extends StatefulWidget {
@@ -21,6 +22,15 @@ class _ListDormPage extends State {
 
   void initState() {
     super.initState();
+    _body();
+  }
+
+  Future<int> _getId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getInt('id');
+  }
+
+  void _body() {
     http.post('${config.API_url}/dorm/listAll').then((respone) {
       print(respone.body);
       Map jsonData = jsonDecode(respone.body);
@@ -55,7 +65,7 @@ class _ListDormPage extends State {
               } else {
                 color = Colors.green;
               }
-              
+
               FlatButton dormInfo = FlatButton(
                 onPressed: () {
                   Navigator.push(
@@ -196,6 +206,32 @@ class _ListDormPage extends State {
             ));
   }
 
+  Future<Null> _onRefresh() async {
+    await new Future.delayed(new Duration(seconds: 1));
+    _getId().then((userId) {
+      http.post('${config.API_url}/room/findByCustomerId',
+          body: {"userId": userId.toString()}).then((response) {
+        Map jsonData = jsonDecode(response.body) as Map;
+        Map<String, dynamic> dataMap = jsonData['data'];
+        if (jsonData['status'] == 0) {
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext) => mainHomDorm(
+                      dataMap['dormId'], userId, dataMap['roomId'])));
+        } else {
+          lst.clear();
+          setState(() {
+            _body();
+          });
+        }
+      });
+    });
+
+    return null;
+  }
+
   Widget buildBody(BuildContext context, int index) {
     return lst[index];
   }
@@ -204,6 +240,7 @@ class _ListDormPage extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'Kanit'),
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
         onWillPop: _onClose,
@@ -217,7 +254,11 @@ class _ListDormPage extends State {
               )
             ],
           ),
-          body: ListView.builder(itemBuilder: buildBody, itemCount: lst.length),
+          body: RefreshIndicator(
+            child:
+                ListView.builder(itemBuilder: buildBody, itemCount: lst.length),
+            onRefresh: _onRefresh,
+          ),
         ),
       ),
     );

@@ -82,7 +82,6 @@ class _listStatusInformPage extends State<listStatusInformPage> {
         body: {"dormId": _dormId.toString()}).then((response) {
       Map jsonData = jsonDecode(response.body);
       List temp = jsonData["data"];
-      print(temp.length);
 
       if (jsonData["status"] == 0) {
         for (int i = 0; i < temp.length; i++) {
@@ -134,7 +133,7 @@ class _listStatusInformPage extends State<listStatusInformPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              InformCheckStatusPage(_dormId, _userName)));
+                                              InformCheckStatusPage(_dormId, _userName,roomDataMap['roomNo'])));
                                 },
                                 icon: icon,
                                 label: Text('${status}'),

@@ -10,6 +10,7 @@ import 'mainHomDorm.dart';
 
 void main() {
   runApp(new MaterialApp(
+    theme: ThemeData(fontFamily: 'Kanit'),
     debugShowCheckedModeBanner: false,
     home: new SplashScreen(),
   ));

@@ -102,7 +102,7 @@ class _ListPaymentPage extends State<ListPaymentPage> {
           String _dataShow =
               '${data[1].toString().substring(8, 10)} ${_month} ${data[1].toString().substring(0, 4)}';
               
-          if (data[4] == "ยังไม่จ่าย") {
+          if (data[3] == "ยังไม่จ่าย") {
             color = Colors.red[200];
           } else {
             color = Colors.green[200];

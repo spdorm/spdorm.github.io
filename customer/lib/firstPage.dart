@@ -136,7 +136,7 @@ class _Login extends State {
         title: const Text('Login'),
       ),
       body: ListView(
-        padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 60.0),
+        padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 20.0),
         children: <Widget>[
           Image.asset("images/login.png"),
           new Container(
