@@ -43,6 +43,8 @@ public class RoomProfileController {
     @Autowired
     private HistoryRepository historyRepository;
 
+    private String pathUpload = FolderUpload.gcp_charter;
+
     @PostMapping("/add")
     public Object register(RoomProfile roomProfile) {
         APIResponse res = new APIResponse();
@@ -98,7 +100,7 @@ public class RoomProfileController {
 
     @PostMapping("/updateRoom")
     public Object updateRoom(@RequestParam String status, @RequestParam String type, @RequestParam String floor,
-            @RequestParam String no, @RequestParam String price, @RequestParam String doc, @RequestParam int roomId) {
+                             @RequestParam String no, @RequestParam String price, @RequestParam String doc, @RequestParam int roomId) {
         APIResponse res = new APIResponse();
         roomProfileRepository.updateRoom(status, type, floor, no, price, doc, roomId);
         res.setStatus(0);
@@ -162,7 +164,7 @@ public class RoomProfileController {
         UserProfile userProfile_db = userProfileRepository.findByUserUsername(userName);
         RoomProfile roomProfile_db = roomProfileRepository.findByRoomId(roomId);
         RoomProfile checkCustomer = roomProfileRepository.findByCustomerId(userProfile_db.getUserId());
-        History history_db = historyRepository.findByDormIdAndUserId(roomProfile_db.getDormId(),userProfile_db.getUserId(), "รออนุมัติ");
+        History history_db = historyRepository.findByDormIdAndUserId(roomProfile_db.getDormId(), userProfile_db.getUserId(), "รออนุมัติ");
 
         if (roomProfile_db != null && userProfile_db != null) {
             if (checkCustomer == null) {
@@ -170,7 +172,7 @@ public class RoomProfileController {
                     Date myDateObj = new Date();
                     res.setStatus(0);
                     roomProfileRepository.updateCustomerToRoom(roomId, userProfile_db.getUserId(), "ไม่ว่าง");
-                    historyRepository.updateHistory(history_db.getHistoryId(),roomId, myDateObj, "อนุมัติ");
+                    historyRepository.updateHistory(history_db.getHistoryId(), roomId, myDateObj, "อนุมัติ");
                     res.setMessage("เพิ่มผู้เช่าเรียบร้อยแล้ว");
                 } else {
                     res.setStatus(1);
@@ -191,13 +193,13 @@ public class RoomProfileController {
     public Object cancelRent(@RequestParam int roomId) {
         APIResponse res = new APIResponse();
         RoomProfile roomProfile_db = roomProfileRepository.findByRoomId(roomId);
-        History history_db = historyRepository.findByDormIdAndUserId(roomProfile_db.getDormId(),roomProfile_db.getCustomerId(),"อนุมัติ");
+        History history_db = historyRepository.findByDormIdAndUserId(roomProfile_db.getDormId(), roomProfile_db.getCustomerId(), "อนุมัติ");
 
         if (roomProfile_db != null && history_db != null) {
             Date myDateObj = new Date();
             res.setStatus(0);
             roomProfileRepository.updateCustomerToRoom(roomId, 0, "ว่าง");
-            historyRepository.cancel(history_db.getHistoryId(),myDateObj,"ยกเลิก");
+            historyRepository.cancel(history_db.getHistoryId(), myDateObj, "ยกเลิก");
             res.setMessage("ยกเลิกสัญญาเช่าเรียบร้อยแล้ว");
         } else {
             res.setData(1);
@@ -223,7 +225,7 @@ public class RoomProfileController {
 
     @PostMapping("/saveImage")
     public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int roomId,
-            @RequestParam int roomNo, @RequestParam String userName) throws IOException {
+                            @RequestParam int roomNo, @RequestParam String userName) throws IOException {
         APIResponse res = new APIResponse();
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
@@ -235,9 +237,7 @@ public class RoomProfileController {
             String fileName = file.getOriginalFilename();
             String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
             String newName = roomNo + "_" + userName + "_" + formattedDate + "." + typeName;
-            //String floder = "D:/Projects/spdorm_16-08-62/image/charter/";
-            String floder = "/home/nicapa_sr/spdorm/images/charter/";
-            Path path = Paths.get(floder + newName);
+            Path path = Paths.get(pathUpload + newName);
             // File fileContent = new File(fileName);
             // BufferedOutputStream buf = new BufferedOutputStream(new
             // FileOutputStream(fileContent));
@@ -255,8 +255,7 @@ public class RoomProfileController {
     @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getResource(@RequestParam String nameImage) throws Exception {
         try {
-            String path = "/home/nicapa_sr/spdorm/images/charter/" + nameImage;
-            //String path = "D:/Projects/spdorm_16-08-62/image/charter/" + nameImage; // D:/Projects/spdorm_08-07-62/spdorm/image/ /home/nicapa_sr/spdorm/images/charter/
+            String path = pathUpload + nameImage;
             InputStream in = new FileInputStream(path);
             return IOUtils.toByteArray(in);
         } catch (Exception e) {

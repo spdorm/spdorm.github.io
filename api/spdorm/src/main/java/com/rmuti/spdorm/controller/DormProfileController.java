@@ -25,6 +25,7 @@ public class DormProfileController {
     @Autowired
     private DormProfileRepository dormProfileRepository;
 
+    private String pathUpload = FolderUpload.gcp_dorm;
 
     @PostMapping("/add")
     public Object add(DormProfile dormProfile) {
@@ -134,9 +135,7 @@ public class DormProfileController {
             String fileName = file.getOriginalFilename();
             String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
             String newName = formattedDate + "." + typeName;
-            //String floder = "D:/Projects/spdorm_16-08-62/image/dorm/";
-            String floder = "/home/nicapa_sr/spdorm/images/dorm/";
-            Path path = Paths.get(floder + newName);
+            Path path = Paths.get(pathUpload + newName);
             //File fileContent = new File(fileName);
             //BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
             byte[] bytes = file.getBytes();
@@ -153,8 +152,7 @@ public class DormProfileController {
     @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getResource(@RequestParam String nameImage) throws Exception {
         try {
-            String path = "/home/nicapa_sr/spdorm/images/dorm/" + nameImage;
-            //String path = "D:/Projects/spdorm_16-08-62/image/dorm/" + nameImage; ///home/nicapa_sr/spdorm/images/dorm/
+            String path = pathUpload + nameImage;
             InputStream in = new FileInputStream(path);
             return IOUtils.toByteArray(in);
         } catch (Exception e) {
