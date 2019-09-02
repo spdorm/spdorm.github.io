@@ -4,6 +4,8 @@
 *.iml
 *.ipr
 
+### Zip File ###
+spdorm.github.io.zip
 ### ignore api ###
 api/spdorm/target
 
