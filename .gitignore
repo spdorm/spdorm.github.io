@@ -3,7 +3,7 @@
 *.iws
 *.iml
 *.ipr
-
+spdorm.github.io.zip
 ### ignore api ###
 api/spdorm/target
 
