@@ -14,6 +14,7 @@ class AddRoomPage extends StatefulWidget {
     this._dormId = dormId;
     this._userId = userId;
     this._floor = floor;
+    print(_floor);
   }
   @override
   State<StatefulWidget> createState() {
@@ -37,6 +38,8 @@ class _AddRoomPage extends State<AddRoomPage> {
 
   List<String> _Status = [
     "ว่าง",
+    "จอง",
+    "รายวัน",
     "ไม่ว่าง",
   ].toList();
   List<String> _Type = [
@@ -45,7 +48,7 @@ class _AddRoomPage extends State<AddRoomPage> {
   ].toList();
 
   // String _selectedMonth = null;
-  String _selectedMonth, _selectedStatus, _selectType;
+  String _selectedMonth, _selectedStatus, _selectType, _errorMassage = "";
 
   @override
   void initState() {
@@ -63,18 +66,23 @@ class _AddRoomPage extends State<AddRoomPage> {
       "roomFloor": _selectedMonth,
       "roomNo": _roomNo.text,
       "roomPrice": _roomPrice.text,
-      "roomStatus": "ว่าง",
+      "roomStatus": _selectedStatus,
       "roomType": _selectType
     }).then((respone) {
       print(respone.body);
       Map jsonData = jsonDecode(respone.body) as Map;
       int status = jsonData['status'];
       if (status == 0) {
+        _errorMassage = "";
         Navigator.of(context).pop();
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (BuildContext) => MainHomeFragment(_dormId, _userId)));
+      } else {
+        setState(() {
+          _errorMassage = jsonData['message'];
+        });
       }
     });
   }
@@ -105,122 +113,127 @@ class _AddRoomPage extends State<AddRoomPage> {
     }
 
     return new Scaffold(
-        resizeToAvoidBottomPadding: true,
-        appBar: AppBar(
-          title: Text('เพิ่มห้องพัก'),
-        ),
-        body: new ListView(
-          padding: EdgeInsets.only(left: 15, right: 15, top: 20),
-          children: <Widget>[
-            new Card(
-              margin: EdgeInsets.all(0.5),
-              child: new Column(
-                children: <Widget>[
-                  new Container(
-                    padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: new Row(
-                      children: <Widget>[
-                        new Icon(Icons.label_important),
-                        new Text('รายละเอียดการเพิ่มห้องพัก'),
-                      ],
-                    ),
-                  ),
-                  Row(
+      resizeToAvoidBottomPadding: true,
+      appBar: AppBar(
+        title: Text('เพิ่มห้องพัก'),
+      ),
+      body: new ListView(
+        padding: EdgeInsets.only(left: 15, right: 15, top: 20),
+        children: <Widget>[
+          new Card(
+            margin: EdgeInsets.all(0.5),
+            child: new Column(
+              children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: new Row(
                     children: <Widget>[
-                      new Container(
-                        padding:
-                            EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                        child: Text("ชั้น :"),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Container(
-                            padding: EdgeInsets.only(right: 10, top: 20.0),
-                            child: Text(
-                              '${_selectedMonth}',
-                              style: TextStyle(color: Colors.grey),
-                            )),
-                      ),
-                      new Container(
-                        padding:
-                            EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                        child: Text("สถานะ :"),
-                      ),
-                      new DropdownButton<String>(
-                          value: _selectedStatus,
-                          items: _Status.map((String dropdownStatusValue) {
-                            return new DropdownMenuItem(
-                                value: dropdownStatusValue,
-                                child: new Text(dropdownStatusValue));
-                          }).toList(),
-                          onChanged: (String value) {
-                            onStatusChange(value);
-                          }),
+                      new Icon(Icons.label_important),
+                      new Text('รายละเอียดการเพิ่มห้องพัก'),
                     ],
                   ),
-                  Row(
-                    children: <Widget>[
-                      new Container(
-                        padding:
-                            EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                        child: Text("ประเภทห้องพัก :"),
-                      ),
-                      new DropdownButton<String>(
-                          value: _selectType,
-                          items: _Type.map((String dropdownValue) {
-                            return new DropdownMenuItem(
-                                value: dropdownValue,
-                                child: new Text(dropdownValue));
-                          }).toList(),
-                          onChanged: (String value) {
-                            onTypeChange(value);
-                          }),
-                    ],
-                  ),
-                  new Container(
-                    padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: TextFormField(
-                      controller: _roomNo,
-                      decoration: InputDecoration(
-                          icon: const Icon(Icons.control_point),
-                          hintText: '${roomNo}',
-                          labelText: 'หมายเลขห้อง :',
-                          labelStyle: TextStyle(fontSize: 15)),
-                      keyboardType: TextInputType.text,
+                ),
+                Row(
+                  children: <Widget>[
+                    new Container(
+                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                      child: Text("ชั้น :"),
                     ),
-                  ),
-                  new Container(
-                    padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: TextFormField(
-                      controller: _roomPrice,
-                      decoration: InputDecoration(
-                          icon: const Icon(Icons.control_point),
-                          hintText: '${roomPrice}',
-                          labelText: 'ราคาห้องพัก :',
-                          labelStyle: TextStyle(fontSize: 15)),
-                      keyboardType: TextInputType.text,
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Container(
+                          padding: EdgeInsets.only(right: 10, top: 20.0),
+                          child: Text(
+                            '${_selectedMonth}',
+                            style: TextStyle(color: Colors.grey),
+                          )),
                     ),
+                    new Container(
+                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                      child: Text("สถานะ :"),
+                    ),
+                    new DropdownButton<String>(
+                        value: _selectedStatus,
+                        items: _Status.map((String dropdownStatusValue) {
+                          return new DropdownMenuItem(
+                              value: dropdownStatusValue,
+                              child: new Text(dropdownStatusValue));
+                        }).toList(),
+                        onChanged: (String value) {
+                          onStatusChange(value);
+                        }),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    new Container(
+                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                      child: Text("ประเภทห้องพัก :"),
+                    ),
+                    new DropdownButton<String>(
+                        value: _selectType,
+                        items: _Type.map((String dropdownValue) {
+                          return new DropdownMenuItem(
+                              value: dropdownValue,
+                              child: new Text(dropdownValue));
+                        }).toList(),
+                        onChanged: (String value) {
+                          onTypeChange(value);
+                        }),
+                  ],
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: _roomNo,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.control_point),
+                        hintText: '${roomNo}',
+                        labelText: 'หมายเลขห้อง :',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.text,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new RaisedButton(
-                        onPressed: onSumit,
-                        textColor: Colors.white,
-                        color: Colors.green,
-                        child: new Row(
-                          children: <Widget>[
-                            new Text('บันทึก'),
-                          ],
-                        ),
+                ),
+                _errorMassage != ""
+                    ? Container(
+                        margin: EdgeInsets.only(top: 5),
+                        child: Text(_errorMassage,style: TextStyle(color: Colors.red)),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.all(0.0),
                       ),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: _roomPrice,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.control_point),
+                        hintText: '${roomPrice}',
+                        labelText: 'ราคาห้องพัก :',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new RaisedButton(
+                      onPressed: onSumit,
+                      textColor: Colors.white,
+                      color: Colors.green,
+                      child: new Row(
+                        children: <Widget>[
+                          new Text('บันทึก'),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

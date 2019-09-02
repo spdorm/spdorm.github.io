@@ -2,7 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:photo_view/photo_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sweetalert/sweetalert.dart';
 import 'config.dart';
+import 'mainHomeFragment.dart';
 
 class vieWDocument extends StatefulWidget {
   int _dormId, _roomId;
@@ -34,7 +38,6 @@ class _vieWDocument extends State {
       "dormId": _dormId.toString(),
       "roomId": _roomId.toString()
     }).then((respone) {
-      print(respone.body);
       Map jsonData = jsonDecode(respone.body) as Map;
       Map<String, dynamic> dataMap = jsonData["data"];
 
@@ -47,14 +50,74 @@ class _vieWDocument extends State {
         if (_roomDoc == "") {
           img = null;
         } else {
-          img = Image.network(
-            '${config.url_upload}/upload/image/charter/${_roomDoc}',
-            height: 500,
+          img = Container(
             width: 500,
+            height: 500,
+            color: Colors.white,
+            child: PhotoView(
+              imageProvider: NetworkImage(
+                '${config.API_url}/room/image/?nameImage=${_roomDoc}',
+              ),
+            ),
           );
         }
         setState(() {});
       }
+    });
+  }
+
+  Future<int> _getId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('id');
+  }
+
+  void _onPressed() {
+    return SweetAlert.show(context,
+        subtitle: "คุณต้องการยกเลิกสัญญาเช่า ?",
+        style: SweetAlertStyle.confirm,
+        showCancelButton: true, onPress: (bool isConfirm) {
+      if (isConfirm) {
+        SweetAlert.show(context,
+            subtitle: "กำลังลบ...", style: SweetAlertStyle.loading);
+        new Future.delayed(new Duration(seconds: 1), () {
+          http.post('${config.API_url}/room/cancelRent',
+              body: {"roomId": _roomId.toString()}).then((response) {
+                print(response.body);
+            Map jsonData = jsonDecode(response.body) as Map;
+            if (jsonData["status"] == 0) {
+              _getId().then((int userId) {
+                // Navigator.pop(context);
+                // Navigator.pop(context);
+                // Navigator.pop(context);
+                // Navigator.pushReplacement(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (BuildContext) =>
+                //             MainHomeFragment(_dormId, userId)));
+                SweetAlert.show(context,
+                    subtitle: "สำเร็จ!",
+                    style: SweetAlertStyle.success, onPress: (bool isConfirm) {
+                  if (isConfirm) {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext) =>
+                                MainHomeFragment(_dormId, userId)));
+                  }
+                  return false;
+                });
+              });
+            }
+          });
+        });
+      } else {
+        SweetAlert.show(context,
+            subtitle: "ยกเลิก!", style: SweetAlertStyle.error);
+      }
+      // return false to keep dialog
+      return false;
     });
   }
 
@@ -85,8 +148,24 @@ class _vieWDocument extends State {
                 ),
                 Padding(
                   padding: EdgeInsets.all(5),
-                  child: img,
+                  child: img == null
+                      ? Text(
+                          'ไม่พบรูปสัญญาเช่า',
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : img,
                 ),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: RaisedButton(
+                    child: Text(
+                      'ยกเลิกสัญญาเช่า',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: _onPressed,
+                    color: Colors.redAccent,
+                  ),
+                )
               ],
             ),
           ),

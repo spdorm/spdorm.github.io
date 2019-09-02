@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sweetalert/sweetalert.dart';
 import 'config.dart';
 import 'dart:convert';
 import 'DataAccountIncome.dart';
-import 'mainHomeFragment.dart';
-
 
 class AccountIncomeFragment extends StatefulWidget {
   int _dormId, _userId;
@@ -46,7 +45,10 @@ class _AccountIncomeFragmenttState extends State {
       Map jsonMap = jsonDecode(response.body) as Map;
       int status = jsonMap['status'];
       if (status == 0) {
-        Navigator.pop(context);
+        return SweetAlert.show(context,
+            title: "สำเร็จ!",
+            subtitle: "เพิ่มรายรับ-รายจ่ายเรียบร้อยแล้ว",
+            style: SweetAlertStyle.success);
       }
     });
   }
@@ -70,21 +72,11 @@ class _AccountIncomeFragmenttState extends State {
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         title: Text('การเพิ่มบัญชีรายรับ-รายจ่าย'),
-        leading: Builder(
-    builder: (BuildContext context) {
-      return IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () { Navigator.pop(context);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext)=>MainHomeFragment(_dormId,_userId))); },
-      );
-    },
-  ),
       ),
       body: new ListView(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 20),
+        padding: EdgeInsets.all(8),
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 10),
             child: Center(
               child: RaisedButton.icon(
                 onPressed: () {
@@ -92,15 +84,14 @@ class _AccountIncomeFragmenttState extends State {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              DataAccoutIncomPage(1))); //ทดลอง
+                              DataAccoutIncomPage(_dormId, _userId))); //ทดลอง
                 },
-                icon: Icon(Icons.search),
-                label: Text('ประวัติรายรับรายจ่ายทั้งหมด'),
-                color: Colors.yellow[600],
+                icon: Icon(Icons.remove_red_eye),
+                label: Text('สรุปยอดรายรับ-รายจ่าย'),
+                color: Colors.pink[50],
               ),
             ),
           ),
-          Text(':รายละเอียดข้อมูลบัญชีรายรับ-รายจ่าย'),
           new Card(
             margin: EdgeInsets.all(5),
             child: new Column(
@@ -109,8 +100,8 @@ class _AccountIncomeFragmenttState extends State {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.label_important),
-                      new Text('รายรับ:'),
+                      new Icon(Icons.monetization_on,color: Colors.indigo,),
+                      new Text(' รายรับ:',style: TextStyle(fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -130,8 +121,8 @@ class _AccountIncomeFragmenttState extends State {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.label_important),
-                      new Text('รายจ่าย:'),
+                      new Icon(Icons.monetization_on,color: Colors.red,),
+                      new Text(' รายจ่าย:',style: TextStyle(fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -151,47 +142,29 @@ class _AccountIncomeFragmenttState extends State {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.label_important),
-                      new Text('กำไรต่อเดือนทั้งหมด : บาท/เดือน'),
+                      new Icon(Icons.monetization_on,color: Colors.green,),
+                      new Text(' กำไรต่อเดือนทั้งหมด : บาท/เดือน',style: TextStyle(fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
                 incomeRent.text != "" || expend.text != ""
                     ? new Container(
-                        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                        padding: EdgeInsets.all(10),
                         child: Text('${sum()}'),
                       )
                     : new Container(
-                        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                        padding: EdgeInsets.all(10),
                         child: Text('0'),
                       ),
                 new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 70, top: 5, right: 1),
-                      child: new RaisedButton(
-                        onPressed: onAccountIncome,
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        child: new Row(
-                          children: <Widget>[
-                            new Text('บันทึก'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 1, top: 5),
-                      child: new RaisedButton(
-                        onPressed: () {},
-                        textColor: Colors.white,
-                        color: Colors.blueGrey,
-                        child: new Row(
-                          children: <Widget>[
-                            new Text('แก้ไข'),
-                          ],
-                        ),
-                      ),
+                    new RaisedButton.icon(
+                      onPressed: onAccountIncome,
+                      textColor: Colors.white,
+                      color: Colors.blue[300],
+                      icon : Icon(Icons.save) , 
+                      label: new Text('บันทึก'),
                     ),
                   ],
                 ),

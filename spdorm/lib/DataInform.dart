@@ -106,7 +106,7 @@ class _DataInfromPage extends State<DataInfromPage> {
 
   void _changDate() {
     Card cardTop = Card(
-      margin: EdgeInsets.only(left: 5, right: 5, top: 10),
+      margin: EdgeInsets.only(left: 5, right: 5, top: 10,bottom: 10),
       child: new Column(
         children: <Widget>[
           Row(
@@ -173,12 +173,12 @@ class _DataInfromPage extends State<DataInfromPage> {
 
       if (jsonData["status"] == 0) {
         for (int i = 0; i < temp.length; i++) {
-          List data = temp[i];
+          Map<String, dynamic> data = temp[i];
           //####################################################
-          if (data[1].toString().substring(5, 6) == "0" &&
-              data[1].toString().substring(0, 4) ==
+          if (data['dateTime'].toString().substring(5, 6) == "0" &&
+              data['dateTime'].toString().substring(0, 4) ==
                   '${int.parse('${_selectedYear}') - 543}') {
-            if (data[1].toString().substring(6, 7) ==
+            if (data['dateTime'].toString().substring(6, 7) ==
                 '${_Month.indexOf('${_selectedMonth}') + 1}') {
               _createCard(temp[i]);
             }
@@ -190,13 +190,13 @@ class _DataInfromPage extends State<DataInfromPage> {
             //     ),
             //   );
             //   setState(() {
-            //    lst.add(alert); 
+            //    lst.add(alert);
             //   });
             // }
-          } else if (data[1].toString().substring(5, 6) == "1" &&
-              data[1].toString().substring(0, 4) ==
+          } else if (data['dateTime'].toString().substring(5, 6) == "1" &&
+              data['dateTime'].toString().substring(0, 4) ==
                   '${int.parse('${_selectedYear}') - 543}') {
-            if (data[1].toString().substring(6, 7) ==
+            if (data['dateTime'].toString().substring(6, 7) ==
                 '${_Month.indexOf('${_selectedMonth}') + 1}') {
               _createCard(temp[i]);
             }
@@ -208,7 +208,7 @@ class _DataInfromPage extends State<DataInfromPage> {
             //     ),
             //   );
             //   setState(() {
-            //    lst.add(alert); 
+            //    lst.add(alert);
             //   });
             // }
           }
@@ -218,26 +218,68 @@ class _DataInfromPage extends State<DataInfromPage> {
     });
   }
 
-  void _createCard(List data) {
+  void _createCard(Map<String, dynamic> data) {
     http.post('${config.API_url}/room/listRoom', body: {
-      "dormId": data[2].toString(),
-      "roomId": data[6].toString()
+      "dormId": data['dormId'].toString(),
+      "roomId": data['roomId'].toString()
     }).then((response) {
       Map jsonData = jsonDecode(response.body);
       Map<String, dynamic> roomDataMap = jsonData['data'];
 
       if (jsonData['status'] == 0) {
+        Color color;
+        String status;
+
+        if (data['fixStatus'] == "active") {
+          color = Colors.yellow[600];
+          status = "รอดำเนินการ";
+        } else if (data['fixStatus'] == "success") {
+          color = Colors.green[600];
+          status = "ดำเนินการแล้ว";
+        }
+
         Card cardShow = Card(
-          margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+          margin: EdgeInsets.all(5),
           child: Padding(
             padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-            child: Row(
+            child: Column(
               children: <Widget>[
-                Expanded(
-                  child: Text('\nห้อง : ${roomDataMap['roomNo']}\n\n' +
-                      'รายละเอียดรายการ : ${data[3]}\n\n' +
-                      'สถานะ :'),
+                Container(
+                  child: Text(
+                    'ห้อง : ${roomDataMap['roomNo']}',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
+                Divider(
+                  color: Colors.black,                  
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child:
+                                Text('รายละเอียดรายการ : ${data['fixDetail']}'),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text('สถานะ : '),
+                          Text(
+                            '${status}',
+                            style: TextStyle(color: color),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

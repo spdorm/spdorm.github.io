@@ -10,7 +10,6 @@ class HomeFragment extends StatefulWidget {
 
   HomeFragment(int dormId) {
     this._dormId = dormId;
-    print(_dormId);
   }
 
   @override
@@ -35,35 +34,36 @@ class HomeFragmentState extends State<HomeFragment> {
 
   @override
   void initState() {
-    super.initState();
     createRoom();
+    super.initState();
   }
 
   Future<Null> _onRefresh() async {
-    //_key.currentState.show();
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 1));
     lst.clear();
-    _floor.clear();
     setState(() {
-      createRoom();
+      showFloor();
+      showRoom();
     });
     return null;
   }
 
   void createRoom() {
-        http.post('${config.API_url}/dorm/list',
+    http.post('${config.API_url}/dorm/list',
         body: {"dormId": _dormId.toString()}).then((response) {
       Map jsonData = jsonDecode(response.body);
       Map<String, dynamic> data = jsonData["data"] as Map;
-      int n = int.parse(data["dormFloor"]);
-      _userId = data['userId'];
+      if (jsonData["status"] == 0) {
+        int n = int.parse(data["dormFloor"]);
+        _userId = data['userId'];
 
-      for (int i = 1; i <= n; i++) {
-        _floor.add(i.toString());
+        for (int i = 1; i <= n; i++) {
+          _floor.add(i.toString());
+        }
+        _selectedFloor = _floor.first;
+        showFloor();
+        showRoom();
       }
-      _selectedFloor = _floor.first;
-      showFloor();
-      showRoom();
     });
   }
 
@@ -75,7 +75,7 @@ class HomeFragmentState extends State<HomeFragment> {
       Map jsonData = jsonDecode(respone.body);
       temp = jsonData['data'];
 
-      if (temp.isNotEmpty) {
+      if (jsonData['status'] == 0 && temp.isNotEmpty) {
         for (int i = 0; i < temp.length; i++) {
           List data = temp[i];
           Color color;
@@ -211,29 +211,29 @@ class HomeFragmentState extends State<HomeFragment> {
     lst.add(con);
     setState(() {});
 
-    Container bt = Container(
-      child: new Row(
-        children: <Widget>[
-          new Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RaisedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            AddRoomPage(_dormId, _userId, _selectedFloor)));
-              },
-              child: Icon(Icons.add),
-              textColor: Colors.green,
-              color: Colors.white70,
-            ),
-          ),
-        ],
-      ),
-    );
-    lst.add(bt);
-    setState(() {});
+    // Container bt = Container(
+    //   child: new Row(
+    //     children: <Widget>[
+    //       new Padding(
+    //         padding: const EdgeInsets.all(8.0),
+    //         child: RaisedButton(
+    //           onPressed: () {
+    //             Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                     builder: (BuildContext context) =>
+    //                         AddRoomPage(_dormId, _userId, _selectedFloor)));
+    //           },
+    //           child: Icon(Icons.add),
+    //           textColor: Colors.green,
+    //           color: Colors.white70,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    // lst.add(bt);
+    // setState(() {});
   }
 
   void onMonthChange(String item) {
@@ -254,12 +254,23 @@ class HomeFragmentState extends State<HomeFragment> {
     //final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        AddRoomPage(_dormId, _userId, _selectedFloor)));
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.green,
+        ),
         body: RefreshIndicator(
-      child: ListView.builder(
-        itemBuilder: buildBody,
-        itemCount: lst.length,
-      ),
-      onRefresh: _onRefresh,
-    ));
+          child: ListView.builder(
+            itemBuilder: buildBody,
+            itemCount: lst.length,
+          ),
+          onRefresh: _onRefresh,
+        ));
   }
 }

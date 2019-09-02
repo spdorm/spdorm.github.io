@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:http/http.dart' as http;
 import 'AddCharterDorm_fragment.dart';
+import 'ListCustumer.dart';
 import 'PaymentNotification.dart';
 import 'ViewDocument.dart';
 import 'config.dart';
@@ -39,6 +39,8 @@ class _ViewRoomPage extends State<ViewRoomPage> {
 
   List<String> _Status = [
     "ว่าง",
+    "จอง",
+    "รายวัน",
     "ไม่ว่าง",
   ].toList();
   List<String> _Type = [
@@ -48,6 +50,27 @@ class _ViewRoomPage extends State<ViewRoomPage> {
 
   // String _selectedMonth = null;
   String _selectedMonth, _selectedStatus, _selectType;
+  List lst = new List();
+
+  void onMonthChange(String item) {
+    setState(() {
+      _selectedMonth = item;
+    });
+  }
+
+  void onStatusChange(String item) {
+    setState(() {
+      _selectedStatus = item;
+      cardShow(1);
+    });
+  }
+
+  void onTypeChange(String item) {
+    setState(() {
+      _selectType = item;
+      cardShow(1);
+    });
+  }
 
   @override
   void initState() {
@@ -59,7 +82,6 @@ class _ViewRoomPage extends State<ViewRoomPage> {
       "dormId": _dormId.toString(),
       "roomId": _roomId.toString()
     }).then((respone) {
-      print(respone.body);
       Map jsonData = jsonDecode(respone.body) as Map;
       Map<String, dynamic> listData = jsonData["data"];
 
@@ -69,10 +91,15 @@ class _ViewRoomPage extends State<ViewRoomPage> {
         _roomDoc = listData["customerId"];
         _selectedMonth = listData["roomFloor"];
         _selectedStatus = listData["roomStatus"];
+
         if (listData["roomStatus"] == "ว่าง") {
           _selectedStatus = _Status[0];
-        } else {
+        } else if (listData["roomStatus"] == "จอง") {
           _selectedStatus = _Status[1];
+        } else if (listData["roomStatus"] == "รายวัน") {
+          _selectedStatus = _Status[2];
+        } else {
+          _selectedStatus = _Status[3];
         }
 
         if (listData["roomType"] == "ห้องพัดลม") {
@@ -80,234 +107,167 @@ class _ViewRoomPage extends State<ViewRoomPage> {
         } else {
           _selectType = _Type[1];
         }
-        setState(() {});
+        cardShow(0);
       }
     });
   }
 
-  void onSumit() {
-    http.post('${config.API_url}/room/updateRoom', body: {
-      "roomId": _roomId.toString(),
-      "doc": '',
-      "floor": _selectedMonth,
-      "no": roomNo.toString(),
-      "price": roomPrice.toString(),
-      "status": _selectedStatus,
-      "type": _selectType
-    }).then((respone) {
-      print(respone.body);
-      Map jsonData = jsonDecode(respone.body) as Map;
-      int status = jsonData['status'];
-      print(status);
-      if (status == 0) {
-        Navigator.pop(context);
-      }
-    });
-  }
-
-  void onDelete() {
-    http.post('${config.API_url}/room/deleteRoom', body: {
-      "dormId": _dormId.toString(),
-      "userId": _userId.toString(),
-      "roomId": _roomId.toString()
-    }).then((response) {
-      print(response.body);
-      Map jsonData = jsonDecode(response.body);
-      int status = jsonData["status"];
-      if (status == 0) {
-        Navigator.pop(context);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext)=>MainHomeFragment(_dormId, _userId)));
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //final screenSize = MediaQuery.of(context).size;
-
-    void onMonthChange(String item) {
-      setState(() {
-        _selectedMonth = item;
-        print(_selectedMonth);
-      });
-    }
-
-    void onStatusChange(String item) {
-      setState(() {
-        _selectedStatus = item;
-        print(_selectedStatus);
-      });
-    }
-
-    void onTypeChange(String item) {
-      setState(() {
-        _selectType = item;
-        print(_selectType);
-      });
-    }
-
-    return new Scaffold(
-      appBar: AppBar(
-        title: Text('รายละเอียดห้องพัก'),
-      ),
-      body: new ListView(
-        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+  void cardShow(int state) {
+    Card show = Card(
+      margin: EdgeInsets.all(0.5),
+      child: new Column(
         children: <Widget>[
-          new Card(
-            margin: EdgeInsets.all(0.5),
-            child: new Column(
+          new Container(
+            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+            child: new Row(
               children: <Widget>[
-                new Container(
-                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                  child: new Row(
-                    children: <Widget>[
-                      new Icon(Icons.label_important),
-                      new Text('รายละเอียดห้องพัก'),
-                    ],
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("ชั้น :"),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(
-                          padding: EdgeInsets.only(right: 10, top: 20.0),
-                          child: Text(
-                            '${_selectedMonth}',
-                            style: TextStyle(color: Colors.grey),
-                          )),
-                    ),
-                    new Container(
-                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("หมายเลขห้องพัก :"),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(
-                          padding: EdgeInsets.only(right: 10, top: 20.0),
-                          child: Text(
-                            '${roomNo}',
-                            style: TextStyle(color: Colors.grey),
-                          )),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("ราคาห้องพัก :"),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(
-                          padding: EdgeInsets.only(right: 10, top: 20.0),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                '${roomPrice}',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              Text("    บาท"),
-                            ],
-                          )),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("สถานะ :"),
-                    ),
-                    new DropdownButton<String>(
-                        value: _selectedStatus,
-                        items: _Status.map((String dropdownStatusValue) {
-                          return new DropdownMenuItem(
-                              value: dropdownStatusValue,
-                              child: new Text(
-                                dropdownStatusValue,
-                                style: TextStyle(color: Colors.black54),
-                              ));
-                        }).toList(),
-                        onChanged: (String value) {
-                          onStatusChange(value);
-                        }),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("ประเภทห้องพัก :"),
-                    ),
-                    new DropdownButton<String>(
-                        value: _selectType,
-                        items: _Type.map((String dropdownValue) {
-                          return new DropdownMenuItem(
-                              value: dropdownValue,
-                              child: new Text(
-                                dropdownValue,
-                                style: TextStyle(color: Colors.black54),
-                              ));
-                        }).toList(),
-                        onChanged: (String value) {
-                          onTypeChange(value);
-                        }),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    new Container(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text("ใบสัญญาเช่า :"),
-                    ),
-                    Column(
+                new Icon(Icons.label_important),
+                new Text('รายละเอียดห้องพัก'),
+              ],
+            ),
+          ),
+          Row(
+            children: <Widget>[
+              new Container(
+                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                child: Text("ชั้น :"),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                    padding: EdgeInsets.only(right: 10, top: 20.0),
+                    child: Text(
+                      '${_selectedMonth}',
+                      style: TextStyle(color: Colors.grey),
+                    )),
+              ),
+              new Container(
+                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                child: Text("หมายเลขห้องพัก :"),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                    padding: EdgeInsets.only(right: 10, top: 20.0),
+                    child: Text(
+                      '${roomNo}',
+                      style: TextStyle(color: Colors.grey),
+                    )),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              new Container(
+                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                child: Text("ราคาห้องพัก :"),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                    padding: EdgeInsets.only(right: 10, top: 20.0),
+                    child: Row(
                       children: <Widget>[
-                        _roomDoc != 0
-                            ? FlatButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext) =>
-                                              vieWDocument(_dormId, _roomId)));
-                                },
-                                textColor: Colors.orangeAccent,
-                                child: new Row(
-                                  children: <Widget>[
-                                    Icon(Icons.remove_red_eye),
-                                    new Text(' ข้อมูลใบสัญญาเช่า'),
-                                  ],
-                                ),
-                              )
-                            : FlatButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext) =>
-                                              CharterDormFragment(
-                                                  _roomId, roomNo)));
-                                },
-                                textColor: Colors.green,
-                                child: new Row(
-                                  children: <Widget>[
-                                    Icon(Icons.add),
-                                    new Text(' เพิ่มใบสัญญาเช่า'),
-                                  ],
-                                ),
-                              ),
+                        Text(
+                          '${roomPrice}',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        Text("    บาท"),
                       ],
-                    ),
-                  ],
-                ),
-                _roomDoc != 0?
-                Row(
+                    )),
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              new Container(
+                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                child: Text("สถานะ :"),
+              ),
+              new DropdownButton<String>(
+                  value: _selectedStatus,
+                  items: _Status.map((String dropdownStatusValue) {
+                    return new DropdownMenuItem(
+                        value: dropdownStatusValue,
+                        child: new Text(
+                          dropdownStatusValue,
+                          style: TextStyle(color: Colors.black54),
+                        ));
+                  }).toList(),
+                  onChanged: (String value) {
+                    onStatusChange(value);
+                  }),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              new Container(
+                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                child: Text("ประเภทห้องพัก :"),
+              ),
+              new DropdownButton<String>(
+                  value: _selectType,
+                  items: _Type.map((String dropdownValue) {
+                    return new DropdownMenuItem(
+                        value: dropdownValue,
+                        child: new Text(
+                          dropdownValue,
+                          style: TextStyle(color: Colors.black54),
+                        ));
+                  }).toList(),
+                  onChanged: (String value) {
+                    onTypeChange(value);
+                  }),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              new Container(
+                padding: EdgeInsets.only(left: 20),
+                child: Text("ใบสัญญาเช่า :"),
+              ),
+              Column(
+                children: <Widget>[
+                  _roomDoc != 0
+                      ? FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext) =>
+                                        vieWDocument(_dormId, _roomId)));
+                          },
+                          textColor: Colors.orangeAccent,
+                          child: new Row(
+                            children: <Widget>[
+                              Icon(Icons.remove_red_eye),
+                              new Text(' ข้อมูลใบสัญญาเช่า'),
+                            ],
+                          ),
+                        )
+                      : FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext) =>
+                                        listCustumerPage(
+                                            _dormId, _userId, _roomId)));
+                          },
+                          textColor: Colors.green,
+                          child: new Row(
+                            children: <Widget>[
+                              Icon(Icons.add),
+                              new Text(' เพิ่มใบสัญญาเช่า'),
+                            ],
+                          ),
+                        ),
+                ],
+              ),
+            ],
+          ),
+          _roomDoc != 0
+              ? Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     new Container(
@@ -333,35 +293,37 @@ class _ViewRoomPage extends State<ViewRoomPage> {
                     ),
                   ],
                 )
-                : Padding(padding: EdgeInsets.all(0),),
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              : Padding(
+                  padding: EdgeInsets.all(0),
+                ),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new RaisedButton(
+                onPressed: onSumit,
+                textColor: Colors.white,
+                color: Colors.lightGreen,
+                child: new Row(
                   children: <Widget>[
-                    new RaisedButton(
-                      onPressed: onSumit,
-                      textColor: Colors.white,
-                      color: Colors.lightGreen,
-                      child: new Row(
-                        children: <Widget>[
-                          new Text('ตกลง'),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 5),
-                    ),
-                    new RaisedButton(
-                      onPressed: onDelete,
-                      textColor: Colors.white,
-                      color: Colors.redAccent,
-                      child: new Row(
-                        children: <Widget>[
-                          new Text('ลบ'),
-                        ],
-                      ),
-                    ),
+                    new Text('ตกลง'),
                   ],
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 5),
+              ),
+              new RaisedButton(
+                onPressed: onDelete,
+                textColor: Colors.white,
+                color: Colors.redAccent,
+                child: new Row(
+                  children: <Widget>[
+                    new Text('ลบ'),
+                  ],
+                ),
+              ),
+            ],
+          ),
 //                  Padding(
 //                    padding: EdgeInsets.only(left: 100, top: 5, right: 110),
 //                    child: new RaisedButton(
@@ -378,10 +340,76 @@ class _ViewRoomPage extends State<ViewRoomPage> {
 //                      ),
 //                    ),
 //                  ),
-              ],
-            ),
-          )
         ],
+      ),
+    );
+    if (state == 1) {
+      lst.removeLast();
+      setState(() {
+        lst.add(show);
+      });
+    } else {
+      setState(() {
+        lst.add(show);
+      });
+    }
+  }
+
+  void onSumit() {
+    http.post('${config.API_url}/room/updateRoom', body: {
+      "roomId": _roomId.toString(),
+      "doc": '',
+      "floor": _selectedMonth,
+      "no": roomNo.toString(),
+      "price": roomPrice.toString(),
+      "status": _selectedStatus,
+      "type": _selectType
+    }).then((respone) {
+      Map jsonData = jsonDecode(respone.body) as Map;
+      int status = jsonData['status'];
+      if (status == 0) {
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) => MainHomeFragment(_dormId, _userId)));
+      }
+    });
+  }
+
+  void onDelete() {
+    http.post('${config.API_url}/room/deleteRoom', body: {
+      "dormId": _dormId.toString(),
+      "userId": _userId.toString(),
+      "roomId": _roomId.toString()
+    }).then((response) {
+      Map jsonData = jsonDecode(response.body);
+      int status = jsonData["status"];
+      if (status == 0) {
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) => MainHomeFragment(_dormId, _userId)));
+      }
+    });
+  }
+
+  Widget bodyBuild(BuildContext context, int index) {
+    return lst[index];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //final screenSize = MediaQuery.of(context).size;
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text('รายละเอียดห้องพัก'),
+      ),
+      body: new ListView.builder(
+        padding: EdgeInsets.all(8),
+        itemBuilder: bodyBuild,
+        itemCount: lst.length,
       ),
     );
   }

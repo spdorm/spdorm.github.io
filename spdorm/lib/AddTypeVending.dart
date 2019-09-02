@@ -92,7 +92,7 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                     });
                   },
                   textColor: Colors.white,
-                  color: Colors.green,
+                  color: Colors.green[300],
                   child: new Row(
                     children: <Widget>[
                       new Icon(Icons.add),

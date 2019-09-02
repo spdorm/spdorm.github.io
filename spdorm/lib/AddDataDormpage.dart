@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:sweetalert/sweetalert.dart';
 import 'AddDormpage.dart';
 import 'config.dart';
 import 'dart:convert';
@@ -44,19 +45,20 @@ class _RegisterDataDorm extends State {
 
   Future upload(File imageFile) async {
     if (imageFile != null) {
+      SweetAlert.show(context,
+          subtitle: "กำลังสร้างรายการหอพัก...", style: SweetAlertStyle.loading);
       var stream =
           new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
       var length = await imageFile.length();
-      var uri = Uri.parse("${config.url_upload}/upload/upload.php");
+      var uri = Uri.parse("${config.API_url}/dorm/saveImage");
 
       var request = new http.MultipartRequest("POST", uri);
-      var multipartFile = new http.MultipartFile("image", stream, length,
+      var multipartFile = new http.MultipartFile("file", stream, length,
           filename: path.basename(imageFile.path));
       request.fields['dormId'] = _dormId.toString();
       request.files.add(multipartFile);
 
       var response = await request.send();
-
       if (response.statusCode == 200) {
         print("Image Uploaded");
       } else {
@@ -65,8 +67,6 @@ class _RegisterDataDorm extends State {
       response.stream.transform(utf8.decoder).listen((value) {
         print(value);
       });
-    } else {
-      return;
     }
   }
 
@@ -98,10 +98,12 @@ class _RegisterDataDorm extends State {
       });
       if (status == 0) {
         upload(_image).then((_) {
-          Navigator.push(
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext) => AddDormPage(_userId)));
+                  builder: (BuildContext context) => AddDormPage(_userId)));
         });
       }
     });
@@ -111,7 +113,7 @@ class _RegisterDataDorm extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomPadding: true,
       appBar: AppBar(title: const Text('เพิ่มข้อมูลหอพัก')),
       body: new ListView(
         padding: EdgeInsets.only(left: 15, right: 15, top: 20),
@@ -121,7 +123,7 @@ class _RegisterDataDorm extends State {
             child: new Row(
               children: <Widget>[
                 new Icon(Icons.date_range),
-                new Text('Dormitory details:'),
+                new Text('ข้อมูลหอพัก'),
               ],
             ),
           ),
@@ -131,8 +133,8 @@ class _RegisterDataDorm extends State {
               controller: dormName,
               decoration: InputDecoration(
                   icon: const Icon(Icons.home),
-                  hintText: 'Enter a dorm name',
-                  labelText: 'Dorm name:',
+                  hintText: 'กรอกชื่อหอพัก',
+                  labelText: 'ชื่อหอพัก:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
             ),
@@ -143,8 +145,8 @@ class _RegisterDataDorm extends State {
               controller: dormAddress,
               decoration: InputDecoration(
                   icon: const Icon(Icons.add_location),
-                  hintText: 'Enter a email address',
-                  labelText: 'Address:',
+                  hintText: 'กรอกที่อยู่หอพัก',
+                  labelText: 'ที่อยู่:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
             ),
@@ -155,8 +157,8 @@ class _RegisterDataDorm extends State {
               controller: dormTelephone,
               decoration: InputDecoration(
                   icon: const Icon(Icons.local_phone),
-                  hintText: 'Enter a phone number',
-                  labelText: 'Tel:',
+                  hintText: 'กรอกเบอร์โทร',
+                  labelText: 'เบอร์โทร:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.phone,
             ),
@@ -167,8 +169,8 @@ class _RegisterDataDorm extends State {
               controller: dormEmail,
               decoration: InputDecoration(
                   icon: const Icon(Icons.email),
-                  hintText: 'Enter a email address',
-                  labelText: 'Email:',
+                  hintText: 'กรอกอีเมล์',
+                  labelText: 'อีเมล์:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.emailAddress,
             ),
@@ -179,8 +181,8 @@ class _RegisterDataDorm extends State {
               controller: dormFloor,
               decoration: InputDecoration(
                   icon: const Icon(Icons.library_add),
-                  hintText: 'Enter a number of floors',
-                  labelText: 'Number of floors:',
+                  hintText: 'กรอกจำนวนชั้น',
+                  labelText: 'จำนวนชั้น:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.number,
             ),
@@ -190,37 +192,33 @@ class _RegisterDataDorm extends State {
             child: new Row(
               children: <Widget>[
                 new Icon(Icons.image),
-                new Text('Drom picture:'),
+                new Text('รูปหอพัก:'),
               ],
             ),
           ),
           new Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: _image == null
-                ? Text('No image selected.')
-                : Image.file(_image),
+            child:
+                _image == null ? Text('ไม่มีรูปที่เลือก') : Image.file(_image),
           ),
           new Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             child: FloatingActionButton(
               onPressed: getImageGallery,
-              tooltip: 'Pick Image',
+              tooltip: 'เลือกรูปหอพัก',
               child: Icon(Icons.add_a_photo),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 120, top: 5, right: 120),
-            child: new RaisedButton(
-              onPressed: onRegisterDataDorm,
-              textColor: Colors.white,
-              color: Colors.blue,
-              child: new Row(
-                children: <Widget>[
-                  new Text('Submit'),
-                ],
+          Container(
+            child: Center(
+              child: new RaisedButton(
+                onPressed: onRegisterDataDorm,
+                textColor: Colors.white,
+                color: Colors.blue,
+                child: new Text('บันทึก'),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

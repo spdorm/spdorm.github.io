@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddDataDormpage.dart';
 import 'dart:convert';
 import 'config.dart';
-import 'main.dart';
+import 'firstPage.dart';
 import 'mainHomeFragment.dart';
 
 class AddDormPage extends StatefulWidget {
@@ -27,7 +28,6 @@ class _AddDormPage extends State {
 
   _AddDormPage(int userId) {
     this._userId = userId;
-    print(this._userId);
   }
 
   List lst = new List();
@@ -35,8 +35,7 @@ class _AddDormPage extends State {
 
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('login', false);
-    print(prefs.getBool('login'));
+    await prefs.setInt('id', null);
   }
 
   Future<bool> onLogOut() {
@@ -52,203 +51,187 @@ class _AddDormPage extends State {
                 FlatButton(
                   child: Text('ใช่'),
                   onPressed: () => {
-                        _logout().then((res) => {
-                              Navigator.pop(context),
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext) => Login()))
-                            }),
-                      },
+                    _logout().then((_) => {
+                          Navigator.pop(context),
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext) => Login()))
+                        }),
+                  },
                 ),
               ],
             ));
   }
 
+  Future<Null> _onRefresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    lst.clear();
+    setState(() {
+      _body();
+    });
+    return null;
+  }
+
   void initState() {
     super.initState();
 
+    // FlatButton addButton = FlatButton(
+    //   onPressed: () {
+    //     Navigator.push(
+    //         context,
+    //         MaterialPageRoute(
+    //             builder: (BuildContext) => RegisterDataDorm(_userId)));
+    //   },
+    //   child: Container(
+    //     alignment: Alignment.centerLeft,
+    //     margin: new EdgeInsets.only(top: 5),
+    //     // padding: new EdgeInsets.all(5.0),
+    //     height: 50.0,
+    //     decoration: new BoxDecoration(
+    //       color: Colors.lightBlue[200],
+    //       borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
+    //       boxShadow: [
+    //         new BoxShadow(
+    //             color: Colors.black54,
+    //             offset: new Offset(2.0, 2.0),
+    //             blurRadius: 5.0)
+    //       ],
+    //     ),
+    //     child: Column(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       children: <Widget>[
+    //         Center(
+    //           child: new Icon(
+    //             Icons.add,
+    //             color: Colors.white,
+    //           ),
+    //         )
+    //       ],
+    //     ),
+    //   ),
+    // );
+    // lst.add(addButton);
+    // setState(() {});
+    _body();
+  }
+
+  void _body() {
     http.post('${config.API_url}/dorm/findInfo',
         body: {"userId": _userId.toString()}).then((respone) {
-      print(respone.body);
       Map jsonData = jsonDecode(respone.body);
       List temp = jsonData["data"];
 
-      for (int i = 0; i < temp.length; i++) {
-        List data = temp[i];
-        http.post('${config.API_url}/dorm/findImageDorm',
-            body: {"dormId": data[0].toString()}).then((response) {
-          print(response.body);
-          Map jsonData = jsonDecode(response.body) as Map;
-          String _name_image = jsonData['data'];
-          setState(() {});
+      if (jsonData['status'] == 0) {
+        for (int i = 0; i < temp.length; i++) {
+          List data = temp[i];
+          String _name_image = data[5], _status;
+          Color colorStatus;
 
-          Container test = Container(
-            alignment: Alignment.centerLeft,
-            margin: new EdgeInsets.all(5.0),
-            padding: new EdgeInsets.all(5.0),
-            height: 150.0,
-            decoration: new BoxDecoration(
-              color: Colors.lightBlue,
-              borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
-              boxShadow: [
-                new BoxShadow(
-                    color: Colors.black54,
-                    offset: new Offset(2.0, 2.0),
-                    blurRadius: 5.0)
-              ],
-            ),
-            child: new Row(
-              children: <Widget>[
-                _name_image == null
-                    ? new CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        radius: 50.0,
-                        backgroundImage: NetworkImage(
-                            '${config.url_upload}/upload/image/no_image.png'),
-                      )
-                    : new CircleAvatar(
-                        backgroundColor: Colors.white70,
-                        radius: 50.0,
-                        backgroundImage: NetworkImage(
-                            '${config.url_upload}/upload/image/dorm/${_name_image}'),
-                      ),
-                new Expanded(
-                    child: new Padding(
-                  padding: new EdgeInsets.only(left: 8.0),
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      new Text(
-                        '${data[6]}',
-                        style: new TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
-                      ),
-                      new Wrap(
-                        spacing: 2.0,
-                        children: <Widget>[
-                          new Chip(label: new Text('Hot')),
-                          new Chip(label: new Text('Hot')),
-                          new Chip(label: new Text('Hot')),
-                        ],
-                      )
+          if (data[10] == "inactive") {
+            colorStatus = Colors.red;
+            _status = "ปิด";
+          } else {
+            colorStatus = Colors.green;
+            _status = "เปิด";
+          }
+
+          http.post('${config.API_url}/room/countStatus',
+              body: {"dormId": data[0].toString()}).then((response) {
+            Map jsonData = jsonDecode(response.body) as Map;
+
+            if (jsonData['status'] == 0) {
+              int count = jsonData['data'];
+              Color color;
+
+              if (count == 0) {
+                color = Colors.red;
+              } else {
+                color = Colors.green;
+              }
+
+              FlatButton dormInfo = FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext) =>
+                              MainHomeFragment(data[0], data[12])));
+                },
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  margin: new EdgeInsets.only(top: 8),
+                  padding: new EdgeInsets.all(5.0),
+                  height: 150.0,
+                  decoration: new BoxDecoration(
+                    color: Colors.lightBlue,
+                    borderRadius:
+                        new BorderRadius.all(new Radius.circular(10.0)),
+                    boxShadow: [
+                      new BoxShadow(
+                          color: Colors.black54,
+                          offset: new Offset(2.0, 2.0),
+                          blurRadius: 5.0)
                     ],
                   ),
-                ))
-              ],
-            ),
-          );
-
-          FlatButton dormInfo = FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext) =>
-                          MainHomeFragment(data[0], data[12])));
-            },
-            child: Container(
-              alignment: Alignment.centerLeft,
-              margin: new EdgeInsets.all(5.0),
-              padding: new EdgeInsets.all(5.0),
-              height: 150.0,
-              decoration: new BoxDecoration(
-                color: Colors.lightBlue,
-                borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
-                boxShadow: [
-                  new BoxShadow(
-                      color: Colors.black54,
-                      offset: new Offset(2.0, 2.0),
-                      blurRadius: 5.0)
-                ],
-              ),
-              child: new Row(
-                children: <Widget>[
-                  _name_image == null
-                      ? new CircleAvatar(
-                          backgroundColor: Colors.white70,
-                          radius: 50.0,
-                          backgroundImage: NetworkImage(
-                              '${config.url_upload}/upload/image/no_image.png'),
-                        )
-                      : new CircleAvatar(
-                          backgroundColor: Colors.white70,
-                          radius: 50.0,
-                          backgroundImage: NetworkImage(
-                              '${config.url_upload}/upload/image/dorm/${_name_image}'),
-                        ),
-                  new Expanded(
-                      child: new Padding(
-                    padding: new EdgeInsets.only(left: 8.0),
-                    child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Text(
-                          '${data[6]}',
-                          style: new TextStyle(
-                              fontSize: 20.0, fontWeight: FontWeight.bold),
-                        ),
-                        new Wrap(
-                          spacing: 2.0,
+                  child: new Row(
+                    children: <Widget>[
+                      _name_image == "" || _name_image == null
+                          ? new CircleAvatar(
+                              backgroundColor: Colors.white70,
+                              radius: 50.0,
+                              backgroundImage:
+                                  AssetImage("images/no_image.png"),
+                            )
+                          : new CircleAvatar(
+                              backgroundColor: Colors.white70,
+                              radius: 50.0,
+                              backgroundImage: NetworkImage(
+                                  '${config.API_url}/dorm/image/?nameImage=${_name_image}'),
+                            ),
+                      new Expanded(
+                          child: new Padding(
+                        padding: new EdgeInsets.only(left: 8.0),
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            new Chip(label: new Text('Hot')),
-                            new Chip(label: new Text('Hot')),
-                            new Chip(label: new Text('Hot')),
+                            new Text(
+                              '${data[6]}',
+                              style: new TextStyle(
+                                  fontSize: 20.0, fontWeight: FontWeight.bold),
+                            ),
+                            new Wrap(
+                              spacing: 2.0,
+                              children: <Widget>[
+                                new Chip(
+                                    label: new Text(
+                                  'ห้องว่าง: ${count}',
+                                  style: TextStyle(color: color),
+                                )),
+                                new Chip(
+                                    label: new Text(
+                                  'สถานะ: ${_status}',
+                                  style: TextStyle(color: colorStatus),
+                                )),
+                                // new Chip(label: new Text('Hot')),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    ),
-                  ))
-                ],
-              ),
-            ),
-          );
-          lst.add(dormInfo);
-          setState(() {});
-        });
-      }
-      FlatButton addButton = FlatButton(
-        onPressed: () {
-          Navigator.pop(context);
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext) => RegisterDataDorm(_userId)));
-        },
-        child: Container(
-          alignment: Alignment.centerLeft,
-          margin: new EdgeInsets.all(5.0),
-          padding: new EdgeInsets.all(5.0),
-          height: 50.0,
-          decoration: new BoxDecoration(
-            color: Colors.lightBlue[200],
-            borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
-            boxShadow: [
-              new BoxShadow(
-                  color: Colors.black54,
-                  offset: new Offset(2.0, 2.0),
-                  blurRadius: 5.0)
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                child: new Icon(
-                  Icons.add,
-                  color: Colors.white,
+                        ),
+                      ))
+                    ],
+                  ),
                 ),
-              )
-            ],
-          ),
-        ),
-      );
-      lst.add(addButton);
-      setState(() {});
+              );
+              lst.add(dormInfo);
+              setState(() {});
+            }
+          });
+        }
+      }
     });
   }
 
@@ -262,7 +245,7 @@ class _AddDormPage extends State {
       return showDialog(
           context: context,
           builder: (context) => AlertDialog(
-                title: Text('คุณต้องการออกจากระบบ ?'),
+                title: Text('คุณต้องการออกจากแอพ ?'),
                 actions: <Widget>[
                   FlatButton(
                     child: Text('ตกลง'),
@@ -277,6 +260,7 @@ class _AddDormPage extends State {
     }
 
     return MaterialApp(
+      theme: ThemeData(fontFamily: 'Kanit'),
         debugShowCheckedModeBanner: false,
         home: WillPopScope(
           onWillPop: _onWillPop,
@@ -290,8 +274,20 @@ class _AddDormPage extends State {
                 ),
               ],
             ),
-            body:
-                ListView.builder(itemBuilder: buildBody, itemCount: lst.length),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext) => RegisterDataDorm(_userId)));
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Colors.lightBlue,
+            ),
+            body:RefreshIndicator(
+              child: ListView.builder(itemBuilder: buildBody, itemCount: lst.length),
+              onRefresh: _onRefresh,
+            )
           ),
         ));
   }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sweetalert/sweetalert.dart';
 import 'config.dart';
 import 'dart:convert';
+
+import 'listPayment.dart';
 
 class PaymentNotification extends StatefulWidget {
   int _dormId, _userId, _roomId;
@@ -34,6 +37,7 @@ class _PaymentNotification extends State<PaymentNotification> {
   TextEditingController priceTotal = TextEditingController();
 
   String roomNo, roomPrice = "";
+  int _customerId;
   int intRoomPrice = 0;
   bool check = false;
 
@@ -52,6 +56,7 @@ class _PaymentNotification extends State<PaymentNotification> {
       if (jsonData["status"] == 0) {
         roomNo = listData["roomNo"];
         roomPrice = listData["roomPrice"];
+        _customerId = listData["customerId"];
         check = true;
       }
       set();
@@ -68,14 +73,18 @@ class _PaymentNotification extends State<PaymentNotification> {
     param["priceElectricity"] = priceElectricity.text;
     param["priceOther"] = priceOther.text;
     param["priceFix"] = priceFix.text;
-    param["priceTotal"] = priceTotal.text;
+    param["priceTotal"] = sum().toString();
+    param["invoiceStatus"] = "ยังไม่จ่าย";
 
     http.post('${config.API_url}/invoice/add', body: param).then((response) {
       print(response.body);
       Map jsonMap = jsonDecode(response.body) as Map;
       int status = jsonMap['status'];
       if (status == 0) {
-        Navigator.pop(context);
+        return SweetAlert.show(context,
+            title: "สำเร็จ!",
+            subtitle: "เพิ่มใบแจ้งชำระเรียบร้อยแล้ว",
+            style: SweetAlertStyle.success);
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(
@@ -124,9 +133,9 @@ class _PaymentNotification extends State<PaymentNotification> {
         title: new Text('การเพิ่มใบแจ้งชำระ'),
       ),
       body: new ListView(
+        padding: EdgeInsets.all(8),
         children: <Widget>[
           new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             child: new Row(
               children: <Widget>[
                 new Icon(Icons.label_important),
@@ -135,7 +144,6 @@ class _PaymentNotification extends State<PaymentNotification> {
             ),
           ),
           new Card(
-            margin: EdgeInsets.all(10),
             child: new Column(
               children: <Widget>[
                 Container(
@@ -222,7 +230,14 @@ class _PaymentNotification extends State<PaymentNotification> {
                     Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: new RaisedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ListPaymentPage(
+                                          _dormId, _customerId, _roomId)));
+                        },
                         textColor: Colors.white,
                         color: Colors.deepPurpleAccent,
                         icon: Icon(Icons.remove_red_eye),
