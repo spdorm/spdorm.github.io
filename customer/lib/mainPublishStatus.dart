@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'Pending.dart';
 import 'dart:convert';
 import 'Registor.dart';
-import 'main.dart';
 import 'config.dart';
+import 'firstPage.dart';
 
 class PubStatus extends StatefulWidget {
   List lst = new List();

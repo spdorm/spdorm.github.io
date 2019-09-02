@@ -53,13 +53,13 @@ class HomDormPageState extends State<HomDormPage> {
         body: {"dormId": _dormId.toString()}).then((response) {
       Map jsonData = jsonDecode(response.body) as Map;
       List newData = jsonData['data'];
-      print(newData);
 
       if (jsonData['status'] == 0) {
         for (int i = 0; i < newData.length; i++) {
-          List data = newData[i];
+           Map<String,dynamic> data = newData[i];
+           print(data['userId']);
           http.post('${config.API_url}/user/list',
-              body: {"userId": data[2].toString()}).then((responseUser) {
+              body: {"userId": data['userId'].toString()}).then((responseUser) {
             Map jsonData = jsonDecode(responseUser.body) as Map;
             Map<String, dynamic> dataMap = jsonData['data'];
 
@@ -74,7 +74,7 @@ class HomDormPageState extends State<HomDormPage> {
                         children: <Widget>[
                           Expanded(
                             child: Text(
-                              '${data[5]}',
+                              '${data['newsTopic']}',
                               style: TextStyle(
                                   fontSize: 18,
                                   color: Colors.blueAccent,
@@ -91,7 +91,7 @@ class HomDormPageState extends State<HomDormPage> {
                           style: TextStyle(color: Colors.grey),
                         ),
                         Text(
-                          'วันโพสต์ : ${(data[1].toString().substring(0, 10))}',
+                          'วันโพสต์ : ${(data['dateTime'].toString().substring(0, 10))}',
                           style: TextStyle(color: Colors.grey),
                         )
                       ],
@@ -102,7 +102,7 @@ class HomDormPageState extends State<HomDormPage> {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Text('         ${data[3]}'),
+                          child: Text('         ${data['newsDetail']}'),
                         ),
                       ],
                     ),

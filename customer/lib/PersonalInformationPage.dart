@@ -2,23 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'config.dart';
+import 'mainHomDorm.dart';
 
 class PersonalFragment extends StatefulWidget {
-  int _userId;
-  PersonalFragment(int _userId) {
-    this._userId = _userId;
+  int _dormId, _userId, _roomId;
+  PersonalFragment(int dormId, int userId, int roomId) {
+    this._dormId = dormId;
+    this._userId = userId;
+    this._roomId = roomId;
   }
   @override
   State<StatefulWidget> createState() {
-    return new _PersonalFragment(_userId);
+    return new _PersonalFragment(_dormId, _userId, _roomId);
   }
 }
 
 class _PersonalFragment extends State<PersonalFragment> {
   int selectedDrawerIndex = 0;
-  int _userId;
-  _PersonalFragment(int _userId) {
-    this._userId = _userId;
+  int _dormId, _userId, _roomId;
+  _PersonalFragment(int dormId, int userId, int roomId) {
+    this._dormId = dormId;
+    this._userId = userId;
+    this._roomId = roomId;
   }
 
   String _Username, _Firstname, _userLastname, _Address, _Email, _Telephone;
@@ -28,6 +33,7 @@ class _PersonalFragment extends State<PersonalFragment> {
   TextEditingController userAddress = TextEditingController();
   TextEditingController userEmail = TextEditingController();
   TextEditingController userTelephone = TextEditingController();
+  List lst = new List();
 
   void initState() {
     super.initState();
@@ -43,6 +49,7 @@ class _PersonalFragment extends State<PersonalFragment> {
         userAddress.text = data['userAddress'];
         userEmail.text = data['userEmail'];
         userTelephone.text = data['userTelephone'];
+        _body();
       });
     });
   }
@@ -84,22 +91,14 @@ class _PersonalFragment extends State<PersonalFragment> {
       if (status == 0) {
         Navigator.pop(context);
         Navigator.pop(context);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context)=>mainHomDorm(_dormId, _userId, _roomId)));
       }
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      resizeToAvoidBottomPadding: true,
-      appBar: AppBar(
-        title: Text('ข้อมูลส่วนตัว'),
-      ),
-      body: new ListView(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 20),
-        children: <Widget>[
-          Text(':รายละเอียดข้อมูลส่วนตัว'),
-          new Card(
+  void _body(){
+    Text head = Text(':รายละเอียดข้อมูลส่วนตัว');
+          Card body = Card(
             margin: EdgeInsets.all(0.5),
             child: new Column(
               children: <Widget>[
@@ -109,11 +108,11 @@ class _PersonalFragment extends State<PersonalFragment> {
                     children: <Widget>[
                       Icon(
                         Icons.person,
-                        color: Colors.orange,
+                        color: Colors.green[600],
                       ),
                       new Text(
                         '   ${_Username}',
-                        style: TextStyle(color: Colors.orange),
+                        style: TextStyle(color: Colors.green[600]),
                       ),
                     ],
                   ),
@@ -123,9 +122,9 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userFirstname,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.perm_contact_calendar),
+                        icon: const Icon(Icons.perm_contact_calendar,color: Colors.pink),
                         hintText: '${_Firstname}',
-                        labelText: 'Name:',
+                        labelText: 'ชื่อ:',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.text,
                   ),
@@ -135,9 +134,9 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userLastname,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.perm_contact_calendar),
+                        icon: const Icon(Icons.perm_contact_calendar,color: Colors.pink),
                         hintText: '${_userLastname}',
-                        labelText: 'lastname:',
+                        labelText: 'นามสกุล:',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.text,
                   ),
@@ -147,9 +146,9 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userAddress,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.add_location),
+                        icon: const Icon(Icons.add_location,color: Colors.green),
                         hintText: '${_Address}',
-                        labelText: 'Address:',
+                        labelText: 'ที่อยู่:',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.text,
                   ),
@@ -159,9 +158,9 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userEmail,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.email),
+                        icon: const Icon(Icons.email,color: Colors.orange),
                         hintText: '${_Email}',
-                        labelText: 'E-mail:',
+                        labelText: 'อีเมล:',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -171,9 +170,9 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userTelephone,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.local_phone),
+                        icon: const Icon(Icons.local_phone,color: Colors.indigo),
                         hintText: '${_Telephone}',
-                        labelText: 'Tel:',
+                        labelText: 'เบอร์โทรศัพท์:',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.phone,
                   ),
@@ -186,7 +185,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                       child: new RaisedButton(
                         onPressed: _alert,
                         textColor: Colors.white,
-                        color: Colors.blue,
+                        color: Colors.blue[300],
                         child: new Row(
                           children: <Widget>[
                             new Text('ตกลง'),
@@ -198,8 +197,28 @@ class _PersonalFragment extends State<PersonalFragment> {
                 ),
               ],
             ),
-          ),
-        ],
+          );
+          setState(() {
+            lst.add(head);
+            lst.add(body);
+          });
+  }
+
+  Widget bodyBuild(BuildContext context,int index){
+    return lst[index];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      resizeToAvoidBottomPadding: true,
+      appBar: AppBar(
+        title: Text('ข้อมูลส่วนตัว'),
+      ),
+      body: new ListView.builder(
+        padding: EdgeInsets.all(8),
+        itemBuilder: bodyBuild,
+        itemCount: lst.length,
       ),
     );
   }
