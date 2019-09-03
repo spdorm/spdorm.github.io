@@ -1,5 +1,6 @@
 package com.rmuti.spdorm.controller;
 
+import com.rmuti.spdorm.config.Config;
 import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.DormProfileRepository;
 import com.rmuti.spdorm.model.service.RoomProfileRepository;
@@ -213,7 +214,7 @@ public class RoomProfileController {
             String fileName = file.getOriginalFilename();
             String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
             String newName = roomNo + "_" + userName + "_" + formattedDate + "." + typeName;
-            String floder = "/home/nicapa_sr/spdorm/images/charter/";
+            String floder = Config.DATA_PATH_CHARTER;
             Path path = Paths.get(floder + newName);
             //File fileContent = new File(fileName);
             //BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
@@ -231,7 +232,7 @@ public class RoomProfileController {
     @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getResource(@RequestParam String nameImage) throws Exception {
         try {
-            String path = "/home/nicapa_sr/spdorm/images/charter/" + nameImage;
+            String path = Config.DATA_PATH_CHARTER + nameImage;
             InputStream in = new FileInputStream(path);
             return IOUtils.toByteArray(in);
         } catch (Exception e) {

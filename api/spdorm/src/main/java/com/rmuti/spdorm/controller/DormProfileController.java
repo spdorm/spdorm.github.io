@@ -1,8 +1,10 @@
 package com.rmuti.spdorm.controller;
 
+import com.rmuti.spdorm.config.Config;
 import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.DormProfileRepository;
 import com.rmuti.spdorm.model.table.DormProfile;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +21,7 @@ import org.apache.commons.io.IOUtils;
 
 @RestController
 @RequestMapping("/dorm")
-
+@Log4j2
 public class DormProfileController {
 
     @Autowired
@@ -123,6 +125,7 @@ public class DormProfileController {
 
     @PostMapping("/saveImage")
     public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int dormId) throws IOException {
+        log.debug("save image api");
         APIResponse res = new APIResponse();
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
@@ -134,8 +137,9 @@ public class DormProfileController {
             String fileName = file.getOriginalFilename();
             String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
             String newName = formattedDate + "." + typeName;
-            String floder = "/home/nicapa_sr/spdorm/images/dorm/";
+            String floder = Config.DATA_PATH_DORM;
             Path path = Paths.get(floder + newName);
+            log.debug("path : "+path);
             //File fileContent = new File(fileName);
             //BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
             byte[] bytes = file.getBytes();
@@ -145,14 +149,16 @@ public class DormProfileController {
             res.setMessage("อัพรูปเรียบร้อยแล้ว");
             res.setData(newName);
         }
+        log.debug("end save image api");
         return res;
     }
 
     @ResponseBody
     @RequestMapping(value = "/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getResource(@RequestParam String nameImage) throws Exception {
+        log.debug("image api");
         try {
-            String path = "/home/nicapa_sr/spdorm/images/dorm/" + nameImage;
+            String path = Config.DATA_PATH_DORM + nameImage;
             InputStream in = new FileInputStream(path);
             return IOUtils.toByteArray(in);
         } catch (Exception e) {
