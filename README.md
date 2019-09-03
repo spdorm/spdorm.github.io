@@ -1,4 +1,7 @@
-![SP Dorn Logo](https://raw.githubusercontent.com/spdorm/spdorm.github.io/c87d6538582e3f17abd6e6b86b8fafa24ce0dd83/assets/images/spdorm-github-io.png)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/spdorm/spdorm.github.io/c87d6538582e3f17abd6e6b86b8fafa24ce0dd83/assets/images/spdorm-github-io.png" width="350" alt="SP Dorm Logo">
+</p>
+
 
 # spdorm.github.io
 - api คือ โฟล์เดอร์เก็บ API
