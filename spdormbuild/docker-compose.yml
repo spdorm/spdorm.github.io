@@ -7,8 +7,8 @@ services:
       - proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
-      - ./traefik/acme:/etc/traefik/acme
+      - ../../traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ../../traefik/acme:/etc/traefik/acme
     ports:
      - 80:80
      - 443:443
@@ -47,9 +47,9 @@ services:
     labels:
       - traefik.enable=false
     volumes:
-      - ../data/mysql/datafile:/var/lib/mysql
-      - ../data/mysql/mysql-files:/var/lib/mysql-files
-      - ../data/mysql/datafolder:/datafolder
+      - ../../data/mysql/datafile:/var/lib/mysql
+      - ../../data/mysql/mysql-files:/var/lib/mysql-files
+      - ../../data/mysql/datafolder:/datafolder
       - /etc/localtime:/etc/localtime:ro
       - ./config/mysql/my.cnf:/etc/mysql/my.cnf
     environment:
