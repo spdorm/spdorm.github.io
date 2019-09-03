@@ -19,8 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  datetime_picker_formfield:
   shared_preferences: ^0.5.3+1
+  sweetalert: ^0.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -39,7 +39,12 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  fonts:
+    - family: Kanit
+      fonts:
+        - asset: fonts/Kanit-Bold.ttf
+        - asset: fonts/Kanit-Regular.ttf
+          style: italic
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

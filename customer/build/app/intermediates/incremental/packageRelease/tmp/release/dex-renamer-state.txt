@@ -1,4 +1,4 @@
-#Mon Sep 02 22:21:10 ICT 2019
-base.0=/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_29-08-62/build/app/intermediates/dex/release/mergeDexRelease/out/classes.dex
+#Tue Sep 03 18:23:22 ICT 2019
+base.0=/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/app/intermediates/dex/release/mergeDexRelease/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

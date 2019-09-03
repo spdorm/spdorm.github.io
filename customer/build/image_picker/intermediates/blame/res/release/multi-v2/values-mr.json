@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_29-08-62/build/image_picker/intermediates/incremental/mergeReleaseResources/merged.dir/values-mr/values-mr.xml",
+            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/incremental/mergeReleaseResources/merged.dir/values-mr/values-mr.xml",
             "map": [
                 {
                     "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/values-mr/values-mr.xml",
@@ -16,7 +16,7 @@
             ]
         },
         {
-            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_29-08-62/build/image_picker/intermediates/res/merged/release/values-mr/values-mr.xml",
+            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/values-mr/values-mr.xml",
             "map": [
                 {
                     "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/values-mr/values-mr.xml",

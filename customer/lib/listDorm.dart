@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'config.dart';
 import 'firstPage.dart';
@@ -17,7 +18,7 @@ class ListDormPage extends StatefulWidget {
 class _ListDormPage extends State {
   List lst = new List();
 
-  String _address, _promotion, _price, _detail, _nameImage = "";
+  String _address, _promotion, _price, _detail;
 
   void initState() {
     super.initState();
@@ -36,24 +37,27 @@ class _ListDormPage extends State {
       List temp = jsonData["data"];
       Color color;
 
-      for (int i = 0; i < temp.length; i++) {
-        List data = temp[i];
+      if (jsonData["status"] == 0) {
+        for (int i = 0; i < temp.length; i++) {
+          List data = temp[i];
+          Image img;
+          String _name_image;
+          print(data[5]);
 
-        http.post('${config.API_url}/dorm/findImageDorm',
-            body: {"dormId": data[0].toString()}).then((response) {
-          print(response.body);
-          Map jsonData = jsonDecode(response.body) as Map;
-          if (jsonData["status"] == 0) {
+          if (data[5] != "" || data[5] != null) {
             setState(() {
-              _nameImage = jsonData["data"];
+              _name_image = data[5];
+            });
+          } else {
+            setState(() {
+              _name_image = "";
             });
           }
-        });
 
-        http.post('${config.API_url}/room/countStatus',
-            body: {"dormId": data[0].toString()}).then((response) {
-          Map jsonData = jsonDecode(response.body) as Map;
-          int count = jsonData['data'];
+          http.post('${config.API_url}/room/countStatus',
+              body: {"dormId": data[0].toString()}).then((response) {
+            Map jsonData = jsonDecode(response.body) as Map;
+            int count = jsonData['data'];
 
             if (jsonData['status'] == 0) {
               if (count == 0) {
@@ -88,47 +92,62 @@ class _ListDormPage extends State {
                   ),
                   child: new Row(
                     children: <Widget>[
-                      _nameImage != ""
-                          ? Container(
-                              child: Center(
-                                child: Image.network(
-                                    '${config.url_upload}/upload/image/dorm/${_nameImage}',height: 100,width: 100,),
-                              ),
+                      _name_image == "" || _name_image == null
+                          ? new CircleAvatar(
+                              backgroundColor: Colors.white70,
+                              radius: 50.0,
+                              backgroundImage:
+                                  AssetImage("images/no_image.png"),
                             )
-                          : Container(
-                              child: Center(
-                                child: Image.network(
-                                    '${config.url_upload}/upload/image/no_image.png',height: 100,width: 100,),
-                              ),
+                          : new CircleAvatar(
+                              backgroundColor: Colors.white70,
+                              radius: 50.0,
+                              backgroundImage: NetworkImage(
+                                  '${config.API_url}/dorm/image/?nameImage=${_name_image}'),
                             ),
+                      new Expanded(
+                          child: new Padding(
+                        padding: new EdgeInsets.only(left: 8.0),
+                        child: new Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            new Text(
+                              '${data[6]}',
+                              style: new TextStyle(
+                                  fontSize: 20.0, fontWeight: FontWeight.bold),
+                            ),
+                            new Wrap(
+                              spacing: 2.0,
+                              children: <Widget>[
+                                new Chip(
+                                    label: new Text(
+                                  'ราคา : ${data[7]}',
+                                )),
+                                new Chip(
+                                    label: new Text(
+                                  'โปรโมชัน : ${data[8]}',
+                                )),
+                                new Chip(
+                                    label: new Text(
+                                  'ห้องว่าง : ${count}',
+                                  style: TextStyle(color: color),
+                                )),
+                              ],
+                            )
+                          ],
+                        ),
+                      ))
                     ],
                   ),
-                  Expanded(
-                      child: Column(
-                    children: <Widget>[
-                      Text(
-                        '${data[6]}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.blue),
-                      ),
-                      Text('ราคา : ${data[7]}',
-                          style: TextStyle(color: Colors.orange)),
-                      Text('โปรโมชัน : ${data[8]}'),
-                      Text(
-                        'จำนวนห้องว่าง : ${count}',
-                        style: TextStyle(color: color),
-                      ),
-                    ],
-                  )),
-                ],
-              ),
-            ),
-          );
-          lst.add(dormInfo);
-          setState(() {});
-        });
+                ),
+              );
+              setState(() {
+                lst.add(dormInfo);
+              });
+            }
+          });
+        }
       }
     });
   }

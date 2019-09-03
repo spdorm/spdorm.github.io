@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
-import 'main.dart';
 import 'dart:convert';
+
+import 'firstPage.dart';
 
 class RegisterSPDorm extends StatefulWidget {
   @override

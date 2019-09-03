@@ -2,29 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'dart:convert';
+import 'listStatusInform.dart';
 
 class InformMultiLine extends StatefulWidget {
-  int _dormId, _userId,_roomId;
-  InformMultiLine(int dormId, int userId,int roomId) {
+  int _dormId,_userId,_roomId;
+  String _userName;
+  InformMultiLine(int dormId,int userId,int roomId, String userName) {
     this._dormId = dormId;
-    this._userId = userId;
     this._roomId = roomId;
+    this._userId = userId;
+    this._userName = userName;
   }
 
   @override
   State<StatefulWidget> createState() {
-    return new InformMultiLineState(_dormId, _userId,_roomId);
+    return new InformMultiLineState(_dormId,_userId,_roomId, _userName);
   }
 }
 
 class InformMultiLineState extends State<InformMultiLine> {
-  int _dormId, _userId,_roomId;
-  InformMultiLineState(int dormId, int userId,int roomId) {
+ int _dormId,_userId,_roomId;
+  String _userName;
+  InformMultiLineState(int dormId,int userId,int roomId, String userName) {
     this._dormId = dormId;
-    this._userId = userId;
     this._roomId = roomId;
+    this._userId = userId;
+    this._userName = userName;
   }
-
   final TextEditingController _multiLineTextFieldcontroller = TextEditingController();
 
   TextEditingController fixTopic = TextEditingController();
@@ -111,7 +115,12 @@ class InformMultiLineState extends State<InformMultiLine> {
               Container(
                 child: Center(
                   child: new RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                     Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext) => listStatusInformPage(_dormId,_userId,_roomId, _userName)));
+                  },
                   textColor: Colors.white,
                   color: Colors.blueGrey,
                   child:  new Text('แสดงสถานะรายการ'),

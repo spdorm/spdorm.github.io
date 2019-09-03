@@ -1,11 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'Registor.dart';
-import 'listDorm.dart';
-import 'main.dart';
 import 'config.dart';
 
 class pendingPage extends StatefulWidget {
@@ -40,6 +35,7 @@ class _pendingPage extends State<pendingPage> {
   }
 
   String _Name, _lephone;
+  List lst = new List();
 
   void initState() {
     super.initState();
@@ -47,26 +43,16 @@ class _pendingPage extends State<pendingPage> {
         body: {"dormId": _dormId.toString()}).then((response) {
       print(response.body);
       Map jsonData = jsonDecode(response.body) as Map;
-      Map<String, dynamic> data = jsonData['data'];
-      _lephone = data['dormTelephone'];
-      setState(() {});
-    });
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: new AppBar(
-          title: new Text('รอการอนุมัติ'),
-        ),
-        body: Center(
-          child: Column(
+      if (jsonData['status'] == 0) {
+        Map<String, dynamic> data = jsonData['data'];
+
+        Column body = Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               new Text(
-                ' รอการอนุมัติ',
+                'หอพัก : ${data['dormName']}',
                 style: TextStyle(
                   fontSize: 30,
                   color: Colors.green,
@@ -74,15 +60,15 @@ class _pendingPage extends State<pendingPage> {
                 ),
               ),
               new Text(
-                ' โปรดติดต่อเจ้าของหอเพื่อดำเนินการในลำดับต่อไป',
+                'ที่อยู่ : ${data['dormAddress']}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.orange,                
+                  color: Colors.orange,
                 ),
               ),
               new Text(
-                ' เบอร์ติดต่อ : ${_lephone}',
+                ' เบอร์ติดต่อ : ${data['dormTelephone']}',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.red,
@@ -95,30 +81,28 @@ class _pendingPage extends State<pendingPage> {
                   color: Colors.red,
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 140, top: 5),
-                    child: new RaisedButton(
-                      onPressed: () {
-                        prefix0.Navigator.pop(context);
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext)=>ListDormPage()));
-                      },
-                      textColor: Colors.white,
-                      color: Colors.blueGrey,
-                      child: new Row(
-                        children: <Widget>[
-                          new Text('เสร็จสิ้น'),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
             ],
+          );
+        setState(() {
+          lst.add(body);
+        });
+      }
+    });
+  }
+
+  Widget bodyBuild(BuildContext context, int index) {
+    return lst[index];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+          appBar: new AppBar(
+            title: new Text('ข้อมูลติดต่อ'),
           ),
-        ),
-      ),
-    ) ;
+          body: ListView.builder(            
+            itemBuilder: bodyBuild,
+            itemCount: lst.length,
+          ));
   }
 }
