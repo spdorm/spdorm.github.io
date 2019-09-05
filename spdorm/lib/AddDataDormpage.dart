@@ -114,7 +114,7 @@ class _RegisterDataDorm extends State {
     // TODO: implement build
     return Scaffold(
       resizeToAvoidBottomPadding: true,
-      appBar: AppBar(title: const Text('เพิ่มข้อมูลหอพัก')),
+      appBar: AppBar(title: const Text('เพิ่มหอพัก')),
       body: new ListView(
         padding: EdgeInsets.only(left: 15, right: 15, top: 20),
         children: <Widget>[
@@ -123,7 +123,7 @@ class _RegisterDataDorm extends State {
             child: new Row(
               children: <Widget>[
                 new Icon(Icons.date_range),
-                new Text('ข้อมูลหอพัก'),
+                new Text('โปรดระบุข้อมูลหอพัก'),
               ],
             ),
           ),
@@ -133,7 +133,7 @@ class _RegisterDataDorm extends State {
               controller: dormName,
               decoration: InputDecoration(
                   icon: const Icon(Icons.home),
-                  hintText: 'กรอกชื่อหอพัก',
+                  hintText: 'ระบุชื่อหอพัก',
                   labelText: 'ชื่อหอพัก:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
@@ -145,7 +145,7 @@ class _RegisterDataDorm extends State {
               controller: dormAddress,
               decoration: InputDecoration(
                   icon: const Icon(Icons.add_location),
-                  hintText: 'กรอกที่อยู่หอพัก',
+                  hintText: 'ระบุที่อยู่หอพัก',
                   labelText: 'ที่อยู่:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
@@ -157,8 +157,8 @@ class _RegisterDataDorm extends State {
               controller: dormTelephone,
               decoration: InputDecoration(
                   icon: const Icon(Icons.local_phone),
-                  hintText: 'กรอกเบอร์โทร',
-                  labelText: 'เบอร์โทร:',
+                  hintText: 'ระบุหมายเลขโทรศัพท์',
+                  labelText: 'หมายเลขโทรศัพท์:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.phone,
             ),
@@ -169,7 +169,7 @@ class _RegisterDataDorm extends State {
               controller: dormEmail,
               decoration: InputDecoration(
                   icon: const Icon(Icons.email),
-                  hintText: 'กรอกอีเมล์',
+                  hintText: 'ระบุอีเมล์',
                   labelText: 'อีเมล์:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.emailAddress,
@@ -181,7 +181,7 @@ class _RegisterDataDorm extends State {
               controller: dormFloor,
               decoration: InputDecoration(
                   icon: const Icon(Icons.library_add),
-                  hintText: 'กรอกจำนวนชั้น',
+                  hintText: 'ระบุจำนวนชั้น',
                   labelText: 'จำนวนชั้น:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.number,
@@ -199,7 +199,7 @@ class _RegisterDataDorm extends State {
           new Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             child:
-                _image == null ? Text('ไม่มีรูปที่เลือก') : Image.file(_image),
+                _image == null ? Text('โปรดเลือกรูปภาพ') : Image.file(_image),
           ),
           new Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
@@ -215,7 +215,7 @@ class _RegisterDataDorm extends State {
                 onPressed: onRegisterDataDorm,
                 textColor: Colors.white,
                 color: Colors.blue,
-                child: new Text('บันทึก'),
+                child: new Text('เพิ่มหอพัก'),
               ),
             ),
           )
