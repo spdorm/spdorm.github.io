@@ -88,7 +88,7 @@ class _Login extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('เข้าสู่ระบบ')),
+      appBar: AppBar(title: const Text('SP Dorm (เจ้าของหอ)')),
       body: ListView(
         padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 60.0),
         children: <Widget>[
