@@ -9,4 +9,10 @@
 - spdorm คือ โฟล์เดอร์แอปพลิเคชันสำหรับเจ้าของหอพัก
 - upload คือ โฟล์เดอร์สำหรับรองรับการอัปโหลดรูปภาพจากแอปพลิเคชัน (apache, php7)
 
+# command for build APK file
+flutter build apk --release
+
+# command for create api.jar
+mvn -DskipTests clean package
+
 # build project
