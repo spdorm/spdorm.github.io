@@ -206,7 +206,7 @@ class _MainHomeFragment extends State<MainHomeFragment> {
         ),
         body: new HomeFragment(_dormId),
         drawer: new Drawer(
-          child: new ListView(
+          child: new Column(
             children: <Widget>[
               new UserAccountsDrawerHeader(
                 currentAccountPicture: _name_image != ""
