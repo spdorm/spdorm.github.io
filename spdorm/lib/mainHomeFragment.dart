@@ -206,30 +206,16 @@ class _MainHomeFragment extends State<MainHomeFragment> {
         ),
         body: new HomeFragment(_dormId),
         drawer: new Drawer(
-          child: new Column(
+          child: new ListView(
             children: <Widget>[
               new UserAccountsDrawerHeader(
                 currentAccountPicture: _name_image != ""
-                    ? new Container(
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: new DecorationImage(
-                            fit: BoxFit.fill,
-                            image: new NetworkImage(
-                              "${config.API_url}/dorm/image/?nameImage=${_name_image}",
-                            ),
-                          ),
-                        ),
-                      )
-                    : new Container(
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: new DecorationImage(
-                            fit: BoxFit.fill,
-                            image: new AssetImage("images/no_image.png"),
-                          ),
-                        ),
-                      ),
+                    ? new CircleAvatar(
+                        backgroundImage: new NetworkImage(
+                            "${config.API_url}/dorm/image/?nameImage=${_name_image}"))
+                    : new CircleAvatar(
+                        backgroundImage:
+                            new NetworkImage("images/no_image.png")),
                 accountName: new Text('${_dormName}',
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
