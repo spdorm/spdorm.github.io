@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/values-uz/values-uz.xml",
+            "outputFile": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-uz\\values-uz.xml",
             "map": [
                 {
-                    "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/values-uz/values-uz.xml",
+                    "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values-uz\\values-uz.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -16,10 +16,10 @@
             ]
         },
         {
-            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/incremental/mergeReleaseResources/merged.dir/values-uz/values-uz.xml",
+            "outputFile": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\values-uz\\values-uz.xml",
             "map": [
                 {
-                    "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/values-uz/values-uz.xml",
+                    "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values-uz\\values-uz.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

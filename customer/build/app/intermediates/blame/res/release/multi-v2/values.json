@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/app/intermediates/incremental/mergeReleaseResources/merged.dir/values/values.xml",
+            "outputFile": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\app\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values\\values.xml",
             "map": [
                 {
-                    "source": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/android/app/src/main/res/values/ic_launcher_background.xml",
+                    "source": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\android\\app\\src\\main\\res\\values\\ic_launcher_background.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/values/values.xml",
+                    "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,171,172,176,177,178,6,13,56,88,125",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -33,7 +33,7 @@
                     }
                 },
                 {
-                    "source": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/android/app/src/main/res/values/styles.xml",
+                    "source": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\android\\app\\src\\main\\res\\values\\styles.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

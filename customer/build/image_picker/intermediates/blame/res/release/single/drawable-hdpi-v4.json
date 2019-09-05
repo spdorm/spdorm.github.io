@@ -1,22 +1,22 @@
 [
     {
-        "merged": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/drawable-hdpi-v4/notify_panel_notification_icon_bg.png",
-        "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/drawable-hdpi-v4/notify_panel_notification_icon_bg.png"
+        "merged": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notify_panel_notification_icon_bg.png",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\drawable-hdpi-v4\\notify_panel_notification_icon_bg.png"
     },
     {
-        "merged": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/drawable-hdpi-v4/notification_bg_low_normal.9.png",
-        "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/drawable-hdpi-v4/notification_bg_low_normal.9.png"
+        "merged": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_low_pressed.9.png",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\drawable-hdpi-v4\\notification_bg_low_pressed.9.png"
     },
     {
-        "merged": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/drawable-hdpi-v4/notification_bg_normal.9.png",
-        "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/drawable-hdpi-v4/notification_bg_normal.9.png"
+        "merged": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_low_normal.9.png",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\drawable-hdpi-v4\\notification_bg_low_normal.9.png"
     },
     {
-        "merged": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/drawable-hdpi-v4/notification_bg_low_pressed.9.png",
-        "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/drawable-hdpi-v4/notification_bg_low_pressed.9.png"
+        "merged": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_normal.9.png",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\drawable-hdpi-v4\\notification_bg_normal.9.png"
     },
     {
-        "merged": "/media/beerzaonline-ub/Data/Documents/GitHub/bak/customer_03-09-62/build/image_picker/intermediates/res/merged/release/drawable-hdpi-v4/notification_bg_normal_pressed.9.png",
-        "source": "/home/beerzaonline-ub/.gradle/caches/transforms-2/files-2.1/e94bf10d6429fb2c87f20f39f4dac104/core-1.0.2/res/drawable-hdpi-v4/notification_bg_normal_pressed.9.png"
+        "merged": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\notification_bg_normal_pressed.9.png",
+        "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\drawable-hdpi-v4\\notification_bg_normal_pressed.9.png"
     }
 ]
