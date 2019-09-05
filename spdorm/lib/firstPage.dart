@@ -88,7 +88,7 @@ class _Login extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('เข้าสู่ระบบ')),
       body: ListView(
         padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 60.0),
         children: <Widget>[
@@ -107,7 +107,7 @@ class _Login extends State {
               decoration: InputDecoration(
                   contentPadding: new EdgeInsets.all(10.0),
                   border: InputBorder.none,
-                  hintText: ': Username'),
+                  hintText: ': ชื่อผู้ใช้'),
             ),
           ),
           new Container(
@@ -124,7 +124,7 @@ class _Login extends State {
               decoration: InputDecoration(
                   contentPadding: new EdgeInsets.all(10.0),
                   border: InputBorder.none,
-                  hintText: ': Password'),
+                  hintText: ': รหัสผ่าน'),
               obscureText: true,
             ),
           ),
@@ -147,7 +147,7 @@ class _Login extends State {
             margin: new EdgeInsets.only(top: 20),
             child: RaisedButton(
               onPressed: onLogin,
-              child: Text('Login'),
+              child: Text('เข้าสู่ระบบ'),
               textColor: Colors.white,
               color: Colors.blue,
             ),
@@ -159,7 +159,7 @@ class _Login extends State {
                   MaterialPageRoute(
                       builder: (BuildContext) => RegisterSPDorm()));
             },
-            child: Text("Register"),
+            child: Text("ลงทะเบียน"),
           ),
         ],
       ),
