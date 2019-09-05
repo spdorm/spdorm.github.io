@@ -96,7 +96,7 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                   child: new Row(
                     children: <Widget>[
                       new Icon(Icons.add),
-                      new Text('เพิ่มชนิดเครื่องหยอดเหรียญ'),
+                      new Text('เพิ่มประเภทเครื่องหยอดเหรียญ'),
                     ],
                   ),
                 ),
@@ -188,7 +188,7 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                         child: new Row(
                           children: <Widget>[
                             new Icon(Icons.add),
-                            new Text('เพิ่มชนิดเครื่องหยอดเหรียญ'),
+                            new Text('เพิ่มประเภทเครื่องหยอดเหรียญ'),
                           ],
                         ),
                       ),
