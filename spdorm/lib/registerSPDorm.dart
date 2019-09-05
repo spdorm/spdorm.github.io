@@ -56,7 +56,7 @@ class _RegisterSPDorm extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('สมัครสมาชิก')),
+      appBar: AppBar(title: const Text('ลงทะเบียน')),
       body: new ListView(
         padding: EdgeInsets.only(left: 15, right: 15, top: 20),
         children: <Widget>[
@@ -65,7 +65,7 @@ class _RegisterSPDorm extends State {
             child: new Row(
               children: <Widget>[
                 new Icon(Icons.date_range),
-                new Text('รายละเอียดการสมัคร:'),
+                new Text('ข้อมูลการลงทะเบียน:'),
               ],
             ),
           ),
@@ -75,7 +75,7 @@ class _RegisterSPDorm extends State {
               controller: userUsername,
               decoration: InputDecoration(
                   icon: const Icon(Icons.person),
-                  hintText: 'กรอกบัญชีผู้ใช้',
+                  hintText: 'อักษรภาษาอังกฤษ หรือตัวเลขเท่านั้น',
                   labelText: 'บัญชีผู้ใช้:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
@@ -87,7 +87,7 @@ class _RegisterSPDorm extends State {
               controller: userFirstname,
               decoration: InputDecoration(
                   icon: const Icon(Icons.perm_contact_calendar),
-                  hintText: 'กรอกชื่อ',
+                  hintText: 'ระบุชื่อ',
                   labelText: 'ชื่อ:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
@@ -99,7 +99,7 @@ class _RegisterSPDorm extends State {
               controller: userLastname,
               decoration: InputDecoration(
                   icon: const Icon(Icons.perm_contact_calendar),
-                  hintText: 'กรอกนามสุกล',
+                  hintText: 'ระบุนามสกุล',
                   labelText: 'นามสกุล:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
@@ -111,7 +111,7 @@ class _RegisterSPDorm extends State {
               controller: userAddress,
               decoration: InputDecoration(
                   icon: const Icon(Icons.add_location),
-                  hintText: 'กรอกที่อยู่',
+                  hintText: 'ระบุที่อยู่',
                   labelText: 'ที่อยู่:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
@@ -123,7 +123,7 @@ class _RegisterSPDorm extends State {
               controller: userEmail,
               decoration: InputDecoration(
                   icon: const Icon(Icons.email),
-                  hintText: 'กรอกอีเมล์',
+                  hintText: 'ระบุอีเมล์',
                   labelText: 'อีเมล์:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.emailAddress,
@@ -135,7 +135,7 @@ class _RegisterSPDorm extends State {
               controller: userTelephone,
               decoration: InputDecoration(
                   icon: const Icon(Icons.local_phone),
-                  hintText: 'กรอกเบอร์โทรศัพท์',
+                  hintText: 'ระบุหมายเลขโทรศัพท์',
                   labelText: 'เบอร์โทรศัพท์:',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.phone,
@@ -147,7 +147,7 @@ class _RegisterSPDorm extends State {
               controller: userPassword,
               decoration: InputDecoration(
                   icon: const Icon(Icons.lock),
-                  hintText: 'กรอกรหัสผ่าน',
+                  hintText: 'ระบุรหัสผ่าน',
                   labelText: 'รหัสผ่าน:',
                   labelStyle: TextStyle(fontSize: 15)),
               obscureText: true,
@@ -160,8 +160,8 @@ class _RegisterSPDorm extends State {
               controller: userPassword2,
               decoration: InputDecoration(
                   icon: const Icon(Icons.lock),
-                  hintText: 'Enter a Re-Password',
-                  labelText: 'Re-Password:',
+                  hintText: 'ระบุรหัสผ่านอีกครั้ง',
+                  labelText: 'ยืนยันรหัสผ่าน:',
                   labelStyle: TextStyle(fontSize: 15)),
               obscureText: true,
               keyboardType: TextInputType.text,
@@ -173,7 +173,7 @@ class _RegisterSPDorm extends State {
               onPressed: onRegisterSPDorm,
               textColor: Colors.white,
               color: Colors.blue,
-              child: new Text('Register')
+              child: new Text('ลงทะเบียน')
             ),
             ),
           ),
