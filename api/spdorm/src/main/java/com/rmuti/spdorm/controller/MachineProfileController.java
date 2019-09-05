@@ -5,6 +5,7 @@ import com.rmuti.spdorm.model.service.MachineDataRepository;
 import com.rmuti.spdorm.model.service.MachineProfileRepository;
 import com.rmuti.spdorm.model.table.MachineData;
 import com.rmuti.spdorm.model.table.MachineProfile;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class MachineProfileController {
     @PostMapping("/list")
     public Object list(@RequestParam int dormId) {
         APIResponse res = new APIResponse();
-        List machineProfile_db = machineProfileRepository.findByDormId(dormId);
+        List<Object[]> machineProfile_db = machineProfileRepository.findByDormId(dormId);
         if(machineProfile_db.isEmpty()){
             res.setStatus(1);
             res.setMessage("ไม่พบข้อมูลเครื่องหยอดเหรียญ");

@@ -1,7 +1,6 @@
 package com.rmuti.spdorm.model.table;
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Date;

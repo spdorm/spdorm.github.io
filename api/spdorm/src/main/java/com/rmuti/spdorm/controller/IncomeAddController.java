@@ -1,16 +1,16 @@
 package com.rmuti.spdorm.controller;
 
+import java.util.List;
+
 import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.IncomeAddRepository;
-import com.rmuti.spdorm.model.table.FixAdd;
 import com.rmuti.spdorm.model.table.IncomeAdd;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/income")
@@ -38,7 +38,7 @@ public class IncomeAddController {
     @PostMapping("/listAll")
     public Object list(@RequestParam int dormId){
         APIResponse res = new APIResponse();
-        List incomeAdd_db = incomeAddRepository.listByDormId(dormId);
+        List<IncomeAdd> incomeAdd_db = incomeAddRepository.listByDormId(dormId);
         if(!incomeAdd_db.isEmpty()){
             res.setStatus(0);
             res.setData(incomeAdd_db);

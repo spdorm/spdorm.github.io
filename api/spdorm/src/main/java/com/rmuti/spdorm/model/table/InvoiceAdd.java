@@ -27,7 +27,7 @@ public class InvoiceAdd {
     //วัน-เดือน-ปี
     @Column(name = "create_date")
     private Date dateTime = new Date();
-
+/*
     //เดือน
     @Column(name = "invoice_month")
     private String invoiceMonth;
@@ -35,7 +35,7 @@ public class InvoiceAdd {
     //ปี
     @Column(name = "invoice_year")
     private String invoiceYear;
-
+*/
     //ค่าเช่าห้องพัก
     @Column(name = "room_price")
     private String roomPrice;

@@ -6,8 +6,6 @@ import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.UserProfileRepository;
 import com.rmuti.spdorm.model.table.UserProfile;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/user")
 

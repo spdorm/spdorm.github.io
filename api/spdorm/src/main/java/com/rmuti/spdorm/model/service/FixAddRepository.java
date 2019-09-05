@@ -17,9 +17,9 @@ public interface FixAddRepository extends JpaRepository<FixAdd, Integer> {
 
     // Check FixId, DormId RoomId and RoomNo for list
     @Query(value = "select * from fix_add a where a.dorm_id = ?1 order by a.fix_id DESC",nativeQuery = true)
-    List<Object[]> listByDormId(int dormId);
+    List<FixAdd> listByDormId(int dormId);
 
-    @Query(value = "select * from fix_add a where a.dorm_id = ?1, a.room_id = ?2 order by a.fix_id DESC",nativeQuery = true)
+    @Query(value = "select * from fix_add a where a.dorm_id = ?1 and a.room_id = ?2 order by a.fix_id DESC",nativeQuery = true)
     List<Object[]> listByDormIdAndRoomId(int dormId,int roomId);
 
     @Modifying
