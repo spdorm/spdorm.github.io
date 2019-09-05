@@ -119,7 +119,9 @@ class DataDormFragmentState extends State<DataDormFragment> {
                   value: _selectedStatus,
                   items: _status.map((String value) {
                     return new DropdownMenuItem(
-                        value: value, child: new Text(value));
+                        value: value, 
+                        child: new Text(value)
+                        );
                   }).toList(),
                   onChanged: (String value) {
                     onStatusChange(value);
@@ -203,7 +205,7 @@ class DataDormFragmentState extends State<DataDormFragment> {
             child: new Row(
               children: <Widget>[
                 new Icon(Icons.content_paste,color: Colors.yellow[700],),
-                new Text(' โปรโมชั่น:',style: TextStyle(fontWeight: FontWeight.bold),),
+                new Text(' โปรโมชัน:',style: TextStyle(fontWeight: FontWeight.bold),),
               ],
             ),
           ),
@@ -213,7 +215,7 @@ class DataDormFragmentState extends State<DataDormFragment> {
               controller: dormPromotion,
               maxLines: 5,
               decoration: InputDecoration(
-                hintText: '** คลิกเพื่อเพิ่มโปรโมชั่นหอพัก **',
+                hintText: '** คลิกเพื่อเพิ่มโปรโมชันหอพัก **',
               ),
             ),
           ),
