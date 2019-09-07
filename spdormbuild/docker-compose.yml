@@ -33,6 +33,7 @@ services:
     image: openjdk:12
     volumes:
       - ./dist/:/app
+      - ../../data:/data
     expose:
       - 8080
     networks:
