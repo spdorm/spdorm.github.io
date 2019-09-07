@@ -10,7 +10,6 @@ api/spdorm/target
 ### python cache ###
 tools/__pycache__
 
-### Zip files ###
-spdorm.github.io.zip
-
+### temporary files & folders ###
 temp/
+tools/temp
