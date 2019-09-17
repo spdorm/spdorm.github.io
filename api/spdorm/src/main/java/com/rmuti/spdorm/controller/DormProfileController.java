@@ -22,7 +22,6 @@ import org.apache.commons.io.IOUtils;
 @RestController
 @RequestMapping("/dorm")
 @Log4j2
-
 public class DormProfileController {
 
     @Autowired
