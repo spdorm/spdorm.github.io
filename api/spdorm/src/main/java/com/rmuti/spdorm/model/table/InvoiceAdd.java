@@ -13,7 +13,7 @@ public class InvoiceAdd {
 
     //รหัสใบแจ้งชำระ
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int invoiceId;
 
     //รหัสหอพัก

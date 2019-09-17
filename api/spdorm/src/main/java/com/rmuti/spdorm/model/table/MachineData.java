@@ -14,7 +14,7 @@ public class MachineData {
 
     //รหัสข้อมูล
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     //รหัสเครื่องหยอดเหรียญ

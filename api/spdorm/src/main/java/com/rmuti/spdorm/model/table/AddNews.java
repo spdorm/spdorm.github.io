@@ -12,7 +12,7 @@ public class AddNews {
 
     //รหัสข่าวสาร
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int newsId;
 
     //รหัสผู้ใช้ (เจ้าของหอ)

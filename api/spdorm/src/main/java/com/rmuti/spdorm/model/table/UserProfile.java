@@ -11,7 +11,7 @@ public class UserProfile {
 
     //รหัสผู้ใช้
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     //ชื่อผู้ใช้

@@ -13,7 +13,7 @@ public class FixAdd {
 
     //รหัสแจ้งซ่อม
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int fixId;
 
     //รหัสหอพัก

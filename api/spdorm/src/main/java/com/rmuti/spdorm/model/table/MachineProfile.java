@@ -12,7 +12,7 @@ public class MachineProfile {
 
         //รหัสเครื่องหยอดเหรียญ
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int machineId;
 
         //รหัสหอพัก

@@ -13,7 +13,7 @@ public class RoomProfile {
 
     //รหัสห้องพัก
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roomId;
 
     //รหัสหอพัก

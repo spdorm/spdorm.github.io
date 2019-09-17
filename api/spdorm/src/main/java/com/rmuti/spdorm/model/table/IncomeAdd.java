@@ -13,7 +13,7 @@ public class IncomeAdd {
 
     //รหัสรายได้
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int incomeId;
 
     //รหัสหอพัก
