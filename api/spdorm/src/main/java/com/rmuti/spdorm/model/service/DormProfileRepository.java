@@ -31,7 +31,7 @@ public interface DormProfileRepository extends JpaRepository<DormProfile, Intege
 
     // Frank created 05-06-2562
     // For: List all dorm.
-    @Query(value = "select * from dorm_profile a where a.dorm_status = 'active'",nativeQuery = true)
+    @Query(value = "select * from dorm_profile a where a.dorm_status = 'active' order by a.dorm_id",nativeQuery = true)
     List<Object[]> listall();
 
     @Query(value = "select a.dorm_image from dorm_profile a where a.dorm_Id = ?1",nativeQuery = true)
