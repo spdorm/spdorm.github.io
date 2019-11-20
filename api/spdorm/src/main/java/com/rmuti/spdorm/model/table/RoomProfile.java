@@ -56,4 +56,7 @@ public class RoomProfile {
     @Column(name = "create_date")
     private Date dateTime = new Date();
 
+    @Column(name = "pledge")
+    private String pledge;
+
 }

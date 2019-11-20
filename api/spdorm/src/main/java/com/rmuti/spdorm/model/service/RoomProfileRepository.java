@@ -35,6 +35,9 @@ public interface RoomProfileRepository extends JpaRepository<RoomProfile, Intege
     @Query(value = "select a.room_no,b.user_username from room_profile a,user_profile b where a.dorm_id = ?1 and a.user_id = ?2 and a.room_no = ?3 and b.user_username = ?4",nativeQuery = true)
     List<Object[]> findRoomByDormIdAndUserIdAndRoomNo(int dormId, int userId, String roomNo, String userUsername);
 
+    @Query(value = "select * from room_profile a where a.dorm_id = ?1 order by a.room_no",nativeQuery = true)
+    List<RoomProfile> listRoomAllByDormId(int dormId);
+
     @Modifying
     @Transactional
     @Query(value = "update room_profile a set a.room_status = ?1, a.room_type = ?2, a.room_floor = ?3, a.room_no = ?4, a.room_price = ?5, a.room_document = ?6 where a.room_id = ?7 and a.room_no = ?4",nativeQuery = true)

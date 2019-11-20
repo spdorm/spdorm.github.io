@@ -38,26 +38,43 @@ public class InvoiceAddController {
     public Object list(@RequestParam int dormId, @RequestParam int userId, @RequestParam int roomId) {
         APIResponse res = new APIResponse();
         List<Object[]> invoiceAdd_db = invoiceAddRepository.findByDormIdAndUserIdAndRoomId(dormId, userId, roomId);
-        if(invoiceAdd_db!=null && !invoiceAdd_db.isEmpty()){
+        if (invoiceAdd_db != null && !invoiceAdd_db.isEmpty()) {
             res.setStatus(0);
             res.setMessage("พบข้อมูล");
             res.setData(invoiceAddRepository.findByDormIdAndUserIdAndRoomId(dormId, userId, roomId));
-        }else {
+        } else {
             res.setStatus(1);
             res.setMessage("ไม่พบข้อมูล");
         }
         return res;
     }
 
-    @PostMapping("/updateStatus")
-    public Object updateStatus(@RequestParam int invoiceId,@RequestParam String status){
+    @PostMapping("/findByInvoiceId")
+    public Object findByInvoiceId(@RequestParam int invoiceId) {
         APIResponse res = new APIResponse();
         InvoiceAdd invoiceAdd_db = invoiceAddRepository.findByInvoiceId(invoiceId);
-        if(invoiceAdd_db != null){
+
+        if (invoiceAdd_db != null) {
+            res.setStatus(0);
+            res.setMessage("พบข้อมูล");
+            res.setData(invoiceAdd_db);
+        } else {
+            res.setStatus(1);
+            res.setMessage("ไม่พบข้อมูล");
+        }
+        return res;
+
+    }
+
+    @PostMapping("/updateStatus")
+    public Object updateStatus(@RequestParam int invoiceId, @RequestParam String status) {
+        APIResponse res = new APIResponse();
+        InvoiceAdd invoiceAdd_db = invoiceAddRepository.findByInvoiceId(invoiceId);
+        if (invoiceAdd_db != null) {
             res.setStatus(0);
             res.setMessage("แก้ไขสถานะใบแจ้งชำระแล้ว");
             invoiceAddRepository.updateInvoice(invoiceId, status);
-        }else{
+        } else {
             res.setStatus(1);
             res.setMessage("ไม่พบข้อมูล");
         }
@@ -65,14 +82,14 @@ public class InvoiceAddController {
     }
 
     @PostMapping("/deleteInvoice")
-    public Object deleteInvoice(@RequestParam int invoiceId){
+    public Object deleteInvoice(@RequestParam int invoiceId) {
         APIResponse res = new APIResponse();
         InvoiceAdd invoiceAdd_db = invoiceAddRepository.findByInvoiceId(invoiceId);
-        if(invoiceAdd_db != null){
+        if (invoiceAdd_db != null) {
             res.setStatus(0);
             res.setMessage("ลบใบแจ้งชำระแล้ว");
             invoiceAddRepository.deleteById(invoiceId);
-        }else{
+        } else {
             res.setStatus(1);
             res.setMessage("ไม่พบข้อมูล");
         }

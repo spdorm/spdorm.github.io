@@ -3,6 +3,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 @ToString
 @Data
@@ -26,7 +27,7 @@ public class InvoiceAdd {
 
     //วัน-เดือน-ปี
     @Column(name = "create_date")
-    private Date dateTime = new Date();
+    private String dateTime;
 /*
     //เดือน
     @Column(name = "invoice_month")

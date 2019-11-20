@@ -10,6 +10,7 @@ import com.rmuti.spdorm.model.table.DormProfile;
 import com.rmuti.spdorm.model.table.History;
 import com.rmuti.spdorm.model.table.RoomProfile;
 import com.rmuti.spdorm.model.table.UserProfile;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -226,7 +227,7 @@ public class RoomProfileController {
 
     @PostMapping("/saveImage")
     public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int roomId,
-                            @RequestParam int roomNo, @RequestParam String userName) throws IOException {
+                            @RequestParam String roomNo, @RequestParam String userName) throws IOException {
         APIResponse res = new APIResponse();
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
@@ -235,8 +236,7 @@ public class RoomProfileController {
         RoomProfile roomProfile_db = roomProfileRepository.findByRoomId(roomId);
 
         if (!file.isEmpty() && roomProfile_db != null) {
-            String fileName = file.getOriginalFilename();
-            String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
+            String typeName = FilenameUtils.getExtension(file.getOriginalFilename());
             String newName = roomNo + "_" + userName + "_" + formattedDate + "." + typeName;
             String floder = Config.DATA_PATH_CHARTER;
             Path path = Paths.get(floder + newName);
@@ -249,6 +249,55 @@ public class RoomProfileController {
             res.setStatus(0);
             res.setMessage("อัพรูปเรียบร้อยแล้ว");
             res.setData(newName);
+        } else {
+            res.setStatus(1);
+            res.setMessage("ไม่สามารถอัพรูปภาพได้");
+        }
+        return res;
+    }
+
+//    @PostMapping("/updateImage")
+//    public Object updateImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int roomId,
+//                            @RequestParam int roomNo, @RequestParam String userName) throws IOException {
+//        APIResponse res = new APIResponse();
+//        LocalDateTime myDateObj = LocalDateTime.now();
+//        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
+//        String formattedDate = myDateObj.format(myFormatObj);
+//
+//        RoomProfile roomProfile_db = roomProfileRepository.findByRoomId(roomId);
+//
+//        if (!file.isEmpty() && roomProfile_db != null) {
+//            String typeName = FilenameUtils.getExtension(file.getOriginalFilename());
+//            String newName = roomNo + "_" + userName + "_" + formattedDate + "." + typeName;
+//            String floder = Config.DATA_PATH_CHARTER;
+//            Path path = Paths.get(floder + newName);
+//            // File fileContent = new File(fileName);
+//            // BufferedOutputStream buf = new BufferedOutputStream(new
+//            // FileOutputStream(fileContent));
+//            byte[] bytes = file.getBytes();
+//            Files.write(path, bytes);
+//            roomProfileRepository.updateImageToRoom(roomId, newName);
+//            res.setStatus(0);
+//            res.setMessage("อัพรูปเรียบร้อยแล้ว");
+//            res.setData(newName);
+//        } else {
+//            res.setStatus(1);
+//            res.setMessage("ไม่สามารถอัพรูปภาพได้");
+//        }
+//        return res;
+//    }
+
+    @PostMapping("/listRoomAll")
+    public Object listRoomAll(@RequestParam int dormId) {
+        APIResponse res = new APIResponse();
+        DormProfile dormProfile_db = dormProfileRepository.findByDormId(dormId);
+        if (dormProfile_db != null) {
+            res.setStatus(0);
+            res.setMessage("พบข้อมูล");
+            res.setData(roomProfileRepository.listRoomAllByDormId(dormId));
+        } else {
+            res.setStatus(1);
+            res.setMessage("ไม่พบข้อมูล");
         }
         return res;
     }

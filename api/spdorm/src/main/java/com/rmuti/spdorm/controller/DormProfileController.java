@@ -5,7 +5,9 @@ import com.rmuti.spdorm.model.bean.APIResponse;
 import com.rmuti.spdorm.model.service.DormProfileRepository;
 import com.rmuti.spdorm.model.table.DormProfile;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @RestController
 @RequestMapping("/dorm")
@@ -124,9 +127,10 @@ public class DormProfileController {
 //        return res;
 //    }
 
-    @PostMapping("/saveImage")
+    @PostMapping(value = "/saveImage")
     public Object saveImage(@RequestParam(name = "file", required = false) MultipartFile file, @RequestParam int dormId) throws IOException {
         log.debug("save image api");
+
         APIResponse res = new APIResponse();
         LocalDateTime myDateObj = LocalDateTime.now();
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy_HHmmss");
@@ -135,12 +139,11 @@ public class DormProfileController {
         DormProfile dormProfile_db = dormProfileRepository.findByDormId(dormId);
 
         if (!file.isEmpty() && dormProfile_db != null) {
-            String fileName = file.getOriginalFilename();
-            String typeName = file.getOriginalFilename().substring(fileName.length() - 3);
-            String newName = formattedDate + "." + typeName;
+            String typeName = FilenameUtils.getExtension(file.getOriginalFilename());
+            String newName = "P" + dormId + formattedDate + "." + typeName;
             String floder = Config.DATA_PATH_DORM;
             Path path = Paths.get(floder + newName);
-            log.debug("path : "+path);
+            log.debug("path : " + path);
             //File fileContent = new File(fileName);
             //BufferedOutputStream buf = new BufferedOutputStream(new FileOutputStream(fileContent));
             byte[] bytes = file.getBytes();

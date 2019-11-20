@@ -26,12 +26,12 @@ public interface DormProfileRepository extends JpaRepository<DormProfile, Intege
 //    @Query(value = "select * from dorm_profile a where a.dormId = :stetus and a.name = :name",nativeQuery = true)
 //    DormProfile findInfo(@Param("stetus") int stetus , @Param("name") String name);
 
-    @Query(value = "select * from dorm_profile a where a.user_id = ?1",nativeQuery = true)
+    @Query(value = "select * from dorm_profile a where a.user_id = ?1 order by a.dorm_id asc",nativeQuery = true)
     List<Object[]> findInfo(int userId);
 
     // Frank created 05-06-2562
     // For: List all dorm.
-    @Query(value = "select * from dorm_profile a where a.dorm_status = 'active' order by a.dorm_id",nativeQuery = true)
+    @Query(value = "select * from dorm_profile a where a.dorm_status = 'active' order by a.dorm_id asc",nativeQuery = true)
     List<Object[]> listall();
 
     @Query(value = "select a.dorm_image from dorm_profile a where a.dorm_Id = ?1",nativeQuery = true)

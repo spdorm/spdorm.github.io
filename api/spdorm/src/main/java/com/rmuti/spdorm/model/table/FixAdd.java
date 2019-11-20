@@ -40,12 +40,22 @@ public class FixAdd {
     @Column(name = "fix_detail")
     private String fixDetail;
 
+    @Column(name = "fix_price")
+    private int fixPrice;
+
     //สถานะการแจ้งซ่อม (ซ่อมแล้ว/ยังไม่ซ่อม) --จัดการได้เฉพาะเจ้าของหอ
     @Column(name = "fix_status")
     private String fixStatus;
 
+    @Column(name = "fix_note")
+    private String fixNote;
+
     //วันที่เพิ่มการแจ้งซ่อม
     @Column(name = "create_date")
     private Date dateTime = new Date();
+
+    //วันที่ซ่อมสำเร็จ
+    @Column(name = "end_date")
+    private Date endDateTime = new Date();
 
 }
