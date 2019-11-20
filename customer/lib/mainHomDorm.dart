@@ -6,6 +6,8 @@ import 'InformPage.dart';
 import 'firstPage.dart';
 import 'listPayment.dart';
 import 'PersonalInformationPage.dart';
+import 'DataPayDeposit.dart';
+import 'CheckOut.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'config.dart';
@@ -32,7 +34,13 @@ class mainHomDormState extends State<mainHomDorm> {
     this._roomId = roomId;
   }
 
-  String _Username, _Firstname, _userLastname, _Address, _Email, _Telephone,_dormName;
+  String _Username,
+      _Firstname,
+      _userLastname,
+      _Address,
+      _Email,
+      _Telephone,
+      _dormName;
 
   TextEditingController userFirstname = TextEditingController();
   TextEditingController userLastname = TextEditingController();
@@ -66,8 +74,6 @@ class mainHomDormState extends State<mainHomDorm> {
     });
   }
 
-  
-
   Future<void> _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id', null);
@@ -82,20 +88,33 @@ class mainHomDormState extends State<mainHomDorm> {
         return Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext) => PersonalFragment(_dormId, _userId, _roomId)));
+                builder: (BuildContext) =>
+                    PersonalFragment(_dormId, _userId, _roomId)));
       case 3:
         return Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext) =>
-                      InformMultiLine(_dormId,_userId,_roomId, _Username)));
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) =>
+                    InformMultiLine(_dormId, _userId, _roomId, _Username)));
       case 4:
         return Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext) =>
-                      ListPaymentPage(_dormId, _userId, _roomId)));
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) =>
+                    ListPaymentPage(_dormId, _userId, _roomId)));
       case 5:
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) =>
+                    dataPayDepositManagePage(_dormId, _userId, _roomId)));
+      case 6:
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) =>
+                    CheckOutPage(_dormId, _userId, _roomId)));
+      case 7:
         return showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -128,15 +147,21 @@ class mainHomDormState extends State<mainHomDorm> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
+        backgroundColor: Colors.blue[300],
         title: new Text('${_dormName}'),
       ),
       drawer: new Drawer(
         child: new Column(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text("${_Username}"),
+              accountName: Text("${_Username}",
+              style: TextStyle(fontSize: 18),),
               accountEmail: Text("${_Email}"),
+              decoration: new BoxDecoration(
+                color: Colors.blue[300],
+              ),
               currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.grey[200],
                 // backgroundColor:
                 //     Theme.of(context).platform == TargetPlatform.iOS
                 //         ? Colors.blue
@@ -148,14 +173,14 @@ class mainHomDormState extends State<mainHomDorm> {
               children: <Widget>[
                 new ListTile(
                   title: new Text('หน้าหลัก'),
-                  leading: new Icon(Icons.home,color: Colors.indigo),
-                  selected: 1 == selectedDrawerIndex,
+                  leading: new Icon(Icons.home,color: Colors.grey),
+                  selected: true,
                   onTap: () => onSelectItem(1),
                 ),
                 new ListTile(
                   title: new Text('ข้อมูลส่วนตัว'),
-                  leading: new Icon(Icons.person,color: Colors.green),
-                  selected: 2 == selectedDrawerIndex,
+                  leading: new Icon(Icons.person, color: Colors.grey),
+                  // selected: 2 == selectedDrawerIndex,
                   onTap: () {
                     Navigator.pop(context);
                     onSelectItem(2);
@@ -163,29 +188,52 @@ class mainHomDormState extends State<mainHomDorm> {
                 ),
                 new ListTile(
                   title: new Text('การแจ้งซ่อม'),
-                  leading: new Icon(Icons.settings,color: Colors.brown[600]),
-                  selected: 3 == selectedDrawerIndex,
-                onTap: () {
+                  leading: new Icon(Icons.settings, color: Colors.grey),
+                  // selected: 3 == selectedDrawerIndex,
+                  onTap: () {
                     Navigator.pop(context);
                     onSelectItem(3);
                   },
                 ),
                 new ListTile(
                   title: new Text('ใบเสร็จชำระเงิน'),
-                  leading: new Icon(Icons.monetization_on,color: Colors.yellow[700]),
-                  selected: 4 == selectedDrawerIndex,
+                  leading: new Icon(Icons.monetization_on,
+                      color: Colors.grey),
+                  // selected: 4 == selectedDrawerIndex,
                   onTap: () {
                     Navigator.pop(context);
                     onSelectItem(4);
                   },
                 ),
                 new ListTile(
-                  title: new Text('ออกจากระบบ'),
-                  leading: new Icon(Icons.exit_to_app,color: Colors.red[200],),
-                  selected: 5 == selectedDrawerIndex,
+                  title: new Text('ตรวจสอบค่ามัดจำ'),
+                  leading: new Icon(Icons.monetization_on, color: Colors.grey),
+                  // selected: 5 == selectedDrawerIndex,
                   onTap: () {
                     Navigator.pop(context);
                     onSelectItem(5);
+                  },
+                ),
+                // new ListTile(
+                //   title: new Text('ขอออกหอพัก'),
+                //   leading:
+                //       new Icon(Icons.record_voice_over, color: Colors.grey),
+                //   // selected: 6 == selectedDrawerIndex,
+                //   onTap: () {
+                //     Navigator.pop(context);
+                //     onSelectItem(6);
+                //   },
+                // ),
+                new ListTile(
+                  title: new Text('ออกจากระบบ'),
+                  leading: new Icon(
+                    Icons.exit_to_app,
+                    color: Colors.grey,
+                  ),
+                  // selected: 7 == selectedDrawerIndex,
+                  onTap: () {
+                    Navigator.pop(context);
+                    onSelectItem(7);
                   },
                 )
               ],

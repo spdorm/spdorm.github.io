@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'dart:convert';
 import 'PaymentNotificationPage.dart';
+import 'mainHomDorm.dart';
 
 class ListPaymentPage extends StatefulWidget {
   int _dormId, _userId, _roomId;
@@ -29,7 +30,7 @@ class _ListPaymentPage extends State<ListPaymentPage> {
 
   List<String> _Month = [
     "มกราคม",
-    "กุมภาพันธุ์",
+    "กุมภาพันธ์",
     "มีนาคม",
     "เมษายน",
     "พฤษภาคม",
@@ -38,7 +39,7 @@ class _ListPaymentPage extends State<ListPaymentPage> {
     "สิงหาคม",
     "กันยายน",
     "ตุลาคม",
-    "พฤษจิกายน",
+    "พฤศจิกายน",
     "ธันวาคม",
   ].toList();
 
@@ -49,23 +50,7 @@ class _ListPaymentPage extends State<ListPaymentPage> {
   @override
   void initState() {
     super.initState();
-    _head();
     AddCard();
-  }
-
-  void _head() {
-    Container head = Container(
-      padding: EdgeInsets.only(left: 5, right: 5, top: 5),
-      child: new Row(
-        children: <Widget>[
-          new Icon(Icons.label_important),
-          new Text('รายการใบแจ้งชำระทั้งหมด'),
-        ],
-      ),
-    );
-    setState(() {
-      lst.add(head);
-    });
   }
 
   void AddCard() {
@@ -103,9 +88,9 @@ class _ListPaymentPage extends State<ListPaymentPage> {
               '${data[1].toString().substring(8, 10)} ${_month} ${data[1].toString().substring(0, 4)}';
               
           if (data[3] == "ยังไม่จ่าย") {
-            color = Colors.red[200];
+            color = Colors.blue[200];
           } else {
-            color = Colors.green[200];
+            color = Colors.blueGrey[100];
           }
 
           Card cardNew = Card(
@@ -132,12 +117,12 @@ class _ListPaymentPage extends State<ListPaymentPage> {
                           border: new Border(
                               right: new BorderSide(
                                   width: 1.0, color: Colors.black))),
-                      child: Icon(Icons.monetization_on, color: Colors.black),
+                      child: Icon(Icons.monetization_on, color: Colors.white),
                     ),
                     title: Text(
                       '${data[1].toString().substring(8, 10)} ${_month} ${data[1].toString().substring(0, 4)}',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
                     ),
                     // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -196,8 +181,17 @@ class _ListPaymentPage extends State<ListPaymentPage> {
         }
       }else{
        return  SweetAlert.show(context,
-                      subtitle: "ไม่พบข้อมูลใบแจ้งชำระ",
-                      style: SweetAlertStyle.error);
+        subtitle: "ไม่พบรายการใบแจ้งชำระ!", style: SweetAlertStyle.error,onPress: (isTrue) {
+          if (isTrue) {
+            Navigator.of(context).pop();
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext) =>
+                        mainHomDorm(_dormId, _userId, _roomId)));
+          }
+          return false;
+        });
       }
     });
   }
@@ -207,7 +201,6 @@ class _ListPaymentPage extends State<ListPaymentPage> {
     await Future.delayed(Duration(seconds: 1));
     lst.clear();
     setState(() {
-      _head();
       AddCard();
     });
     return null;
@@ -220,8 +213,10 @@ class _ListPaymentPage extends State<ListPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
+          backgroundColor: Colors.blue[300],
           title: Text('ใบแจ้งชำระทั้งหมด'),
         ),
         body: RefreshIndicator(

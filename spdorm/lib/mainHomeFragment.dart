@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'AddDormpage.dart';
 import 'VendingHome.dart';
@@ -12,6 +13,7 @@ import 'StaticVendingMachine.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'config.dart';
+import 'listCustumerManageAll.dart';
 
 class MainHomeFragment extends StatefulWidget {
   int _dormId, _userId;
@@ -106,7 +108,7 @@ class _MainHomeFragment extends State<MainHomeFragment> {
             ));
   }
 
-  int selectedDrawerIndex = 0;
+  int selectedDrawerIndex = 1;
 
   onSelectItem(int index) {
     setState(() => selectedDrawerIndex = index);
@@ -117,29 +119,35 @@ class _MainHomeFragment extends State<MainHomeFragment> {
         return Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext) => InformAlertPage(_dormId, _userId)));
+                builder: (BuildContext) =>
+                    listManageCustumerAllPage(_dormId, _userId)));
       case 3:
         return Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext) => NewsDorm(_dormId, _userId)));
+                builder: (BuildContext) => InformAlertPage(_dormId, _userId)));
       case 4:
         return Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (BuildContext) => DataDormFragment(_dormId, _userId)));
+                builder: (BuildContext) => NewsDorm(_dormId, _userId)));
       case 5:
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext) => DataDormFragment(_dormId, _userId)));
+      case 6:
         return Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext) =>
                     AccountIncomeFragment(_dormId, _userId)));
-      case 6:
+      case 7:
         return Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext) => VendingHomePage(_dormId, _userId)));
-      case 7:
+      case 8:
         return Navigator.push(
             context,
             MaterialPageRoute(
@@ -202,20 +210,50 @@ class _MainHomeFragment extends State<MainHomeFragment> {
       onWillPop: () async => false,
       child: new Scaffold(
         appBar: new AppBar(
+          backgroundColor: Colors.red[300],
           title: new Text('หน้าหลัก'),
+          // actions: <Widget>[
+          //   IconButton(
+          //     icon: Icon(Icons.settings),
+          //     onPressed: () {
+          //       Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //               builder: (BuildContext) => NotificationsPage(_userId)));
+          //     },
+          //   ),
+          // ],
         ),
         body: new HomeFragment(_dormId),
         drawer: new Drawer(
-          child: new Column(
+          child: new ListView(
+            padding: EdgeInsets.all(0),
             children: <Widget>[
               new UserAccountsDrawerHeader(
+                decoration: new BoxDecoration(
+                  color: prefix0.Colors.red[300]
+                ),
                 currentAccountPicture: _name_image != ""
-                    ? new CircleAvatar(
-                        backgroundImage: new NetworkImage(
-                            "${config.API_url}/dorm/image/?nameImage=${_name_image}"))
-                    : new CircleAvatar(
-                        backgroundImage:
-                            new NetworkImage("images/no_image.png")),
+                    ? new Container(
+                        decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: new DecorationImage(
+                            fit: BoxFit.cover,
+                            image: new NetworkImage(
+                              "${config.API_url}/dorm/image/?nameImage=${_name_image}",
+                            ),
+                          ),
+                        ),
+                      )
+                    : new Container(
+                        decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: new DecorationImage(
+                            fit: BoxFit.fill,
+                            image: new AssetImage("images/no_image.png"),
+                          ),
+                        ),
+                      ),
                 accountName: new Text('${_dormName}',
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
@@ -224,61 +262,70 @@ class _MainHomeFragment extends State<MainHomeFragment> {
               new ListTile(
                 title: new Text('หน้าหลัก'),
                 leading: new Icon(Icons.home),
-                selected: 1 == selectedDrawerIndex,
+                selected: true,
                 onTap: () => onSelectItem(1),
               ),
               new ListTile(
-                title: new Text('แจ้งซ่อม'),
-                leading: new Icon(Icons.settings),
-                selected: 2 == selectedDrawerIndex,
+                title: new Text('จัดการค่ามัดจำ'),
+                leading: new Icon(Icons.insert_drive_file),
+                // selected: 2 == selectedDrawerIndex,
                 onTap: () {
                   Navigator.pop(context);
                   onSelectItem(2);
                 },
               ),
               new ListTile(
-                title: new Text('เพิ่มข้อมูลข่าวสาร'),
-                leading: new Icon(Icons.public),
-                selected: 3 == selectedDrawerIndex,
+                title: new Text('แจ้งซ่อม'),
+                leading: new Icon(Icons.settings),
+                // selected: 3 == selectedDrawerIndex,
                 onTap: () {
                   Navigator.pop(context);
                   onSelectItem(3);
                 },
               ),
               new ListTile(
-                title: new Text('ข้อมูลหอพัก'),
-                leading: new Icon(Icons.perm_device_information),
-                selected: 4 == selectedDrawerIndex,
+                title: new Text('เพิ่มข้อมูลข่าวสาร'),
+                leading: new Icon(Icons.public),
+                // selected: 4 == selectedDrawerIndex,
                 onTap: () {
                   Navigator.pop(context);
                   onSelectItem(4);
                 },
               ),
               new ListTile(
-                title: new Text('บัญชีรายรับรายจ่าย'),
-                leading: new Icon(Icons.note),
-                selected: 5 == selectedDrawerIndex,
+                title: new Text('ข้อมูลหอพัก'),
+                leading: new Icon(Icons.perm_device_information),
+                // selected: 5 == selectedDrawerIndex,
                 onTap: () {
                   Navigator.pop(context);
                   onSelectItem(5);
                 },
               ),
               new ListTile(
-                title: new Text('เครื่องหยอดเหรียญ'),
-                leading: new Icon(Icons.note_add),
-                selected: 6 == selectedDrawerIndex,
+                title: new Text('บัญชีรายรับรายจ่าย'),
+                leading: new Icon(Icons.note),
+                // selected: 6 == selectedDrawerIndex,
                 onTap: () {
                   Navigator.pop(context);
                   onSelectItem(6);
                 },
               ),
               new ListTile(
-                title: new Text('สถิตเครื่องหยอดเหรียญ'),
-                leading: new Icon(Icons.insert_chart),
-                selected: 7 == selectedDrawerIndex,
+                title: new Text('เครื่องหยอดเหรียญ'),
+                leading: new Icon(Icons.note_add),
+                // selected: 7 == selectedDrawerIndex,
                 onTap: () {
                   Navigator.pop(context);
                   onSelectItem(7);
+                },
+              ),
+              new ListTile(
+                title: new Text('สถิตเครื่องหยอดเหรียญ'),
+                leading: new Icon(Icons.insert_chart),
+                // selected: 8 == selectedDrawerIndex,
+                onTap: () {
+                  Navigator.pop(context);
+                  onSelectItem(8);
                 },
               )
             ],

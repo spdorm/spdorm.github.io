@@ -38,11 +38,12 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
 
   File _image, _see;
   List lst = new List();
-  String _roomNo;
+  String _roomNo, _username;
 
   @override
   void initState() {
     super.initState();
+    _username = _user[0].toString();
     _body();
   }
 
@@ -94,48 +95,46 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
   //   }
   // }
 
-  Future upload(File imageFile) {
+  Future upload(File imageFile) async {
     if (imageFile != null) {
       SweetAlert.show(context,
-          subtitle: "กำลังอัพโหลดรูปภาพ...", style: SweetAlertStyle.loading);
-      new Future.delayed(new Duration(seconds: 1), () async {
-        var stream =
-            new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-        var length = await imageFile.length();
-        var uri = Uri.parse("${config.API_url}/room/saveImage");
+          subtitle: "กำลังอัปโหลดรูปภาพ...", style: SweetAlertStyle.loading);
+      var stream =
+          new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+      var length = await imageFile.length();
+      var uri = Uri.parse("${config.API_url}/room/saveImage");
 
-        var request = new http.MultipartRequest("POST", uri);
-        var multipartFile = new http.MultipartFile("file", stream, length,
-            filename: path.basename(imageFile.path));
-        request.fields['roomId'] = _roomId.toString();
-        request.fields['roomNo'] = _roomNo.toString();
-        request.fields['userName'] = _user[0].toString();
-        request.files.add(multipartFile);
+      var request = new http.MultipartRequest("POST", uri);
+      var multipartFile = new http.MultipartFile("file", stream, length,
+          filename: path.basename(imageFile.path));
+      request.fields['roomId'] = '$_roomId';
+      request.fields['roomNo'] = '$_roomNo';
+      request.fields['userName'] = _username;
+      request.files.add(multipartFile);
 
-        var response = await request.send();
-        if (response.statusCode == 200) {
-          print("Image Uploaded");
-          SweetAlert.show(context,
-              subtitle: "สำเร็จ!",
-              style: SweetAlertStyle.success, onPress: (bool isTrue) {
-            if (isTrue) {
-              _getId().then((int userId) {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext) =>
-                            MainHomeFragment(_dormId, userId)));
-              });
-            }
-          });
-        } else {
-          print("Upload Failed");
-        }
-        response.stream.transform(utf8.decoder).listen((value) {
-          print(value);
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        print("Image Uploaded");
+        SweetAlert.show(context,
+            subtitle: "สำเร็จ!",
+            style: SweetAlertStyle.success, onPress: (bool isTrue) {
+          if (isTrue) {
+            _getId().then((int userId) {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext) =>
+                          MainHomeFragment(_dormId, userId)));
+            });
+          }
         });
+      } else {
+        print("Upload Failed");
+      }
+      response.stream.transform(utf8.decoder).listen((value) {
+        print(value);
       });
     }
   }
@@ -218,21 +217,30 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
         print(_roomId);
         print(_roomNo);
         print(_user[0]);
-        Text head = Text(':รายละเอียดข้อมูลสัญญาเช่า');
+
+        Container head = Container(
+          padding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+          child: new Row(
+            children: <Widget>[
+              new Text(' รายละเอียดข้อมูลสัญญาเช่า'),
+            ],
+          ),
+        );
+
         Card body = Card(
-          margin: EdgeInsets.all(5),
+          margin: EdgeInsets.all(10),
           child: new Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               new Container(
-                // padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                padding: EdgeInsets.only(top: 15),
                 child: Text(
                   'หมายเลขห้อง : ${data['roomNo']}',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent),
+                      color: Colors.blueGrey),
                 ),
               ),
               new Container(
@@ -252,23 +260,21 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blueAccent),
+                      color: Colors.blueGrey),
                 ),
               ),
               new Container(
                 padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                 child: new Row(
                   children: <Widget>[
-                    new Icon(Icons.image),
-                    new Text('ใบสัญญาเช่า:'),
+                    new Text(' ใบสัญญาเช่า'),
                   ],
                 ),
               ),
               new Container(
                 padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                child: _image == null
-                    ? Text('No image selected.')
-                    : Image.file(_image),
+                child:
+                    _image == null ? Text('ไม่มีรูปภาพ') : Image.file(_image),
               ),
               new Container(
                 padding: EdgeInsets.only(left: 15, right: 15, top: 15),
@@ -276,16 +282,18 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
                   onPressed: getImageGallery,
                   tooltip: 'Pick Image',
                   child: Icon(Icons.add_a_photo),
+                  backgroundColor: Colors.brown[300],
                 ),
               ),
               new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 70, top: 5, right: 1),
+                    padding: EdgeInsets.only(top: 15, bottom: 15),
                     child: new RaisedButton(
                       onPressed: onDataDorm,
                       textColor: Colors.white,
-                      color: Colors.blue,
+                      color: Colors.brown[400],
                       child: new Row(
                         children: <Widget>[
                           new Text('บันทึก'),
@@ -293,19 +301,19 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 1, top: 5),
-                    child: new RaisedButton(
-                      onPressed: () {},
-                      textColor: Colors.white,
-                      color: Colors.blueGrey,
-                      child: new Row(
-                        children: <Widget>[
-                          new Text('แก้ไข'),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.only(left: 1, top: 5),
+                  //   child: new RaisedButton(
+                  //     onPressed: () {},
+                  //     textColor: Colors.white,
+                  //     color: Colors.brown[200],
+                  //     child: new Row(
+                  //       children: <Widget>[
+                  //         new Text('แก้ไข'),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ],
@@ -327,8 +335,11 @@ class CharterDormFragmentState extends State<CharterDormFragment> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(title: const Text('เพิ่มใบสัญญาเช่า')),
+      appBar: AppBar(
+          backgroundColor: Colors.red[300],
+          title: const Text('เพิ่มใบสัญญาเช่า')),
       body: new ListView.builder(
         padding: EdgeInsets.only(left: 15, right: 15, top: 20),
         itemBuilder: bodyBuild,

@@ -1,47 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sweetalert/sweetalert.dart';
+import 'package:spdorm/ConvertDateTime.dart';
 import 'dart:convert';
 import 'config.dart';
 import 'listPayment.dart';
 
 class PaymentmultiLine extends StatefulWidget {
-  int _dormId, _userId, _roomId;
-  String _date, _dateShow;
-  PaymentmultiLine(
-      int dormId, int userId, int roomId, String date, String dateShow) {
-    this._dormId = dormId;
-    this._userId = userId;
-    this._roomId = roomId;
-    this._date = date;
-    this._dateShow = dateShow;
+ int _invoiceId;
+  String _fullName;
+  PaymentmultiLine(int invoiceId, String fullName) {
+    this._invoiceId = invoiceId;
+    this._fullName = fullName;
   }
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _PaymentmultiLine(_dormId, _userId, _roomId, _date, _dateShow);
+    return _PaymentmultiLine(_invoiceId, _fullName);
   }
 }
 
 class _PaymentmultiLine extends State {
-  int _dormId, _userId, _roomId;
-  String _date, _dateShow;
-  _PaymentmultiLine(
-      int dormId, int userId, int roomId, String date, String dateShow) {
-    this._dormId = dormId;
-    this._userId = userId;
-    this._roomId = roomId;
-    this._date = date;
-    this._dateShow = dateShow;
+  int _invoiceId;
+  String _fullName;
+  _PaymentmultiLine(int invoiceId, String fullName) {
+    this._invoiceId = invoiceId;
+    this._fullName = fullName;
   }
 
-  final TextEditingController _multiLineTextFieldcontroller =
+   final TextEditingController _multiLineTextFieldcontroller =
       TextEditingController();
   List<String> _Status = ["จ่ายแล้ว", "ยังไม่จ่าย"].toList();
   String _selectedStatus;
-  String _name, _roomNo, _price;
+  String _name, _roomNo, _price, _date;
   Color color;
-  int _invoiceId;
+  int _pledge = 0;
   List lst = new List();
 
   void onStatusChange(String item) {
@@ -76,36 +69,49 @@ class _PaymentmultiLine extends State {
   }
 
   void _conApi() {
-    http.post('${config.API_url}/invoice/list', body: {
-      "dormId": _dormId.toString(),
-      "userId": _userId.toString(),
-      "roomId": _roomId.toString()
+    http.post('${config.API_url}/invoice/findByInvoiceId', body: {
+      "invoiceId": _invoiceId.toString(),
     }).then((response) {
+      // print(response.body);
       Map jsonData = jsonDecode(response.body) as Map;
-      List temp = jsonData['data'];
-      if (jsonData['status'] == 0) {
-        for (int i = 0; i < temp.length; i++) {
-          List dataPay = temp[i];
 
-          if (_date == dataPay[1]) {
-            if (dataPay[3] == "ยังไม่จ่าย") {
+      if (jsonData['status'] == 0) {
+        Map<String, dynamic> data = jsonData['data'];
+        http.post('${config.API_url}/room/listRoom', body: {
+          "dormId": data['dormId'].toString(),
+          "roomId": data['roomId'].toString()
+        }).then((respone) {
+          // print(respone.body);
+          Map jsonData = jsonDecode(respone.body) as Map;
+
+          if (jsonData["status"] == 0) {
+            Map<String, dynamic> listData = jsonData["data"];
+            convertDateTime objDateToThai = convertDateTime();
+
+            _date = objDateToThai.convertToThai(data['dateTime']);
+            _pledge = int.parse(listData['pledge']);
+            _roomNo = listData['roomNo'];
+            _price = listData['roomPrice'];
+        
+            if (data['invoiceStatus'] == "ยังไม่จ่าย") {
               color = Colors.red;
               _selectedStatus = _Status[1];
             } else {
               color = Colors.green;
               _selectedStatus = _Status.first;
             }
-            _invoiceId = dataPay[0];
-            _name = dataPay[13] + "  " + dataPay[14];
-            _body(dataPay);
+            // _name = dataPay[13] + "  " + dataPay[14];
+            _body(data, _pledge, _roomNo, _price);
             _bodyChangeStatus();
           }
-        }
+        });
       }
     });
   }
 
-  void _body(List dataPay) {
+
+  void _body(Map<String, dynamic> dataPay, int pledge, String roomNo,
+      String roomPrice) {
     Container detil = Container(
       margin: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -120,37 +126,37 @@ class _PaymentmultiLine extends State {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(5),
-                child: Text('ชื่อ : ${_name}'),
+                child: Text('ชื่อ : ${_fullName}'),
               ),
               Container(
                 padding: EdgeInsets.all(5),
-                child: Text('ห้อง : ${dataPay[12]}'),
+                child: Text('ห้อง : ${_roomNo}'),
               ),
             ],
           ),
           Container(
             padding: EdgeInsets.all(5),
-            child: Text('วันที่ : ${_dateShow}'),
+            child: Text('วันที่ : ${_date}'),
           ),
           Container(
             padding: EdgeInsets.all(5),
-            child: Text('ค่าห้องพัก : ${dataPay[11]}  บาท'),
+            child: Text('ค่าห้องพัก : ${roomPrice}  บาท'),
           ),
           Container(
             padding: EdgeInsets.all(5),
-            child: Text('ค่าน้ำ : ${dataPay[9]}  บาท'),
+            child: Text('ค่าน้ำ : ${dataPay['priceWater']}  บาท'),
           ),
           Container(
             padding: EdgeInsets.all(5),
-            child: Text('ค่าไฟฟ้า : ${dataPay[4]} บาท'),
+            child: Text('ค่าไฟฟ้า : ${dataPay['priceElectricity']} บาท'),
           ),
           Container(
             padding: EdgeInsets.all(5),
-            child: Text('ค่าซ่อม : ${dataPay[5]}  บาท'),
+            child: Text('ค่าซ่อม : ${dataPay['priceFix']}  บาท'),
           ),
           Container(
             padding: EdgeInsets.all(5),
-            child: Text('ค่าอื่น ๆ : ${dataPay[7]}  บาท'),
+            child: Text('ค่าอื่น ๆ : ${dataPay['priceOther']}  บาท'),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -158,7 +164,7 @@ class _PaymentmultiLine extends State {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(5),
-                child: Text('รวมทั้งหมด : ${dataPay[8]}  บาท'),
+                child: Text('รวมทั้งหมด : ${dataPay['priceTotal']}  บาท'),
               ),
             ],
           ),
@@ -176,7 +182,7 @@ class _PaymentmultiLine extends State {
               Container(
                 padding: EdgeInsets.all(5),
                 child: Text(
-                  '${dataPay[3]}',
+                  '${dataPay['invoiceStatus']}',
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20, color: color),
                 ),
@@ -232,18 +238,20 @@ class _PaymentmultiLine extends State {
     // TODO: implement build
     return WillPopScope(
       child: Scaffold(
+        backgroundColor: Colors.grey[300],
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
+            backgroundColor: Colors.red[300],
             title: Text('ใบแจ้งชำระ'),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ListPaymentPage(_dormId, _userId, _roomId)));
+                // Navigator.pushReplacement(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (BuildContext context) =>
+                //             ListPaymentPage(_dormId, _userId, _roomId)));
               },
             ),
           ),
@@ -253,11 +261,11 @@ class _PaymentmultiLine extends State {
           )),
       onWillPop: () {
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    ListPaymentPage(_dormId, _userId, _roomId)));
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (BuildContext context) =>
+        //             ListPaymentPage(_dormId, _userId, _roomId)));
       },
     );
   }

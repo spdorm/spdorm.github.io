@@ -160,8 +160,8 @@ class _CustomerDataFragmentState extends State<CustomerDataFragment> {
                     padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                     child: new Row(
                       children: <Widget>[
-                        new Icon(Icons.label_important),
-                        new Text('ห้อง 102:'),
+                        new Icon(Icons.layers),
+                        new Text(' ห้อง 102:'),
                       ],
                     ),
                   ),
@@ -205,7 +205,7 @@ class _CustomerDataFragmentState extends State<CustomerDataFragment> {
                         child: new RaisedButton(
                           onPressed: () {},
                           textColor: Colors.white,
-                          color: Colors.blue,
+                          color: Colors.brown[400],
                           child: new Row(
                             children: <Widget>[
                               new Text('ตกลง'),
@@ -218,7 +218,7 @@ class _CustomerDataFragmentState extends State<CustomerDataFragment> {
                         child: new RaisedButton(
                           onPressed: () {},
                           textColor: Colors.white,
-                          color: Colors.blueGrey,
+                          color: Colors.brown[200],
                           child: new Row(
                             children: <Widget>[
                               new Text('แก้ไข'),

@@ -119,12 +119,12 @@ class _Login extends State {
               }
             });
           });
-        }
-      } else {        
-        return SweetAlert.show(context,
-            subtitle: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
-            style: SweetAlertStyle.error);
+        } else {
+        setState(() {
+          _userError = "บัญชีผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+        });
       }
+      } 
     });
   }
 
@@ -132,18 +132,21 @@ class _Login extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
-        title: const Text('Login'),
+        backgroundColor: Colors.blue[300],
+        title: const Text('เข้าสู่ระบบ'),
       ),
       body: ListView(
-        padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 20.0),
+        padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 50.0),
         children: <Widget>[
-          Image.asset("images/login.png"),
+          Image.asset('images/sp.png',height: 150,),
           new Container(
-            margin: new EdgeInsets.only(left: 0.05, right: 0.05, top: 20.0),
+            margin: new EdgeInsets.only(left: 0.05, right: 0.05, top: 50.0),
             decoration: new BoxDecoration(
               color: Color.fromARGB(255, 240, 240, 240),
-              border: new Border.all(width: 1.2, color: Colors.black12),
+              border: new Border.all(width: 1.2, 
+              color: _userError == "" ? Colors.black12 : Colors.red),
               borderRadius: const BorderRadius.all(const Radius.circular(25.0)),
             ),
             child: TextField(
@@ -151,14 +154,15 @@ class _Login extends State {
               decoration: InputDecoration(
                   contentPadding: new EdgeInsets.all(10.0),
                   border: InputBorder.none,
-                  hintText: ': Username'),
+                  hintText: ': ชื่อผู้ใช้'),
             ),
           ),
           new Container(
             margin: new EdgeInsets.only(left: 1.0, right: 1.0, top: 20),
             decoration: new BoxDecoration(
               color: Color.fromARGB(255, 240, 240, 240),
-              border: new Border.all(width: 1.2, color: Colors.black12),
+              border: new Border.all(width: 1.2, 
+              color: _userError == "" ? Colors.black12 : Colors.red),
               borderRadius: new BorderRadius.all(const Radius.circular(25.0)),
             ),
             child: TextField(
@@ -166,17 +170,32 @@ class _Login extends State {
               decoration: InputDecoration(
                   contentPadding: new EdgeInsets.all(10.0),
                   border: InputBorder.none,
-                  hintText: ': Password'),
+                  hintText: ': รหัสผ่าน'),
               obscureText: true,
             ),
           ),
+           _userError == ""
+            ? Padding(
+                  padding: EdgeInsets.all(0),
+                )
+              : Padding(
+                padding: EdgeInsets.all(3),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        _userError,
+                        style: TextStyle(color: Colors.red),
+                      )
+                    ],
+                  ),
+                ),
           new Container(
             margin: new EdgeInsets.only(top: 20),
             child: RaisedButton(
               onPressed: onLogin,
-              child: Text('Login'),
+              child: Text('เข้าสู่ระบบ'),
               textColor: Colors.white,
-              color: Colors.blue,
+              color: Colors.blue[300],
             ),
           ),
           FlatButton(
@@ -186,7 +205,7 @@ class _Login extends State {
                   MaterialPageRoute(
                       builder: (BuildContext) => RegisterSPDorm()));
             },
-            child: Text("register"),
+            child: Text("ลงทะเบียน"),
           ),
           // FlatButton(
           //   onPressed: null,

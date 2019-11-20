@@ -6,9 +6,9 @@ import 'config.dart';
 import 'DataInform.dart';
 
 class listStatusInformPage extends StatefulWidget {
-  int _dormId,_userId,_roomId;
+  int _dormId, _userId, _roomId;
   String _userName;
-  listStatusInformPage(int dormId,int userId,int roomId, String userName) {
+  listStatusInformPage(int dormId, int userId, int roomId, String userName) {
     this._dormId = dormId;
     this._roomId = roomId;
     this._userId = userId;
@@ -16,14 +16,14 @@ class listStatusInformPage extends StatefulWidget {
   }
   @override
   State<StatefulWidget> createState() {
-    return new _listStatusInformPage(_dormId,_userId,_roomId, _userName);
+    return new _listStatusInformPage(_dormId, _userId, _roomId, _userName);
   }
 }
 
 class _listStatusInformPage extends State<listStatusInformPage> {
-  int _dormId,_userId,_roomId;
+  int _dormId, _userId, _roomId;
   String _userName;
-  _listStatusInformPage(int dormId,int userId,int roomId, String userName) {
+  _listStatusInformPage(int dormId, int userId, int roomId, String userName) {
     this._dormId = dormId;
     this._roomId = roomId;
     this._userId = userId;
@@ -52,9 +52,15 @@ class _listStatusInformPage extends State<listStatusInformPage> {
                     builder: (BuildContext context) =>
                         DataInfromPage(_dormId)));
           },
-          icon: Icon(Icons.search),
-          label: Text('ประวัติรายการทั้งหมด'),
-          color: Colors.pink[50],
+          icon: Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+          label: Text(
+            'ประวัติรายการทั้งหมด',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Colors.blueGrey[300],
         ),
       ),
     );
@@ -68,8 +74,7 @@ class _listStatusInformPage extends State<listStatusInformPage> {
       padding: EdgeInsets.only(left: 5, right: 5, top: 5),
       child: new Row(
         children: <Widget>[
-          new Icon(Icons.label_important),
-          new Text('รายการแจ้งเตือนอัพเดตล่าสุด'),
+          new Text(' รายการล่าสุด',style: TextStyle(color: Colors.grey[600]),),
         ],
       ),
     );
@@ -85,19 +90,17 @@ class _listStatusInformPage extends State<listStatusInformPage> {
 
       if (jsonData["status"] == 0) {
         for (int i = 0; i < temp.length; i++) {
-          Map<String,dynamic> data = temp[i];
+          Map<String, dynamic> data = temp[i];
           Color color;
           Icon icon;
-          String status;
+          int fixId = data['fixId'];
 
           if (data['fixStatus'] == "active") {
-            color = Colors.yellow[600];
-            status = "รอดำเนินการ";
+            color = Colors.grey[200];
             icon = Icon(Icons.hourglass_empty);
           } else if (data['fixStatus'] == "success") {
-            color = Colors.green[600];
-            status = "ดำเนินการแล้ว";
-            icon = Icon(Icons.check);
+            color = Colors.grey[200];
+            icon = Icon(Icons.check,color: Colors.green[300],);
           }
 
           http.post('${config.API_url}/user/list',
@@ -115,9 +118,9 @@ class _listStatusInformPage extends State<listStatusInformPage> {
 
                 if (jsonData['status'] == 0) {
                   Card cardShow = Card(
-                    margin: EdgeInsets.only(left: 5, right: 5, top: 10),
+                    margin: EdgeInsets.only(left: 10, right: 10, top: 10),
                     child: Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
+                      padding: EdgeInsets.only(left: 20),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -126,19 +129,27 @@ class _listStatusInformPage extends State<listStatusInformPage> {
                                     'ห้อง : ${roomDataMap['roomNo']}\n'),
                           ),
                           Container(
-                            child: Center(
-                              child: RaisedButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              InformCheckStatusPage(_dormId, _userName,roomDataMap['roomNo'])));
-                                },
-                                icon: icon,
-                                label: Text('${status}'),
-                                color: color,
+                            // color: color,
+                            // decoration: BoxDecoration(
+                            //   borderRadius: BorderRadius.circular(10)
+                            // ),
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            InformCheckStatusPage(
+                                                _dormId,
+                                                _userName,
+                                                roomDataMap['roomNo'],
+                                                fixId)));
+                              },
+                              child: CircleAvatar(
+                                child: icon,
+                                backgroundColor: color,
                               ),
+                              //backgroundColor: color,
                             ),
                           ),
                         ],
@@ -174,12 +185,15 @@ class _listStatusInformPage extends State<listStatusInformPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        backgroundColor: Colors.blue[300],
         title: Text('แจ้งซ่อม'),
       ),
       body: RefreshIndicator(
         child: Scaffold(
+          backgroundColor: Colors.grey[300],
           body: ListView.builder(
             padding: EdgeInsets.only(left: 5, right: 5, top: 5),
             itemBuilder: widgetBuilder,

@@ -1,7 +1,4 @@
 class config{
-// For development
-static const String API_url="http://spdorm.ddns.net:8080";
-
-// For production
-// static const String API_url="https://findbuild.co/api";
+  static const String API_url="http://35.186.152.133:8080/api";  
+  // static const String API_url="http://35.186.152.133:8080/api";  
 }

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\res\\merged\\release\\values-de\\values-de.xml",
+            "outputFile": "E:\\Github\\bak\\customer-15-11-62\\build\\image_picker\\intermediates\\res\\merged\\release\\values-de\\values-de.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values-de\\values-de.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values-de\\values-de.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -16,10 +16,10 @@
             ]
         },
         {
-            "outputFile": "C:\\Users\\USER\\Documents\\GitHub\\spdorm.github.io\\customer\\build\\image_picker\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-de\\values-de.xml",
+            "outputFile": "E:\\Github\\bak\\customer-15-11-62\\build\\image_picker\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-de\\values-de.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\USER\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values-de\\values-de.xml",
+                    "source": "C:\\Users\\user\\.gradle\\caches\\transforms-2\\files-2.1\\e94bf10d6429fb2c87f20f39f4dac104\\core-1.0.2\\res\\values-de\\values-de.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

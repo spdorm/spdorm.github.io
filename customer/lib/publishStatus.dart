@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweetalert/sweetalert.dart';
 import 'dart:convert';
@@ -37,10 +39,11 @@ class _PublishStatus extends State {
     this._nameDorm = nameDorm;
     this._dormId = dormId;
   }
-
+  var _image;
   Image img;
   String _address, _promotion, _price, _detail;
   List lst = new List();
+  List images = List();
   int _userId;
   bool status = false;
 
@@ -50,8 +53,8 @@ class _PublishStatus extends State {
       this._userId = userId;
     });
     http.post('${config.API_url}/dorm/list',
-        body: {"dormId": _dormId.toString()}).then((response) {
-      print(response.body);
+        body: {"dormId": _dormId.toString()}).then((response) async {
+      // print(response.body);
       Map jsonData = jsonDecode(response.body) as Map;
       Map<String, dynamic> data = jsonData['data'];
 
@@ -60,6 +63,20 @@ class _PublishStatus extends State {
         _address = data['dormAddress'];
         _detail = data['dormDetail'];
         _promotion = data['dormPromotion'];
+
+        var res_nameImages = await http.post(
+            '${config.API_url}/imageDetail/getNameImages',
+            body: {"dormId": _dormId.toString()});
+        print(res_nameImages.body);
+        Map jsonDataName = jsonDecode(res_nameImages.body);
+
+        if (jsonDataName['status'] == 0) {
+          List temp = jsonDataName['data'];
+          for (int i = 0; i < temp.length; i++) {
+            Map<String, dynamic> dataName = temp[i];
+            images.add(dataName['imageName']);
+          }
+        }
 
         if (data['dormImage'] == "" || data['dormImage'] == null) {
           setState(() {
@@ -103,8 +120,35 @@ class _PublishStatus extends State {
         child: img,
       ),
     );
+
+    Container _images = Container(
+      child: images.isNotEmpty && images != null
+          ? GridView.count(
+              physics: ScrollPhysics(),              
+               padding: EdgeInsets.all(10.0),
+              crossAxisCount: 1,
+              shrinkWrap: true,
+              children: <Widget>[
+                PhotoViewGallery.builder(
+                  scrollPhysics: const BouncingScrollPhysics(),
+                  builder: (BuildContext context, int index) {
+                    return PhotoViewGalleryPageOptions(
+                      imageProvider: NetworkImage(
+                          '${config.API_url}/imageDetail/image?nameImage=${images[index]}'),
+                      initialScale: PhotoViewComputedScale.contained * 0.8,
+                    );
+                  },
+                  itemCount: images.length,
+                )
+              ],
+            )
+          : Padding(
+              padding: EdgeInsets.all(0),
+            ),
+    );
     setState(() {
       lst.add(head);
+      lst.add(_images);
     });
   }
 
@@ -114,7 +158,7 @@ class _PublishStatus extends State {
         Card(
             color: Colors.white,
             child: Padding(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -124,9 +168,18 @@ class _PublishStatus extends State {
                           '\n' +
                           'บรรยากาศ : ${_detail}\n' +
                           'ราคา : ${_price}\n' +
-                          'โปรโมชั่น : ${_promotion}',
+                          'โปรโมชัน : ${_promotion}',
                     ),
                   ),
+                  // Row(
+                  //   children: <Widget>[
+                  //     new Container(
+                  //       padding: EdgeInsets.only(
+                  //           left: 20, right: 5, bottom: 20, top: 20),
+                  //       child: Text("ภาพประกอบการแจ้งซ่อม :"),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             )),
@@ -144,7 +197,7 @@ class _PublishStatus extends State {
         new RaisedButton(
           onPressed: status == false ? onAccept : onDelete,
           textColor: Colors.white,
-          color: Colors.pinkAccent,
+          color: Colors.blueGrey[400],
           child: status == false
               ? new Text('แจ้งเข้าพัก')
               : new Text('ยกเลิกคำขอ'),
@@ -161,7 +214,7 @@ class _PublishStatus extends State {
                         pendingPage(_dormId, _nameDorm)));
           },
           textColor: Colors.white,
-          color: Colors.pinkAccent,
+          color: Colors.blueGrey[400],
           child: new Text('ข้อมูลติดต่อ'),
         ),
       ],
@@ -231,11 +284,13 @@ class _PublishStatus extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Color(0xfff5f5f5),
       appBar: AppBar(
+        backgroundColor: Colors.blue[300],
         title: Text('${_nameDorm}'),
       ),
       body: new ListView.builder(
-        //shrinkWrap: true,
+        shrinkWrap: true,
         padding: const EdgeInsets.all(10.0),
         itemBuilder: bodyBuild,
         itemCount: lst.length,

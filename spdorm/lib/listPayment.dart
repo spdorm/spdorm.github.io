@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'dart:convert';
 import 'PaymentNotificationPage.dart';
+import 'ConvertDateTime.dart';
 
 class ListPaymentPage extends StatefulWidget {
   int _dormId, _roomId, _customerId;
@@ -28,20 +29,21 @@ class _ListPaymentPage extends State<ListPaymentPage> {
 
   List<String> _Month = [
     "มกราคม",
-    "กุมภาพันธุ์",
+    "กุมภาพันธ์",
     "มีนาคม",
     "เมษายน",
     "พฤษภาคม",
     "มิถุนายน",
-    "กรกฏาคม",
+    "กรกฎาคม",
     "สิงหาคม",
     "กันยายน",
     "ตุลาคม",
-    "พฤษจิกายน",
+    "พฤศจิกายน",
     "ธันวาคม",
   ].toList();
 
   List lst = new List();
+  String _dataShow = "";
 
   var now = new DateTime.now();
 
@@ -54,11 +56,10 @@ class _ListPaymentPage extends State<ListPaymentPage> {
 
   void _head() {
     Container head = Container(
-      padding: EdgeInsets.only(left: 5, right: 5, top: 5),
+      padding: EdgeInsets.only(top: 15,bottom: 15),
       child: new Row(
         children: <Widget>[
-          new Icon(Icons.label_important),
-          new Text('รายการใบแจ้งชำระทั้งหมด'),
+          new Text(' รายการล่าสุด',style: TextStyle(color: Colors.grey[600]),),
         ],
       ),
     );
@@ -80,29 +81,32 @@ class _ListPaymentPage extends State<ListPaymentPage> {
       if (jsonData["status"] == 0 && temp.isNotEmpty) {
         for (int i = 0; i < temp.length; i++) {
           List data = temp[i];
-          String _month = "";
+          convertDateTime _dateTimeToThai = convertDateTime();
+          // String _month = "";
 
-          if (data[1].toString().substring(5, 6) == "0") {
-            for (int j = 0; j < _Month.length; j++) {
-              if (data[1].toString().substring(6, 7) == '${j}') {
-                _month = _Month[j - 1];
-              }
-            }
-          } else if (data[1].toString().substring(5, 6) == "1") {
-            for (int i = 0; i < _Month.length; i++) {
-              if ('${int.parse(data[1].toString().substring(5, 7)) - 1}' ==
-                  '${i}') {
-                _month = _Month[i];
-              }
-            }
-          }
-          String _dataShow =
-              '${data[1].toString().substring(8, 10)} ${_month} ${data[1].toString().substring(0, 4)}';
-
+          // if (data[1].toString().substring(5, 6) == "0") {
+          //   for (int j = 0; j < _Month.length; j++) {
+          //     if (data[1].toString().substring(6, 7) == '${j}') {
+          //       _month = _Month[j - 1];
+          //     }
+          //   }
+          // } else if (data[1].toString().substring(5, 6) == "1") {
+          //   for (int i = 0; i < _Month.length; i++) {
+          //     if ('${int.parse(data[1].toString().substring(5, 7)) - 1}' ==
+          //         '${i}') {
+          //       _month = _Month[i];
+          //     }
+          //   }
+          // }
+          // String _dataShow =
+          //     '${data[1].toString().substring(8, 10)} ${_month} ${data[1].toString().substring(0, 4)}';
+          _dataShow = _dateTimeToThai.convertToThai(data[1]);
+          print(data[1]);
+          
           if (data[3] == "ยังไม่จ่าย") {
             color = Colors.red[200];
           } else {
-            color = Colors.green[200];
+            color = Colors.grey[350];
           }
 
           Card cardNew = Card(
@@ -113,11 +117,7 @@ class _ListPaymentPage extends State<ListPaymentPage> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) => PaymentmultiLine(
-                                _dormId,
-                                _customerId,
-                                _roomId,
-                                data[1],
-                                _dataShow)));
+                               data[0], '${data[13]} ${data[14]}')));
                   },
                   padding: EdgeInsets.all(5),
                   child: ListTile(
@@ -129,12 +129,14 @@ class _ListPaymentPage extends State<ListPaymentPage> {
                           border: new Border(
                               right: new BorderSide(
                                   width: 1.0, color: Colors.black))),
-                      child: Icon(Icons.monetization_on, color: Colors.black),
+                      child: Icon(Icons.monetization_on, color: Colors.white),
                     ),
                     title: Text(
-                      '${data[1].toString().substring(8, 10)} ${_month} ${data[1].toString().substring(0, 4)}',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      _dataShow,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                     // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -149,7 +151,7 @@ class _ListPaymentPage extends State<ListPaymentPage> {
                         icon: Icon(Icons.clear, color: Colors.black),
                         onPressed: () {
                           SweetAlert.show(context,
-                          title: "คำเตือน",
+                              title: "คำเตือน",
                               subtitle: "หากลบแล้วไม่สามารถกู้คืนได้",
                               style: SweetAlertStyle.confirm,
                               showCancelButton: true,
@@ -159,7 +161,8 @@ class _ListPaymentPage extends State<ListPaymentPage> {
                                   subtitle: "กำลังลบ...",
                                   style: SweetAlertStyle.loading);
                               new Future.delayed(new Duration(seconds: 1), () {
-                                http.post('${config.API_url}/invoice/deleteInvoice',
+                                http.post(
+                                    '${config.API_url}/invoice/deleteInvoice',
                                     body: {
                                       "invoiceId": data[0].toString()
                                     }).then((respone) {
@@ -228,8 +231,10 @@ class _ListPaymentPage extends State<ListPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        backgroundColor: Colors.grey[300],
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
+          backgroundColor: Colors.red[300],
           title: Text('ใบแจ้งชำระทั้งหมด'),
         ),
         body: RefreshIndicator(

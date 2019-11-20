@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spdorm/ViewRoomPage.dart';
 import 'AddRoompage.dart';
 import 'config.dart';
@@ -31,10 +32,29 @@ class HomeFragmentState extends State<HomeFragment> {
 
   String _selectedFloor;
   int _userId;
+  Color color;
+
+  Future<void> _setRoomNo(String no) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('roomNo', no);
+  }
+
+  Future<String> _getRoomNo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.getString('roomNo');
+  }
 
   @override
   void initState() {
-    createRoom();
+    _getRoomNo().then((String no) {
+      if (no != "1" && no != null) {
+        _selectedFloor = no;
+        createRoom();
+      } else {
+        _selectedFloor = "1";
+        createRoom();
+      }
+    });
     super.initState();
   }
 
@@ -46,6 +66,16 @@ class HomeFragmentState extends State<HomeFragment> {
       showRoom();
     });
     return null;
+  }
+
+  void onMonthChange(String item) {
+    setState(() {
+      _selectedFloor = item;
+      _setRoomNo(_selectedFloor);
+      lst.clear();
+      showFloor();
+      showRoom();
+    });
   }
 
   void createRoom() {
@@ -60,7 +90,7 @@ class HomeFragmentState extends State<HomeFragment> {
         for (int i = 1; i <= n; i++) {
           _floor.add(i.toString());
         }
-        _selectedFloor = _floor.first;
+        // _selectedFloor = _floor.first;
         showFloor();
         showRoom();
       }
@@ -72,6 +102,7 @@ class HomeFragmentState extends State<HomeFragment> {
       "dormId": _dormId.toString(),
       "roomFloor": _selectedFloor.toString()
     }).then((respone) {
+      print(respone.body);
       Map jsonData = jsonDecode(respone.body);
       temp = jsonData['data'];
 
@@ -79,37 +110,68 @@ class HomeFragmentState extends State<HomeFragment> {
         for (int i = 0; i < temp.length; i++) {
           List data = temp[i];
           Color color;
-          if (data[8] == "ว่าง") {
+
+          if (data[9] == "ว่าง") {
             color = Colors.green[300];
-          } else if (data[8] == "จอง") {
-            color = Colors.yellow;
-          } else if (data[8] == "รายวัน") {
-            color = Colors.blue;
-          } else {
+          } else if (data[9] == "จอง") {
+            color = Colors.yellow[700];
+          } else if (data[9] == "รายวัน") {
+            color = Colors.indigo[300];
+          } else if (data[9] == "ปิดปรับปรุง") {
             color = Colors.red[300];
+          } else {
+            color = Colors.blueGrey[200];
           }
 
           Padding cardRoom1 = Padding(
             padding: EdgeInsets.only(right: 10, left: 10),
-            child: RaisedButton(
-              color: color,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            ViewRoomPage(_dormId, _userId, data[0])));
-              },
-              child: Text('${data[6]}  ประเภทห้อง : ${data[9]}'),
+            child: Container(
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                border: Border.all(color: color, width: 1.5),
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              child: FlatButton(
+                color: color,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              ViewRoomPage(_dormId, _userId, data[0])));
+                },
+                // textColor: Colors.white,
+                // icon: Icon(Icons.panorama_fish_eye),
+                child: new Text(
+                  '${data[7]}  ประเภทห้อง : ${data[10]}',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
+            // child: RaisedButton(
+            //   color: color,
+            //   onPressed: () {
+            //     Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (BuildContext context) =>
+            //                 ViewRoomPage(_dormId, _userId, data[0])));
+            //   },
+            //   child: Text('${data[7]}  ประเภทห้อง : ${data[10]}',style: TextStyle(color: Colors.grey[700]),),
+            // ),
           );
           lst.add(cardRoom1);
           setState(() {});
         }
       } else {
         Center ctAlarm = Center(
-          child: Text('ไม่พบข้อมูล'),
-        );
+            child: Container(
+          padding: EdgeInsets.all(50.0),
+          child: Text(
+            'ไม่พบข้อมูล',
+            style: TextStyle(color: Colors.grey[600]),
+          ),
+        ));
         lst.add(ctAlarm);
         setState(() {});
       }
@@ -125,18 +187,26 @@ class HomeFragmentState extends State<HomeFragment> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             new Card(
+              color: Colors.grey[300],
               child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Container(
-                    padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                    child: Text("ชั้น :"),
+                    child: Text(
+                      "กรุณาเลือกชั้น : ",
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
                   ),
                   new DropdownButton<String>(
                       value: _selectedFloor,
                       items: _floor.map((String value) {
                         return new DropdownMenuItem(
-                            value: value, child: new Text(value));
+                            value: value,
+                            child: new Text(
+                              value,
+                              style: TextStyle(color: Colors.grey[700]),
+                            ));
                       }).toList(),
                       onChanged: (String value) {
                         onMonthChange(value);
@@ -145,61 +215,100 @@ class HomeFragmentState extends State<HomeFragment> {
               ),
             ),
             new Container(
+              padding: EdgeInsets.only(top: 10),
               child: new Row(
                 children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: new Container(
-                      width: 30.0,
-                      height: 15.0,
-                      color: Colors.green[300],
+                  Padding(
+                    padding: EdgeInsets.only(right: 25, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.green[300],
+                        ),
+                        new Text(
+                          ' ว่าง',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
                   ),
-                  new Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(" : ว่าง"),
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: new Container(
-                      width: 30.0,
-                      height: 15.0,
-                      color: Colors.yellow[300],
+                  Padding(
+                    padding: EdgeInsets.only(right: 25, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.blueGrey[200],
+                        ),
+                        new Text(
+                          ' ไม่ว่าง',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
                   ),
-                  new Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(" : จอง"),
-                  ),
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: new Container(
-                      width: 30.0,
-                      height: 15.0,
-                      color: Colors.red[300],
+                  Padding(
+                    padding: EdgeInsets.only(right: 25, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.yellow[700],
+                        ),
+                        new Text(
+                          ' จอง',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
-                  ),
-                  new Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(" : ไม่ว่าง"),
                   ),
                 ],
               ),
             ),
             new Container(
+              padding: EdgeInsets.only(top: 10),
               child: new Row(
                 children: <Widget>[
-                  new Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: new Container(
-                      width: 30.0,
-                      height: 15.0,
-                      color: Colors.indigo[300],
+                  Padding(
+                    padding: EdgeInsets.only(right: 10, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.indigo[300],
+                        ),
+                        new Text(
+                          ' รายวัน',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
                   ),
-                  new Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(" : รายวัน"),
+                  Padding(
+                    padding: EdgeInsets.only(right: 20, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.red[300],
+                        ),
+                        new Text(
+                          ' ปิดปรับปรุง',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700]),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -236,15 +345,6 @@ class HomeFragmentState extends State<HomeFragment> {
     // setState(() {});
   }
 
-  void onMonthChange(String item) {
-    setState(() {
-      _selectedFloor = item;
-      lst.clear();
-      showFloor();
-      showRoom();
-    });
-  }
-
   Widget buildBody(BuildContext context, int index) {
     return lst[index];
   }
@@ -254,6 +354,7 @@ class HomeFragmentState extends State<HomeFragment> {
     //final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+        backgroundColor: Colors.grey[300],
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
@@ -263,7 +364,7 @@ class HomeFragmentState extends State<HomeFragment> {
                         AddRoomPage(_dormId, _userId, _selectedFloor)));
           },
           child: Icon(Icons.add),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.green[300],
         ),
         body: RefreshIndicator(
           child: ListView.builder(

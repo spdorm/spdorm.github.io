@@ -35,11 +35,10 @@ class _ListTypeVendingPage extends State<ListTypeVendingPage> {
 
   void _head() {
     Container head = Container(
-      padding: EdgeInsets.only(left: 5, right: 5, top: 5),
+      padding: EdgeInsets.only( top: 15, bottom: 15),
       child: new Row(
         children: <Widget>[
-          new Icon(Icons.label_important),
-          new Text('รายการประเภทเครื่องหยอดเหรียญทั้งหมด'),
+          new Text(' รายการล่าสุด',style: TextStyle(color: Colors.grey[500]),),
         ],
       ),
     );
@@ -75,11 +74,11 @@ class _ListTypeVendingPage extends State<ListTypeVendingPage> {
                       border: new Border(
                           right:
                               new BorderSide(width: 1.0, color: Colors.black))),
-                  child: Icon(Icons.monetization_on, color: Colors.black),
+                  child: Icon(Icons.monetization_on, color: Colors.brown[400]),
                 ),
                 title: Text(
                   '${nameMachine}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.brown[400]),
                 ),
                 // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -108,6 +107,7 @@ class _ListTypeVendingPage extends State<ListTypeVendingPage> {
                                 }).then((respone) {
                               print(respone.body);
                               Map jsonData = jsonDecode(respone.body) as Map;
+                            
                               int status = jsonData["status"];
                               if (status == 0) {
                                 setState(() {
@@ -156,8 +156,10 @@ class _ListTypeVendingPage extends State<ListTypeVendingPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
+           backgroundColor: Colors.red[300],
           title: Text('เพิ่มรายรับเครื่องหยอดเหรียญ'),
         ),
         body: RefreshIndicator(

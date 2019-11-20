@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'AddCharterDorm_fragment.dart';
 import 'ListCustumer.dart';
 import 'PaymentNotification.dart';
 import 'ViewDocument.dart';
 import 'config.dart';
 import 'dart:convert';
-
+import 'package:sweetalert/sweetalert.dart';
 import 'mainHomeFragment.dart';
 
 class ViewRoomPage extends StatefulWidget {
@@ -29,7 +28,7 @@ String dropdownValue = 'ห้องพัดลม';
 
 class _ViewRoomPage extends State<ViewRoomPage> {
   int _dormId, _userId, _roomId, _roomDoc;
-  String roomNo, roomPrice;
+  String roomNo, roomPrice, roomType;
 
   _ViewRoomPage(int dormId, int userId, int roomId) {
     this._dormId = dormId;
@@ -40,8 +39,9 @@ class _ViewRoomPage extends State<ViewRoomPage> {
   List<String> _Status = [
     "ว่าง",
     "จอง",
-    "รายวัน",
     "ไม่ว่าง",
+    "รายวัน",
+    "ปิดปรับปรุง",
   ].toList();
   List<String> _Type = [
     "ห้องพัดลม",
@@ -88,6 +88,7 @@ class _ViewRoomPage extends State<ViewRoomPage> {
       if (jsonData["status"] == 0) {
         roomNo = listData["roomNo"];
         roomPrice = listData["roomPrice"];
+        roomType = listData["roomType"];
         _roomDoc = listData["customerId"];
         _selectedMonth = listData["roomFloor"];
         _selectedStatus = listData["roomStatus"];
@@ -96,10 +97,12 @@ class _ViewRoomPage extends State<ViewRoomPage> {
           _selectedStatus = _Status[0];
         } else if (listData["roomStatus"] == "จอง") {
           _selectedStatus = _Status[1];
-        } else if (listData["roomStatus"] == "รายวัน") {
+        } else if (listData["roomStatus"] == "ไม่ว่าง") {
           _selectedStatus = _Status[2];
-        } else {
+        } else if (listData["roomStatus"] == "รายวัน") {
           _selectedStatus = _Status[3];
+        } else {
+          _selectedStatus = _Status[4];
         }
 
         if (listData["roomType"] == "ห้องพัดลม") {
@@ -121,8 +124,10 @@ class _ViewRoomPage extends State<ViewRoomPage> {
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             child: new Row(
               children: <Widget>[
-                new Icon(Icons.label_important),
-                new Text('รายละเอียดห้องพัก'),
+                new Text(
+                  'รายละเอียดห้องพัก',
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
               ],
             ),
           ),
@@ -130,7 +135,10 @@ class _ViewRoomPage extends State<ViewRoomPage> {
             children: <Widget>[
               new Container(
                 padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                child: Text("ชั้น :"),
+                child: Text(
+                  "ชั้น :",
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -143,7 +151,10 @@ class _ViewRoomPage extends State<ViewRoomPage> {
               ),
               new Container(
                 padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                child: Text("หมายเลขห้องพัก :"),
+                child: Text(
+                  "หมายเลขห้องพัก :",
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -160,7 +171,10 @@ class _ViewRoomPage extends State<ViewRoomPage> {
             children: <Widget>[
               new Container(
                 padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                child: Text("ราคาห้องพัก :"),
+                child: Text(
+                  "ราคาห้องพัก :",
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -169,10 +183,9 @@ class _ViewRoomPage extends State<ViewRoomPage> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          '${roomPrice}',
+                          '${roomPrice} บาท',
                           style: TextStyle(color: Colors.grey),
                         ),
-                        Text("    บาท"),
                       ],
                     )),
               ),
@@ -182,7 +195,48 @@ class _ViewRoomPage extends State<ViewRoomPage> {
             children: <Widget>[
               new Container(
                 padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                child: Text("สถานะ :"),
+                child: Text(
+                  "ประเภทห้องพัก :",
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Container(
+                    padding: EdgeInsets.only(right: 10, top: 20.0),
+                    child: Text(
+                      '${roomType}',
+                      style: TextStyle(color: Colors.grey),
+                    )),
+              ),
+              // new DropdownButton<String>(
+              //     value: _selectType,
+              //     items: _Type.map((String dropdownValue) {
+              //       return new DropdownMenuItem(
+              //           value: dropdownValue,
+              //           child: new Text(
+              //             dropdownValue,
+              //             style: TextStyle(color: Colors.black54),
+              //           ));
+              //     }).toList(),
+              //     onChanged: (String value) {
+              //       onTypeChange(value);
+              //     }),
+            ],
+          ),
+          Divider(
+              color: Colors.grey,
+              indent: 10.0,
+              endIndent: 10.0,
+            ),
+          Row(
+            children: <Widget>[
+              new Container(
+                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                child: Text(
+                  "สถานะ :",
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
               ),
               new DropdownButton<String>(
                   value: _selectedStatus,
@@ -202,29 +256,11 @@ class _ViewRoomPage extends State<ViewRoomPage> {
           Row(
             children: <Widget>[
               new Container(
-                padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                child: Text("ประเภทห้องพัก :"),
-              ),
-              new DropdownButton<String>(
-                  value: _selectType,
-                  items: _Type.map((String dropdownValue) {
-                    return new DropdownMenuItem(
-                        value: dropdownValue,
-                        child: new Text(
-                          dropdownValue,
-                          style: TextStyle(color: Colors.black54),
-                        ));
-                  }).toList(),
-                  onChanged: (String value) {
-                    onTypeChange(value);
-                  }),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              new Container(
                 padding: EdgeInsets.only(left: 20),
-                child: Text("ใบสัญญาเช่า :"),
+                child: Text(
+                  "ใบสัญญาเช่า :",
+                  style: TextStyle(color: Colors.blueGrey[700]),
+                ),
               ),
               Column(
                 children: <Widget>[
@@ -235,7 +271,7 @@ class _ViewRoomPage extends State<ViewRoomPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (BuildContext) =>
-                                        vieWDocument(_dormId, _roomId)));
+                                        vieWDocument(_dormId, _roomId,)));
                           },
                           textColor: Colors.orangeAccent,
                           child: new Row(
@@ -250,9 +286,8 @@ class _ViewRoomPage extends State<ViewRoomPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (BuildContext) =>
-                                        listCustumerPage(
-                                            _dormId, _userId, _roomId)));
+                                    builder: (BuildContext) => listCustumerPage(
+                                        _dormId, _userId, _roomId)));
                           },
                           textColor: Colors.green,
                           child: new Row(
@@ -302,26 +337,30 @@ class _ViewRoomPage extends State<ViewRoomPage> {
               new RaisedButton(
                 onPressed: onSumit,
                 textColor: Colors.white,
-                color: Colors.lightGreen,
+                color: Colors.brown[400],
                 child: new Row(
                   children: <Widget>[
                     new Text('ตกลง'),
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-              ),
-              new RaisedButton(
-                onPressed: onDelete,
-                textColor: Colors.white,
-                color: Colors.redAccent,
-                child: new Row(
-                  children: <Widget>[
-                    new Text('ลบ'),
-                  ],
-                ),
-              ),
+              _roomDoc == 0
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: new RaisedButton(
+                        onPressed: onDelete,
+                        textColor: Colors.white,
+                        color: Colors.brown[200],
+                        child: new Row(
+                          children: <Widget>[
+                            new Text('ลบ'),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.all(0.0),
+                    )
             ],
           ),
 //                  Padding(
@@ -378,20 +417,49 @@ class _ViewRoomPage extends State<ViewRoomPage> {
   }
 
   void onDelete() {
-    http.post('${config.API_url}/room/deleteRoom', body: {
-      "dormId": _dormId.toString(),
-      "userId": _userId.toString(),
-      "roomId": _roomId.toString()
-    }).then((response) {
-      Map jsonData = jsonDecode(response.body);
-      int status = jsonData["status"];
-      if (status == 0) {
-        Navigator.pop(context);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext) => MainHomeFragment(_dormId, _userId)));
+    return SweetAlert.show(context,
+        subtitle: "คุณต้องการลบห้องใช่หรือไม่ ?",
+        style: SweetAlertStyle.confirm,
+        showCancelButton: true, onPress: (bool isConfirm) {
+      if (isConfirm) {
+        SweetAlert.show(context,
+            subtitle: "กำลังลบ...", style: SweetAlertStyle.loading);
+        new Future.delayed(new Duration(seconds: 1), () {
+          http.post('${config.API_url}/room/deleteRoom', body: {
+            "dormId": _dormId.toString(),
+            "userId": _userId.toString(),
+            "roomId": _roomId.toString()
+          }).then((response) {
+            Map jsonData = jsonDecode(response.body);
+            int status = jsonData["status"];
+            if (status == 0) {
+              // Navigator.pop(context);
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (BuildContext) => MainHomeFragment(_dormId, _userId)));
+              SweetAlert.show(context,
+                  subtitle: "สำเร็จ!",
+                  style: SweetAlertStyle.success, onPress: (bool isConfirm) {
+                if (isConfirm) {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext) =>
+                              MainHomeFragment(_dormId, _userId)));
+                }
+                return false;
+              });
+            }
+          });
+        });
+      } else {
+        SweetAlert.show(context,
+            subtitle: "ยกเลิก!", style: SweetAlertStyle.error);
       }
+      // return false to keep dialog
+      return false;
     });
   }
 
@@ -403,7 +471,9 @@ class _ViewRoomPage extends State<ViewRoomPage> {
   Widget build(BuildContext context) {
     //final screenSize = MediaQuery.of(context).size;
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        backgroundColor: Colors.red[300],
         title: Text('รายละเอียดห้องพัก'),
       ),
       body: new ListView.builder(

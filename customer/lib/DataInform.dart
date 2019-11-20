@@ -25,17 +25,17 @@ class _DataInfromPage extends State<DataInfromPage> {
 
   List<String> _Month = [
     "มกราคม",
-    "กุมภาพันธุ์",
+    "กุมภาพันธ์",
     "มีนาคม",
     "เมษายน",
     "พฤษภาคม",
     "มิถุนายน",
-    "กรกฏาคม",
+    "กรกฎาคม",
     "สิงหาคม",
     "กันยายน",
     "ตุลาคม",
-    "พฤษจิกายน",
-    "ธ้นวาคม",
+    "พฤศจิกายน",
+    "ธันวาคม",
   ].toList();
   List<String> _Year = List();
 
@@ -94,8 +94,7 @@ class _DataInfromPage extends State<DataInfromPage> {
       padding: EdgeInsets.only(left: 5, right: 5, top: 5),
       child: new Row(
         children: <Widget>[
-          new Icon(Icons.label_important),
-          new Text('รายละเอียดประวัติข้อมูลการแจ้งซ่อม'),
+          new Text(' รายการแจ้งซ่อม',style: TextStyle(color: Colors.blueGrey[700]),),
         ],
       ),
     );
@@ -106,34 +105,34 @@ class _DataInfromPage extends State<DataInfromPage> {
 
   void _changDate() {
     Card cardTop = Card(
-      margin: EdgeInsets.only(left: 5, right: 5, top: 10,bottom: 10),
+      margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
       child: new Column(
         children: <Widget>[
           Row(
             children: <Widget>[
               new Container(
                 padding: EdgeInsets.only(left: 5, right: 5, top: 20.0),
-                child: Text("เดือน :"),
+                child: Text("เดือน :",style: TextStyle(color: Colors.blueGrey[700]),),
               ),
               new DropdownButton<String>(
                   value: _selectedMonth,
                   items: _Month.map((String dropdownStatusValue) {
                     return new DropdownMenuItem(
                         value: dropdownStatusValue,
-                        child: new Text(dropdownStatusValue));
+                        child: new Text(dropdownStatusValue,style: TextStyle(color: Colors.blueGrey[700]),));
                   }).toList(),
                   onChanged: (String value) {
                     onMonthChange(value);
                   }),
               new Container(
                 padding: EdgeInsets.only(left: 20, right: 5, top: 20.0),
-                child: Text("ปี :"),
+                child: Text("ปี :",style: TextStyle(color: Colors.blueGrey[700]),),
               ),
               new DropdownButton<String>(
                   value: _selectedYear,
                   items: _Year.map((String dropdownValue) {
                     return new DropdownMenuItem(
-                        value: dropdownValue, child: new Text(dropdownValue));
+                        value: dropdownValue, child: new Text(dropdownValue,style: TextStyle(color: Colors.blueGrey[700]),));
                   }).toList(),
                   onChanged: (String value) {
                     onYearChange(value);
@@ -168,10 +167,11 @@ class _DataInfromPage extends State<DataInfromPage> {
   void _show() {
     http.post('${config.API_url}/fix/listAll',
         body: {"dormId": _dormId.toString()}).then((response) {
+      print(response.body);
       Map jsonData = jsonDecode(response.body);
-      List temp = jsonData["data"];
 
       if (jsonData["status"] == 0) {
+        List temp = jsonData["data"];
         for (int i = 0; i < temp.length; i++) {
           Map<String, dynamic> data = temp[i];
           //####################################################
@@ -196,7 +196,7 @@ class _DataInfromPage extends State<DataInfromPage> {
           } else if (data['dateTime'].toString().substring(5, 6) == "1" &&
               data['dateTime'].toString().substring(0, 4) ==
                   '${int.parse('${_selectedYear}') - 543}') {
-            if (data['dateTime'].toString().substring(6, 7) ==
+            if (data['dateTime'].toString().substring(5, 7) ==
                 '${_Month.indexOf('${_selectedMonth}') + 1}') {
               _createCard(temp[i]);
             }
@@ -249,12 +249,12 @@ class _DataInfromPage extends State<DataInfromPage> {
                     'ห้อง : ${roomDataMap['roomNo']}',
                     style: TextStyle(
                         fontSize: 18,
-                        color: Colors.blueAccent,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
                 Divider(
-                  color: Colors.black,                  
+                  color: Colors.black,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 8),
@@ -274,6 +274,24 @@ class _DataInfromPage extends State<DataInfromPage> {
                           Text(
                             '${status}',
                             style: TextStyle(color: color),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text('ค่าใช้จ่าย : '),
+                          Text(
+                            '${data['fixPrice']}',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text('หมายเหตุ : '),
+                          Text(
+                            '${data['fixNote'] == null ? "-" : data['fixNote']}',
+                            style: TextStyle(color: Colors.blueGrey[400]),
                           ),
                         ],
                       ),
@@ -307,8 +325,10 @@ class _DataInfromPage extends State<DataInfromPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        backgroundColor: Colors.blue[300],
         title: Text('ประวัติข้อมูลการแจ้งซ่อม'),
       ),
       body: RefreshIndicator(

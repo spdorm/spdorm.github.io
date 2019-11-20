@@ -88,7 +88,10 @@ class _Login extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('SP Dorm (เจ้าของหอ)')),
+      backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+        backgroundColor: Colors.red[300],
+        title: const Text('เข้าสู่ระบบ')),
       body: ListView(
         padding: EdgeInsets.only(left: 50.0, right: 50.0, top: 60.0),
         children: <Widget>[
@@ -107,7 +110,7 @@ class _Login extends State {
               decoration: InputDecoration(
                   contentPadding: new EdgeInsets.all(10.0),
                   border: InputBorder.none,
-                  hintText: ': ชื่อผู้ใช้'),
+                  hintText: ': บัญชีผู้ใช้'),
             ),
           ),
           new Container(
@@ -149,7 +152,7 @@ class _Login extends State {
               onPressed: onLogin,
               child: Text('เข้าสู่ระบบ'),
               textColor: Colors.white,
-              color: Colors.blue,
+              color: Colors.red[300],
             ),
           ),
           FlatButton(

@@ -69,8 +69,10 @@ class _AccountIncomeFragmenttState extends State {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
+         backgroundColor: Colors.red[300],
         title: Text('การเพิ่มบัญชีรายรับ-รายจ่าย'),
       ),
       body: new ListView(
@@ -86,9 +88,9 @@ class _AccountIncomeFragmenttState extends State {
                           builder: (BuildContext context) =>
                               DataAccoutIncomPage(_dormId, _userId))); //ทดลอง
                 },
-                icon: Icon(Icons.remove_red_eye),
-                label: Text('สรุปยอดรายรับ-รายจ่าย'),
-                color: Colors.pink[50],
+                icon: Icon(Icons.remove_red_eye,color: Colors.white),
+                label: Text('สรุปยอดรายรับ-รายจ่าย',style: TextStyle(color: Colors.white),),
+                color: Colors.brown[400],
               ),
             ),
           ),
@@ -100,8 +102,7 @@ class _AccountIncomeFragmenttState extends State {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.monetization_on,color: Colors.indigo,),
-                      new Text(' รายรับ:',style: TextStyle(fontWeight: FontWeight.bold),),
+                      new Text(' รายรับ',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.brown),),
                     ],
                   ),
                 ),
@@ -121,8 +122,8 @@ class _AccountIncomeFragmenttState extends State {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.monetization_on,color: Colors.red,),
-                      new Text(' รายจ่าย:',style: TextStyle(fontWeight: FontWeight.bold),),
+                      
+                      new Text(' รายจ่าย',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.brown),),
                     ],
                   ),
                 ),
@@ -142,8 +143,8 @@ class _AccountIncomeFragmenttState extends State {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.monetization_on,color: Colors.green,),
-                      new Text(' กำไรต่อเดือนทั้งหมด : บาท/เดือน',style: TextStyle(fontWeight: FontWeight.bold),),
+                      
+                      new Text(' กำไรต่อเดือนทั้งหมด : บาท/เดือน',style: TextStyle(fontWeight: FontWeight.bold,color: Colors.brown),),
                     ],
                   ),
                 ),
@@ -162,7 +163,7 @@ class _AccountIncomeFragmenttState extends State {
                     new RaisedButton.icon(
                       onPressed: onAccountIncome,
                       textColor: Colors.white,
-                      color: Colors.blue[300],
+                      color: Colors.brown[400],
                       icon : Icon(Icons.save) , 
                       label: new Text('บันทึก'),
                     ),

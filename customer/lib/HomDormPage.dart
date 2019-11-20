@@ -42,7 +42,7 @@ class HomDormPageState extends State<HomDormPage> {
       child: Center(
         child: Text(
           "ข่าวประชาสัมพันธ์",
-          style: TextStyle(fontSize: 30, color: Colors.red),
+          style: TextStyle(fontSize: 30, color: Colors.blueGrey),
         ),
       ),
     );
@@ -78,7 +78,7 @@ class HomDormPageState extends State<HomDormPage> {
                               '${data['newsTopic']}',
                               style: TextStyle(
                                   fontSize: 18,
-                                  color: Colors.blueAccent,
+                                  color: Colors.blueGrey,
                                   fontWeight: FontWeight.bold),
                             ),
                           )

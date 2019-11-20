@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:http/http.dart' as http;
 import 'config.dart';
 import 'dart:convert';
-
+import 'package:sweetalert/sweetalert.dart';
 import 'mainHomeFragment.dart';
 
 class AddRoomPage extends StatefulWidget {
@@ -35,12 +34,14 @@ class _AddRoomPage extends State<AddRoomPage> {
   }
   TextEditingController _roomNo = TextEditingController();
   TextEditingController _roomPrice = TextEditingController();
+  TextEditingController _pledge = TextEditingController();
 
   List<String> _Status = [
     "ว่าง",
     "จอง",
     "รายวัน",
     "ไม่ว่าง",
+    "ปิดปรับปรุง",
   ].toList();
   List<String> _Type = [
     "ห้องพัดลม",
@@ -66,19 +67,29 @@ class _AddRoomPage extends State<AddRoomPage> {
       "roomFloor": _selectedMonth,
       "roomNo": _roomNo.text,
       "roomPrice": _roomPrice.text,
+      "pledge": _pledge.text,
       "roomStatus": _selectedStatus,
-      "roomType": _selectType
+      "roomType": _selectType,
     }).then((respone) {
       print(respone.body);
       Map jsonData = jsonDecode(respone.body) as Map;
       int status = jsonData['status'];
       if (status == 0) {
         _errorMassage = "";
-        Navigator.of(context).pop();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext) => MainHomeFragment(_dormId, _userId)));
+        SweetAlert.show(context,
+            title: "สำเร็จ!",
+            subtitle: "เพิ่มห้องพักเรียบร้อยแล้ว",
+            style: SweetAlertStyle.success, onPress: (isTrue) {
+          if (isTrue) {
+            Navigator.of(context).pop();
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext) =>
+                        MainHomeFragment(_dormId, _userId)));
+          }
+          return false;
+        });
       } else {
         setState(() {
           _errorMassage = jsonData['message'];
@@ -113,8 +124,10 @@ class _AddRoomPage extends State<AddRoomPage> {
     }
 
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
+        backgroundColor: Colors.red[300],
         title: Text('เพิ่มห้องพัก'),
       ),
       body: new ListView(
@@ -128,8 +141,10 @@ class _AddRoomPage extends State<AddRoomPage> {
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.label_important),
-                      new Text('รายละเอียดการเพิ่มห้องพัก'),
+                      new Text(
+                        'รายละเอียดการเพิ่มห้องพัก',
+                        style: TextStyle(color: Colors.blueGrey[700]),
+                      ),
                     ],
                   ),
                 ),
@@ -137,7 +152,10 @@ class _AddRoomPage extends State<AddRoomPage> {
                   children: <Widget>[
                     new Container(
                       padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("ชั้น :"),
+                      child: Text(
+                        "ชั้น :",
+                        style: TextStyle(color: Colors.blueGrey[700]),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(8.0),
@@ -150,14 +168,20 @@ class _AddRoomPage extends State<AddRoomPage> {
                     ),
                     new Container(
                       padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("สถานะ :"),
+                      child: Text(
+                        "สถานะ :",
+                        style: TextStyle(color: Colors.blueGrey[700]),
+                      ),
                     ),
                     new DropdownButton<String>(
                         value: _selectedStatus,
                         items: _Status.map((String dropdownStatusValue) {
                           return new DropdownMenuItem(
                               value: dropdownStatusValue,
-                              child: new Text(dropdownStatusValue));
+                              child: new Text(
+                                dropdownStatusValue,
+                                style: TextStyle(color: Colors.blueGrey[700]),
+                              ));
                         }).toList(),
                         onChanged: (String value) {
                           onStatusChange(value);
@@ -168,14 +192,20 @@ class _AddRoomPage extends State<AddRoomPage> {
                   children: <Widget>[
                     new Container(
                       padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
-                      child: Text("ประเภทห้องพัก :"),
+                      child: Text(
+                        "ประเภทห้องพัก :",
+                        style: TextStyle(color: Colors.blueGrey[700]),
+                      ),
                     ),
                     new DropdownButton<String>(
                         value: _selectType,
                         items: _Type.map((String dropdownValue) {
                           return new DropdownMenuItem(
                               value: dropdownValue,
-                              child: new Text(dropdownValue));
+                              child: new Text(
+                                dropdownValue,
+                                style: TextStyle(color: Colors.blueGrey[700]),
+                              ));
                         }).toList(),
                         onChanged: (String value) {
                           onTypeChange(value);
@@ -197,7 +227,8 @@ class _AddRoomPage extends State<AddRoomPage> {
                 _errorMassage != ""
                     ? Container(
                         margin: EdgeInsets.only(top: 5),
-                        child: Text(_errorMassage,style: TextStyle(color: Colors.red)),
+                        child: Text(_errorMassage,
+                            style: TextStyle(color: Colors.red)),
                       )
                     : Padding(
                         padding: EdgeInsets.all(0.0),
@@ -208,10 +239,20 @@ class _AddRoomPage extends State<AddRoomPage> {
                     controller: _roomPrice,
                     decoration: InputDecoration(
                         icon: const Icon(Icons.control_point),
-                        hintText: '${roomPrice}',
                         labelText: 'ราคาห้องพัก :',
                         labelStyle: TextStyle(fontSize: 15)),
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: _pledge,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.control_point),
+                        labelText: 'ค่าประกัน :',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.number,
                   ),
                 ),
                 Row(
@@ -220,7 +261,7 @@ class _AddRoomPage extends State<AddRoomPage> {
                     new RaisedButton(
                       onPressed: onSumit,
                       textColor: Colors.white,
-                      color: Colors.green,
+                      color: Colors.brown[400],
                       child: new Row(
                         children: <Widget>[
                           new Text('บันทึก'),

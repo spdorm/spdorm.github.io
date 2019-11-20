@@ -38,8 +38,7 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
       padding: EdgeInsets.only(left: 5, right: 5, top: 5),
       child: new Row(
         children: <Widget>[
-          new Icon(Icons.label_important),
-          new Text('รายละเอียดการเพิ่มประเภทเครื่องหยอดเหรียญ'),
+          new Text('เพิ่มประเภทเครื่องหยอดเหรียญ'),
         ],
       ),
     );
@@ -92,11 +91,11 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                     });
                   },
                   textColor: Colors.white,
-                  color: Colors.green[300],
+                  color: Colors.green[200],
                   child: new Row(
                     children: <Widget>[
                       new Icon(Icons.add),
-                      new Text('เพิ่มประเภทเครื่องหยอดเหรียญ'),
+                      new Text('เพิ่ม'),
                     ],
                   ),
                 ),
@@ -118,18 +117,19 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        backgroundColor: Colors.red[300],
         title: Text('เพิ่มประเภทเครื่องหยอดเหรียญ'),
       ),
       body: ListView(
         children: <Widget>[
           Container(
-            padding: EdgeInsets.only(left: 5, right: 5, top: 5),
+            padding: EdgeInsets.only(left: 10, right:10, top: 10),
             child: new Row(
               children: <Widget>[
-                new Icon(Icons.label_important),
-                new Text('รายละเอียดการเพิ่มประเภทเครื่องหยอดเหรียญ'),
+                new Text(' เพิ่มประเภทเครื่องหยอดเหรียญ'),
               ],
             ),
           ),
@@ -143,7 +143,7 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                     controller: _machineType,
                     decoration: InputDecoration(
                         icon: const Icon(Icons.control_point),
-                        hintText: 'Enter a amount',
+                        hintText: 'ระบุชื่อเครื่องหยอดเหรียญ',
                         labelText: 'ชื่อเครื่องหยอดเหรียญ',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.text,
@@ -155,10 +155,10 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                         padding: EdgeInsets.all(0.0),
                       ),
                 new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(
-                          left: 65, top: 5, right: 20, bottom: 5),
+                      padding: EdgeInsets.only(top: 5),
                       child: new RaisedButton(
                         onPressed: () {
                           http.post('${config.API_url}/machine/add', body: {
@@ -184,11 +184,11 @@ class _AddTypeVendingPage extends State<AddTypeVendingPage> {
                           });
                         },
                         textColor: Colors.white,
-                        color: Colors.green,
+                        color: Colors.brown[400],
                         child: new Row(
                           children: <Widget>[
                             new Icon(Icons.add),
-                            new Text('เพิ่มประเภทเครื่องหยอดเหรียญ'),
+                            new Text('เพิ่ม'),
                           ],
                         ),
                       ),

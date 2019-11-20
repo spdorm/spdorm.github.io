@@ -77,12 +77,12 @@ class _ListDormPage extends State {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   margin: new EdgeInsets.only(top: 8),
-                  padding: new EdgeInsets.all(5.0),
-                  height: 200.0,
+                  padding: new EdgeInsets.all(8.0),
+                  height: 150.0,
                   decoration: new BoxDecoration(
-                    color: Colors.lightBlue[200],
+                    color: Colors.white,
                     borderRadius:
-                        new BorderRadius.all(new Radius.circular(10.0)),
+                        new BorderRadius.all(new Radius.circular(3.0)),
                     boxShadow: [
                       new BoxShadow(
                           color: Colors.black54,
@@ -115,26 +115,26 @@ class _ListDormPage extends State {
                             new Text(
                               '${data[6]}',
                               style: new TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.bold),
+                                  fontSize: 20.0, fontWeight: FontWeight.bold,color: Colors.blueGrey),
                             ),
                             new Wrap(
-                              spacing: 2.0,
+                              spacing: 10.0,
                               children: <Widget>[
-                                new Chip(
-                                    label: new Text(
-                                  'ราคา : ${data[7]}',
-                                )),
-                                new Chip(
+                                new Text(
+                                  'ราคา : ${data[7]} ',
+                                  style: TextStyle(fontSize: 12.0),
+                                ),
+                                new Text(
+                                  'ห้องว่าง : ${count}',
+                                  style: TextStyle(color: color,fontSize: 12.0),
+                                ),
+                              ],
+                            ),
+                            new Chip(
                                     label: new Text(
                                   'โปรโมชัน : ${data[8]}',
+                                  style: TextStyle(fontSize: 12.0),
                                 )),
-                                new Chip(
-                                    label: new Text(
-                                  'ห้องว่าง : ${count}',
-                                  style: TextStyle(color: color),
-                                )),
-                              ],
-                            )
                           ],
                         ),
                       ))
@@ -245,8 +245,10 @@ class _ListDormPage extends State {
       home: WillPopScope(
         onWillPop: _onClose,
         child: Scaffold(
+         backgroundColor: Color(0xfff5f5f5),
           appBar: AppBar(
-            title: const Text('หอพัก'),
+            backgroundColor: Colors.blue[300],
+            title: const Text('หอพักแนะนำ'),
             actions: <Widget>[
               FlatButton(
                 onPressed: onLogOut,

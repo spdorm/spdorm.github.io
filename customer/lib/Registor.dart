@@ -12,6 +12,8 @@ class RegisterSPDorm extends StatefulWidget {
   }
 }
 
+GlobalKey<FormState> _keyForm = GlobalKey<FormState>();
+
 class _RegisterSPDorm extends State {
   TextEditingController userUsername = TextEditingController();
   TextEditingController userPassword = TextEditingController();
@@ -23,54 +25,51 @@ class _RegisterSPDorm extends State {
   TextEditingController userEmail = TextEditingController();
 
   void onRegisterSPDorm() {
-    Map<String, dynamic> param = Map();
-    param["userUsername"] = userUsername.text;
-    param["userPassword"] = userPassword.text;
-    param["userFirstname"] = userFirstname.text;
-    param["userLastname"] = userLastname.text;
-    param["userAddress"] = userAddress.text;
-    param["userTelephone"] = userTelephone.text;
-    param["userEmail"] = userEmail.text;
-    param["userType"] = 'customer';
-    param["userStatus"] = 'active';
-    http.post('${config.API_url}/user/register', body: param).then((response) {
-      print(response.body);
-      Map jsonMap = jsonDecode(response.body) as Map;
-      int status = jsonMap["status"];
-      String message = jsonMap["message"];
-      print("status ${status}");
-      if (status == 0) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (BuildContext context) => Login()));
-      }
-    });
+    if (_keyForm.currentState.validate()) {
+      Map<String, dynamic> param = Map();
+      param["userUsername"] = userUsername.text;
+      param["userPassword"] = userPassword.text;
+      param["userFirstname"] = userFirstname.text;
+      param["userLastname"] = userLastname.text;
+      param["userAddress"] = userAddress.text;
+      param["userTelephone"] = userTelephone.text;
+      param["userEmail"] = userEmail.text;
+      param["userType"] = 'customer';
+      param["userStatus"] = 'active';
+      http
+          .post('${config.API_url}/user/register', body: param)
+          .then((response) {
+        print(response.body);
+        Map jsonMap = jsonDecode(response.body) as Map;
+        int status = jsonMap["status"];
+        String message = jsonMap["message"];
+        print("status ${status}");
+        if (status == 0) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) => Login()));
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+          backgroundColor: Colors.blue[300], title: const Text('ลงทะเบียน')),
       body: new ListView(
         padding: EdgeInsets.only(left: 15, right: 15, top: 20),
         children: <Widget>[
-          new Container(
-            padding: EdgeInsets.only(top: 5),
-            child: new Row(
-              children: <Widget>[
-                new Icon(Icons.date_range),
-                new Text('details:'),
-              ],
-            ),
-          ),
           new Container(
             padding: EdgeInsets.only(left: 15, right: 15, top: 15),
             child: TextFormField(
               controller: userUsername,
               decoration: InputDecoration(
                   icon: const Icon(Icons.person),
-                  hintText: 'Enter a your username',
-                  labelText: 'Username:',
+                  hintText: 'ระบุชื่อผู้ใช้',
+                  labelText: 'ชื่อผู้ใช้',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
             ),
@@ -81,8 +80,8 @@ class _RegisterSPDorm extends State {
               controller: userFirstname,
               decoration: InputDecoration(
                   icon: const Icon(Icons.perm_contact_calendar),
-                  hintText: 'Enter a your name',
-                  labelText: 'Name:',
+                  hintText: 'ระบุชื่อ',
+                  labelText: 'ชื่อ',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
             ),
@@ -93,8 +92,8 @@ class _RegisterSPDorm extends State {
               controller: userLastname,
               decoration: InputDecoration(
                   icon: const Icon(Icons.perm_contact_calendar),
-                  hintText: 'Enter a your lastname',
-                  labelText: 'lastname:',
+                  hintText: 'ระบุนามสกุล',
+                  labelText: 'นามสกุล',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
             ),
@@ -105,8 +104,8 @@ class _RegisterSPDorm extends State {
               controller: userAddress,
               decoration: InputDecoration(
                   icon: const Icon(Icons.add_location),
-                  hintText: 'Enter a address',
-                  labelText: 'Address:',
+                  hintText: 'ระบุที่อยู่',
+                  labelText: 'ที่อยู่',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.text,
             ),
@@ -117,8 +116,8 @@ class _RegisterSPDorm extends State {
               controller: userEmail,
               decoration: InputDecoration(
                   icon: const Icon(Icons.email),
-                  hintText: 'Enter a e-mail',
-                  labelText: 'E-mail:',
+                  hintText: 'ระบุอีเมล',
+                  labelText: 'อีเมล',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.emailAddress,
             ),
@@ -129,36 +128,55 @@ class _RegisterSPDorm extends State {
               controller: userTelephone,
               decoration: InputDecoration(
                   icon: const Icon(Icons.local_phone),
-                  hintText: 'Enter a phone number',
-                  labelText: 'Tel:',
+                  hintText: 'ระบุเบอร์โทรศัพท์',
+                  labelText: 'เบอร์โทรศัพท์',
                   labelStyle: TextStyle(fontSize: 15)),
               keyboardType: TextInputType.phone,
             ),
           ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userPassword,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.lock),
-                  hintText: 'Enter a Password',
-                  labelText: 'Password:',
-                  labelStyle: TextStyle(fontSize: 15)),
-              obscureText: true,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userPassword2,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.lock),
-                  hintText: 'Enter a Re-Password',
-                  labelText: 'Re-Password:',
-                  labelStyle: TextStyle(fontSize: 15)),
-              obscureText: true,
-              keyboardType: TextInputType.text,
+          Form(
+            key: _keyForm,
+            child: Column(
+              children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userPassword,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.lock),
+                        hintText: 'ระบุรหัสผ่าน',
+                        labelText: 'รหัสผ่าน',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    validator: (String value) {
+                      if (value.trim().isEmpty) {
+                        return "กรุณาระบุรหัสผ่าน";
+                      }
+                    },
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userPassword2,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.lock),
+                        hintText: 'ระบุรหัสผ่านอีกครั้ง',
+                        labelText: 'รหัสผ่านอีกครั้ง',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    obscureText: true,
+                    keyboardType: TextInputType.text,
+                    validator: (String value) {
+                      if (value != userPassword.text) {
+                        return "รหัสผ่านไม่ตรง";
+                      } else if (value.trim().isEmpty) {
+                        return "กรุณาระบุรหัสผ่านอีกครั้ง";
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
@@ -167,8 +185,8 @@ class _RegisterSPDorm extends State {
               child: new RaisedButton(
                 onPressed: onRegisterSPDorm,
                 textColor: Colors.white,
-                color: Colors.blue,
-                child: new Text('Register'),
+                color: Colors.blue[300],
+                child: new Text('ลงทะเบียน'),
               ),
             ),
           )

@@ -59,8 +59,11 @@ class _VendingFragmenttState extends State<VendingFragment> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: false,
-      appBar: AppBar(title: const Text('เพิ่มรายรับเครื่องหยอดเหรียญ')),
+      appBar: AppBar(
+         backgroundColor: Colors.red[300],
+        title: const Text('เพิ่มรายรับเครื่องหยอดเหรียญ')),
       body: ListView(
         children: <Widget>[
           Card(
@@ -71,8 +74,7 @@ class _VendingFragmenttState extends State<VendingFragment> {
                   padding: EdgeInsets.only(left: 15, right: 15),
                   child: new Row(
                     children: <Widget>[
-                      new Icon(Icons.label_important),
-                      new Text('${_machineName}'),
+                      new Text(' ${_machineName}',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red[300])),
                     ],
                   ),
                 ),
@@ -82,8 +84,8 @@ class _VendingFragmenttState extends State<VendingFragment> {
                     controller: _machineValue,
                     decoration: InputDecoration(
                         icon: const Icon(Icons.control_point),
-                        hintText: 'Enter a amount',
-                        labelText: 'กรอกยอดเงินรายรับ: บาท/เดือน',
+                        hintText: 'ระบุยอดเงินรายรับ',
+                        labelText: 'ระบุยอดเงินรายรับ: บาท/เดือน',
                         labelStyle: TextStyle(fontSize: 15)),
                     keyboardType: TextInputType.text,
                   ),
@@ -101,7 +103,7 @@ class _VendingFragmenttState extends State<VendingFragment> {
                         'บันทึก',
                         style: TextStyle(color: Colors.white),
                       ),
-                      color: Colors.green[300],
+                      color: Colors.brown[400],
                     ),
                   ),
                 ),

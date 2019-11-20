@@ -6,8 +6,9 @@ import 'config.dart';
 
 class PaymentmultiLine extends StatefulWidget {
   int _dormId, _userId, _roomId;
-  String _date,_dateShow;
-  PaymentmultiLine(int dormId, int userId, int roomId, String date,String dateShow) {
+  String _date, _dateShow;
+  PaymentmultiLine(
+      int dormId, int userId, int roomId, String date, String dateShow) {
     this._dormId = dormId;
     this._userId = userId;
     this._roomId = roomId;
@@ -17,14 +18,15 @@ class PaymentmultiLine extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _PaymentmultiLine(_dormId, _userId, _roomId, _date,_dateShow);
+    return _PaymentmultiLine(_dormId, _userId, _roomId, _date, _dateShow);
   }
 }
 
 class _PaymentmultiLine extends State {
   int _dormId, _userId, _roomId;
-  String _date,_dateShow;
-  _PaymentmultiLine(int dormId, int userId, int roomId, String date,String dateShow) {
+  String _date, _dateShow;
+  _PaymentmultiLine(
+      int dormId, int userId, int roomId, String date, String dateShow) {
     this._dormId = dormId;
     this._userId = userId;
     this._roomId = roomId;
@@ -55,9 +57,9 @@ class _PaymentmultiLine extends State {
 
           if (_date == dataPay[1]) {
             if (dataPay[3] == "ยังไม่จ่าย") {
-              color = Colors.red;
+              color = Colors.red[300];
             } else {
-              color = Colors.green;
+              color = Colors.grey;
             }
             _name = dataPay[13] + "  " + dataPay[14];
 
@@ -161,8 +163,10 @@ class _PaymentmultiLine extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.grey[300],
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
+          backgroundColor: Colors.blue[300],
           title: Text('ใบแจ้งชำระ'),
         ),
         body: ListView.builder(

@@ -52,10 +52,10 @@ class _pendingPage extends State<pendingPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               new Text(
-                'หอพัก : ${data['dormName']}',
+                '${data['dormName']}',
                 style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.green,
+                  fontSize: 25,
+                  color: Colors.blueGrey,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -64,21 +64,21 @@ class _pendingPage extends State<pendingPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.orange,
+                  color: Colors.grey,
                 ),
               ),
               new Text(
                 ' เบอร์ติดต่อ : ${data['dormTelephone']}',
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.red,
+                  color: Colors.grey,
                 ),
               ),
               new Text(
                 '(${_nameDorm})',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.red,
+                  color: Colors.grey,
                 ),
               ),
             ],
@@ -97,7 +97,9 @@ class _pendingPage extends State<pendingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
           appBar: new AppBar(
+            backgroundColor: Colors.blue[300],
             title: new Text('ข้อมูลติดต่อ'),
           ),
           body: ListView.builder(            

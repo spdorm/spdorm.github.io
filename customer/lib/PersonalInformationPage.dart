@@ -97,7 +97,6 @@ class _PersonalFragment extends State<PersonalFragment> {
   }
 
   void _body(){
-    Text head = Text(':รายละเอียดข้อมูลส่วนตัว');
           Card body = Card(
             margin: EdgeInsets.all(0.5),
             child: new Column(
@@ -122,7 +121,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userFirstname,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.perm_contact_calendar,color: Colors.pink),
+                        icon: const Icon(Icons.perm_contact_calendar,color: Colors.grey),
                         hintText: '${_Firstname}',
                         labelText: 'ชื่อ:',
                         labelStyle: TextStyle(fontSize: 15)),
@@ -134,7 +133,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userLastname,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.perm_contact_calendar,color: Colors.pink),
+                        icon: const Icon(Icons.perm_contact_calendar,color: Colors.grey),
                         hintText: '${_userLastname}',
                         labelText: 'นามสกุล:',
                         labelStyle: TextStyle(fontSize: 15)),
@@ -146,7 +145,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userAddress,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.add_location,color: Colors.green),
+                        icon: const Icon(Icons.add_location,color: Colors.grey),
                         hintText: '${_Address}',
                         labelText: 'ที่อยู่:',
                         labelStyle: TextStyle(fontSize: 15)),
@@ -158,7 +157,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userEmail,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.email,color: Colors.orange),
+                        icon: const Icon(Icons.email,color: Colors.grey),
                         hintText: '${_Email}',
                         labelText: 'อีเมล:',
                         labelStyle: TextStyle(fontSize: 15)),
@@ -170,7 +169,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                   child: TextFormField(
                     controller: userTelephone,
                     decoration: InputDecoration(
-                        icon: const Icon(Icons.local_phone,color: Colors.indigo),
+                        icon: const Icon(Icons.local_phone,color: Colors.grey),
                         hintText: '${_Telephone}',
                         labelText: 'เบอร์โทรศัพท์:',
                         labelStyle: TextStyle(fontSize: 15)),
@@ -185,7 +184,7 @@ class _PersonalFragment extends State<PersonalFragment> {
                       child: new RaisedButton(
                         onPressed: _alert,
                         textColor: Colors.white,
-                        color: Colors.blue[300],
+                        color: Colors.blueGrey[400],
                         child: new Row(
                           children: <Widget>[
                             new Text('ตกลง'),
@@ -199,7 +198,6 @@ class _PersonalFragment extends State<PersonalFragment> {
             ),
           );
           setState(() {
-            lst.add(head);
             lst.add(body);
           });
   }
@@ -211,8 +209,10 @@ class _PersonalFragment extends State<PersonalFragment> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.grey[300],
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
+        backgroundColor: Colors.blue[300],
         title: Text('ข้อมูลส่วนตัว'),
       ),
       body: new ListView.builder(

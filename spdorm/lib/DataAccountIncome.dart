@@ -31,16 +31,16 @@ class _DataAccoutIncomPage extends State<DataAccoutIncomPage> {
   List lst = List();
   List<String> _Month = [
     "มกราคม",
-    "กุมภาพันธุ์",
+    "กุมภาพันธ์",
     "มีนาคม",
     "เมษายน",
     "พฤษภาคม",
     "มิถุนายน",
-    "กรกฏาคม",
+    "กรกฎาคม",
     "สิงหาคม",
     "กันยายน",
     "ตุลาคม",
-    "พฤษจิกายน",
+    "พฤศจิกายน",
     "ธันวาคม",
   ].toList();
 
@@ -96,16 +96,16 @@ class _DataAccoutIncomPage extends State<DataAccoutIncomPage> {
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green),
+                  color: Colors.red[300]),
             ),
             Divider(
-              color: Colors.green,
+              color: Colors.red[300],
             ),
             Padding(
               padding: EdgeInsets.only(top: 17),
               child: Text(
                 'ไม่พบข้อมูล',
-                style: TextStyle(color: Colors.red[200]),
+                style: TextStyle(color: Colors.blueGrey[200]),
               ),
             )
           ],
@@ -183,10 +183,10 @@ class _DataAccoutIncomPage extends State<DataAccoutIncomPage> {
           Text(
             '${_Month[index]}',
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red[300]),
           ),
           Divider(
-            color: Colors.green,
+            color: Colors.red[300],
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -220,7 +220,9 @@ class _DataAccoutIncomPage extends State<DataAccoutIncomPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+         backgroundColor: Colors.red[300],
         title: Text("สรุปยอดรายรับ-รายจ่าย"),
       ),
       body: gridHeader(),
@@ -240,14 +242,15 @@ class _DataAccoutIncomPage extends State<DataAccoutIncomPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     new Container(
-                      child: Text("โปรดเลือกปี พ.ศ เพื่อดูประวัติ    ปี  :  "),
+                      child: Text("โปรดเลือกปี พ.ศ เพื่อดูประวัติ    ปี  :  ",
+                      style: TextStyle(color: Colors.grey[700]),),
                     ),
                     new DropdownButton<String>(
                         value: _selectedYear,
                         items: _Year.map((String dropdownValue) {
                           return new DropdownMenuItem(
                               value: dropdownValue,
-                              child: new Text(dropdownValue));
+                              child: new Text(dropdownValue,style: TextStyle(color: Colors.grey[700]),));
                         }).toList(),
                         onChanged: (String value) {
                           onYearChange(value);
@@ -256,46 +259,56 @@ class _DataAccoutIncomPage extends State<DataAccoutIncomPage> {
                 ),
               ),
               new Container(
+                padding: EdgeInsets.all(10.0),
                 child: new Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    new Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: new Container(
-                        width: 30.0,
-                        height: 15.0,
-                        color: Colors.indigo,
-                      ),
+                    Padding(
+                    padding: EdgeInsets.only(right: 25, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.indigo,
+                        ),
+                        new Text(
+                          ' รายรับ',
+                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
-                    new Container(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Text(" : รายรับ"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 25, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.redAccent,
+                        ),
+                        new Text(
+                          ' รายจ่าย',
+                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
-                    new Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: new Container(
-                        width: 30.0,
-                        height: 15.0,
-                        color: Colors.red,
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 25, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        new Icon(
+                          Icons.panorama_fish_eye,
+                          color: Colors.green[700],
+                        ),
+                        new Text(
+                          ' กำไร',
+                          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey[700]),
+                        ),
+                      ],
                     ),
-                    new Container(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Text(" : รายจ่าย"),
-                    ),
-                    new Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: new Container(
-                        width: 30.0,
-                        height: 15.0,
-                        color: Colors.green[700],
-                      ),
-                    ),
-                    new Container(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Text(" : กำไร"),
-                    ),
+                  ),
                   ],
                 ),
               ),

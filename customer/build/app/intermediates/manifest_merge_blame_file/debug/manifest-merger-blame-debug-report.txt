@@ -1,0 +1,141 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.customer"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="19"
+9        android:targetSdkVersion="28" />
+10    <!--
+11         Flutter needs it to communicate with the running application
+12         to allow setting breakpoints, to provide hot reload, etc.
+13    -->
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:3:5-66
+14-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:3:22-64
+15    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+15-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:4:5-81
+15-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:4:22-78
+16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+16-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:5:5-80
+16-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:5:22-77
+17    <uses-permission android:name="android.permission.CAMERA" />
+17-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:6:5-65
+17-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:6:22-62
+18    <!--
+19 io.flutter.app.FlutterApplication is an android.app.Application that
+20         calls FlutterMain.startInitialization(this); in its onCreate method.
+21         In most cases you can leave this as-is, but you if you want to provide
+22         additional functionality it is fine to subclass or reimplement
+23         FlutterApplication and put your custom class here.
+24    -->
+25    <application
+25-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:12:5-35:19
+26        android:name="io.flutter.app.FlutterApplication"
+26-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:13:9-57
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.0.2] C:\Users\user\.gradle\caches\transforms-2\files-2.1\e94bf10d6429fb2c87f20f39f4dac104\core-1.0.2\AndroidManifest.xml:22:18-86
+28        android:debuggable="true"
+29        android:icon="@mipmap/ic_launcher"
+29-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:15:9-43
+30        android:label="spdorm" >
+30-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:14:9-31
+31        <activity
+31-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:16:9-34:20
+32            android:name="com.example.customer.MainActivity"
+32-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:17:13-41
+33            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+33-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:20:13-144
+34            android:hardwareAccelerated="true"
+34-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:21:13-47
+35            android:launchMode="singleTop"
+35-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:18:13-43
+36            android:theme="@style/LaunchTheme"
+36-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:19:13-47
+37            android:windowSoftInputMode="adjustResize" >
+37-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:22:13-55
+38
+39            <!--
+40                 This keeps the window background of the activity showing
+41                 until Flutter renders its first frame. It can be removed if
+42                 there is no splash screen (such as the default splash screen
+43                 defined in @style/LaunchTheme).
+44            -->
+45            <meta-data
+45-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:27:13-29:40
+46                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
+46-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:28:17-82
+47                android:value="true" />
+47-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:29:17-37
+48
+49            <intent-filter>
+49-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:30:13-33:29
+50                <action android:name="android.intent.action.MAIN" />
+50-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:31:17-68
+50-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:31:25-66
+51
+52                <category android:name="android.intent.category.LAUNCHER" />
+52-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:32:17-76
+52-->E:\Github\bak\customer-15-11-62\android\app\src\main\AndroidManifest.xml:32:27-74
+53            </intent-filter>
+54        </activity>
+55
+56        <provider
+56-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:9-19:20
+57            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+57-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:12:13-82
+58            android:authorities="com.example.customer.flutter.image_provider"
+58-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-74
+59            android:exported="false"
+59-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-37
+60            android:grantUriPermissions="true" >
+60-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-47
+61            <meta-data
+61-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-18:75
+62                android:name="android.support.FILE_PROVIDER_PATHS"
+62-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:17:17-67
+63                android:resource="@xml/flutter_image_picker_file_paths" />
+63-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:18:17-72
+64        </provider>
+65        <provider
+65-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:12:9-20:20
+66            android:name="com.sangcomz.fishbun.FishBunFileProvider"
+66-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:13:13-68
+67            android:authorities="com.example.customer.fishbunfileprovider"
+67-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:14:13-71
+68            android:exported="false"
+68-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:15:13-37
+69            android:grantUriPermissions="true" >
+69-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:16:13-47
+70            <meta-data
+70-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-18:75
+71                android:name="android.support.FILE_PROVIDER_PATHS"
+71-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:17:17-67
+72                android:resource="@xml/provider_paths" />
+72-->[:image_picker] E:\Github\bak\customer-15-11-62\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:18:17-72
+73        </provider>
+74
+75        <activity
+75-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:22:9-25:51
+76            android:name="com.sangcomz.fishbun.ui.album.AlbumActivity"
+76-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:23:13-71
+77            android:label="@string/album"
+77-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:24:13-42
+78            android:theme="@style/FishBunTheme" />
+78-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:25:13-48
+79        <activity
+79-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:26:9-28:51
+80            android:name="com.sangcomz.fishbun.ui.picker.PickerActivity"
+80-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:27:13-73
+81            android:theme="@style/FishBunTheme" />
+81-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:28:13-48
+82        <activity
+82-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:29:9-31:54
+83            android:name="com.sangcomz.fishbun.ui.detail.DetailActivity"
+83-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:30:13-73
+84            android:theme="@style/DetailViewTheme" />
+84-->[com.sangcomz:FishBun:0.11.1] C:\Users\user\.gradle\caches\transforms-2\files-2.1\59b8746919175ebeeff266390b72e22d\jetified-FishBun-0.11.1\AndroidManifest.xml:31:13-51
+85    </application>
+86
+87</manifest>

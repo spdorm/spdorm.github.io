@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:sweetalert/sweetalert.dart';
 import 'config.dart';
 import 'dart:convert';
-import 'mainHomeFragment.dart';
 import 'ListNews.dart';
 
 class NewsDorm extends StatefulWidget {
@@ -56,7 +55,9 @@ class _NewsDorm extends State {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
+         backgroundColor: Colors.red[300],
         title: Text('เพิ่มข้อมูลข่าวสาร'),        
       ),
       resizeToAvoidBottomPadding: true,
@@ -74,9 +75,9 @@ class _NewsDorm extends State {
                     builder: (BuildContext context) =>
                         ListNewsPage(_dormId, _userId)));
           },
-          icon: Icon(Icons.remove_red_eye),
-          label: Text('ประวัติข่าวประชาสัมพันธ์'),
-          color: Colors.pink[50],
+          icon: Icon(Icons.remove_red_eye,color: Colors.white),
+          label: Text('ประวัติข่าวประชาสัมพันธ์',style: TextStyle(color: Colors.white),),
+          color: Colors.brown[400],
         ),
       ),
     ),
@@ -116,7 +117,7 @@ class _NewsDorm extends State {
                     SizedBox(height: 5.0),
                     FlatButton(
                       onPressed: onNewsDorm,
-                      child: const Text('โพสต์',style: TextStyle(fontWeight: FontWeight.bold),),
+                      child: const Text('โพสต์',style: TextStyle(fontWeight: FontWeight.bold,),),
                     ),
                   ],
                 ),
