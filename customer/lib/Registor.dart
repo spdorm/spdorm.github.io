@@ -62,82 +62,92 @@ class _RegisterSPDorm extends State {
       body: new ListView(
         padding: EdgeInsets.only(left: 15, right: 15, top: 20),
         children: <Widget>[
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userUsername,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.person),
-                  hintText: 'ระบุชื่อผู้ใช้',
-                  labelText: 'ชื่อผู้ใช้',
-                  labelStyle: TextStyle(fontSize: 15)),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userFirstname,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.perm_contact_calendar),
-                  hintText: 'ระบุชื่อ',
-                  labelText: 'ชื่อ',
-                  labelStyle: TextStyle(fontSize: 15)),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userLastname,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.perm_contact_calendar),
-                  hintText: 'ระบุนามสกุล',
-                  labelText: 'นามสกุล',
-                  labelStyle: TextStyle(fontSize: 15)),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userAddress,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.add_location),
-                  hintText: 'ระบุที่อยู่',
-                  labelText: 'ที่อยู่',
-                  labelStyle: TextStyle(fontSize: 15)),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userEmail,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.email),
-                  hintText: 'ระบุอีเมล',
-                  labelText: 'อีเมล',
-                  labelStyle: TextStyle(fontSize: 15)),
-              keyboardType: TextInputType.emailAddress,
-            ),
-          ),
-          new Container(
-            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-            child: TextFormField(
-              controller: userTelephone,
-              decoration: InputDecoration(
-                  icon: const Icon(Icons.local_phone),
-                  hintText: 'ระบุเบอร์โทรศัพท์',
-                  labelText: 'เบอร์โทรศัพท์',
-                  labelStyle: TextStyle(fontSize: 15)),
-              keyboardType: TextInputType.phone,
-            ),
-          ),
           Form(
             key: _keyForm,
             child: Column(
               children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userUsername,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.person),
+                        hintText: 'ระบุชื่อผู้ใช้',
+                        labelText: 'ชื่อผู้ใช้',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userFirstname,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.perm_contact_calendar),
+                        hintText: 'ระบุชื่อ',
+                        labelText: 'ชื่อ',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.text,
+                    validator: (String value) {
+                      if (value.trim().isEmpty) {
+                        return "กรุณาระบุชื่อ";
+                      }
+                    },
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userLastname,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.perm_contact_calendar),
+                        hintText: 'ระบุนามสกุล',
+                        labelText: 'นามสกุล',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.text,
+                    validator: (String value) {
+                      if (value.trim().isEmpty) {
+                        return "กรุณาระบุนามสกุล";
+                      }
+                    },
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userAddress,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.add_location),
+                        hintText: 'ระบุที่อยู่',
+                        labelText: 'ที่อยู่',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userEmail,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.email),
+                        hintText: 'ระบุอีเมล',
+                        labelText: 'อีเมล',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ),
+                new Container(
+                  padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: TextFormField(
+                    controller: userTelephone,
+                    decoration: InputDecoration(
+                        icon: const Icon(Icons.local_phone),
+                        hintText: 'ระบุเบอร์โทรศัพท์',
+                        labelText: 'เบอร์โทรศัพท์',
+                        labelStyle: TextStyle(fontSize: 15)),
+                    keyboardType: TextInputType.phone,
+                  ),
+                ),
                 new Container(
                   padding: EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: TextFormField(

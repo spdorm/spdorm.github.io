@@ -28,7 +28,7 @@ String dropdownValue = 'ห้องพัดลม';
 
 class _ViewRoomPage extends State<ViewRoomPage> {
   int _dormId, _userId, _roomId, _roomDoc;
-  String roomNo, roomPrice, roomType;
+  String roomNo, roomPrice, roomType, userFirstname, userLastname;
 
   _ViewRoomPage(int dormId, int userId, int roomId) {
     this._dormId = dormId;
@@ -49,6 +49,7 @@ class _ViewRoomPage extends State<ViewRoomPage> {
   ].toList();
 
   // String _selectedMonth = null;
+  bool check = false;
   String _selectedMonth, _selectedStatus, _selectType;
   List lst = new List();
 
@@ -81,7 +82,8 @@ class _ViewRoomPage extends State<ViewRoomPage> {
     http.post('${config.API_url}/room/listRoom', body: {
       "dormId": _dormId.toString(),
       "roomId": _roomId.toString()
-    }).then((respone) {
+    }).then((respone) async {
+      print(respone.body);
       Map jsonData = jsonDecode(respone.body) as Map;
       Map<String, dynamic> listData = jsonData["data"];
 
@@ -92,6 +94,21 @@ class _ViewRoomPage extends State<ViewRoomPage> {
         _roomDoc = listData["customerId"];
         _selectedMonth = listData["roomFloor"];
         _selectedStatus = listData["roomStatus"];
+
+        if (_roomDoc != 0) {
+          var resUser = await http.post('${config.API_url}/user/list',
+              body: {"userId": listData['customerId'].toString()});
+          Map jsonDataUser = jsonDecode(resUser.body) as Map;
+
+          if (jsonDataUser['status'] == 0) {
+            Map<String, dynamic> dataUser = jsonDataUser['data'];
+            userFirstname = dataUser["userFirstname"];
+            userLastname = dataUser["userLastname"];
+            check = true;
+          } else {
+            check = false;
+          }
+        }
 
         if (listData["roomStatus"] == "ว่าง") {
           _selectedStatus = _Status[0];
@@ -225,10 +242,10 @@ class _ViewRoomPage extends State<ViewRoomPage> {
             ],
           ),
           Divider(
-              color: Colors.grey,
-              indent: 10.0,
-              endIndent: 10.0,
-            ),
+            color: Colors.grey,
+            indent: 10.0,
+            endIndent: 10.0,
+          ),
           Row(
             children: <Widget>[
               new Container(
@@ -253,6 +270,34 @@ class _ViewRoomPage extends State<ViewRoomPage> {
                   }),
             ],
           ),
+          check
+              ? Row(
+                  children: <Widget>[
+                    new Container(
+                      padding: EdgeInsets.only(left: 20, right: 10, top: 20.0),
+                      child: Text(
+                        "ชื่อลูกค้า :",
+                        style: TextStyle(color: Colors.blueGrey[700]),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Container(
+                          padding: EdgeInsets.only(right: 10, top: 20.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                '${userFirstname} ${userLastname}',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ],
+                )
+              : Padding(
+                  padding: EdgeInsets.all(0),
+                ),
           Row(
             children: <Widget>[
               new Container(
@@ -270,8 +315,10 @@ class _ViewRoomPage extends State<ViewRoomPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (BuildContext) =>
-                                        vieWDocument(_dormId, _roomId,)));
+                                    builder: (BuildContext) => vieWDocument(
+                                          _dormId,
+                                          _roomId,
+                                        )));
                           },
                           textColor: Colors.orangeAccent,
                           child: new Row(
